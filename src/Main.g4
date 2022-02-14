@@ -11,7 +11,7 @@ STRING_CONST: '\'' LETTER* '\'' {System.out.println(getText() + " -> String cons
 COMMENT_LINE: '{' ~[\r\n]+ '}';
 COMMENT_BLOCK: '(*' (~[*] | '*' ~[)])* '*'+ ')';
 
-IGNORE : (' '|'\r\n') -> skip;
+IGNORE : (' '|'\r'|'\n') -> skip;
 
 fragment
 CHAR:;

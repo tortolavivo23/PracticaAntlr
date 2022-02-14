@@ -8,10 +8,10 @@ NUMERIC_INTEGER_CONST: ('+' | '-')? INT {System.out.println(getText()+" -> Enter
 NUMERIC_REAL_CONST: ('+' | '-')? INT ('.'INT)? (('e'|'E')('+' | '-')? INT)? {System.out.println(getText()+" -> Real");};
 //STRING_CONST: ('\''~[(\r\n)']*'\'') | ('"' ~[(\r\n)"]*'"') | ('”' ~[(\r\n)”]*'”')  {System.out.println(getText() + " -> String const");};
 STRING_CONST: '\'' LETTER* '\'' {System.out.println(getText() + " -> String const");};
-CCOMMENT_LINE: '{' ~[\r\n]+ '}';
+COMMENT_LINE: '{' ~[\r\n]+ '}';
 COMMENT_BLOCK: '(*' (~[*] | '*' ~[)])* '*'+ ')';
 
-IGNORE : (' '|'\r\n') -> skip;
+IGNORE : (' '|'\r'|'\n') -> skip;
 
 fragment
 CHAR:;

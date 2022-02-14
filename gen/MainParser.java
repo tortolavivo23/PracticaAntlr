@@ -1,4 +1,4 @@
-// Generated from R:/Documents/IdeaProjects/PracticaAntlr/src\Main.g4 by ANTLR 4.9.1
+// Generated from /home/heqro/Documents/IdeaProjects/PracticaAntlr/src/Main.g4 by ANTLR 4.9.2
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -10,14 +10,14 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class MainParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.9.1", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.9.2", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
 		IDENTIFIER=1, NUMERIC_INTEGER_CONST=2, NUMERIC_REAL_CONST=3, STRING_CONST=4, 
-		CCOMMENT_LINE=5, COMMENT_BLOCK=6, IGNORE=7, LETTER=8, DIG=9, INT=10, COMMENT_LINE=11;
+		COMMENT_LINE=5, COMMENT_BLOCK=6, IGNORE=7, LETTER=8, DIG=9, INT=10;
 	public static final int
 		RULE_r = 0;
 	private static String[] makeRuleNames() {
@@ -35,7 +35,7 @@ public class MainParser extends Parser {
 	private static String[] makeSymbolicNames() {
 		return new String[] {
 			null, "IDENTIFIER", "NUMERIC_INTEGER_CONST", "NUMERIC_REAL_CONST", "STRING_CONST", 
-			"CCOMMENT_LINE", "COMMENT_BLOCK", "IGNORE", "LETTER", "DIG", "INT", "COMMENT_LINE"
+			"COMMENT_LINE", "COMMENT_BLOCK", "IGNORE", "LETTER", "DIG", "INT"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -148,7 +148,7 @@ public class MainParser extends Parser {
 				{
 				setState(2);
 				_la = _input.LA(1);
-				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << IDENTIFIER) | (1L << NUMERIC_INTEGER_CONST) | (1L << NUMERIC_REAL_CONST) | (1L << STRING_CONST) | (1L << COMMENT_BLOCK) | (1L << COMMENT_LINE))) != 0)) ) {
+				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << IDENTIFIER) | (1L << NUMERIC_INTEGER_CONST) | (1L << NUMERIC_REAL_CONST) | (1L << STRING_CONST) | (1L << COMMENT_LINE) | (1L << COMMENT_BLOCK))) != 0)) ) {
 				_errHandler.recoverInline(this);
 				}
 				else {
@@ -161,7 +161,7 @@ public class MainParser extends Parser {
 				setState(5); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << IDENTIFIER) | (1L << NUMERIC_INTEGER_CONST) | (1L << NUMERIC_REAL_CONST) | (1L << STRING_CONST) | (1L << COMMENT_BLOCK) | (1L << COMMENT_LINE))) != 0) );
+			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << IDENTIFIER) | (1L << NUMERIC_INTEGER_CONST) | (1L << NUMERIC_REAL_CONST) | (1L << STRING_CONST) | (1L << COMMENT_LINE) | (1L << COMMENT_BLOCK))) != 0) );
 			}
 		}
 		catch (RecognitionException re) {
@@ -176,10 +176,9 @@ public class MainParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\r\n\4\2\t\2\3\2\6"+
-		"\2\6\n\2\r\2\16\2\7\3\2\2\2\3\2\2\3\5\2\3\6\b\b\r\r\2\t\2\5\3\2\2\2\4"+
-		"\6\t\2\2\2\5\4\3\2\2\2\6\7\3\2\2\2\7\5\3\2\2\2\7\b\3\2\2\2\b\3\3\2\2\2"+
-		"\3\7";
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\f\n\4\2\t\2\3\2\6"+
+		"\2\6\n\2\r\2\16\2\7\3\2\2\2\3\2\2\3\3\2\3\b\2\t\2\5\3\2\2\2\4\6\t\2\2"+
+		"\2\5\4\3\2\2\2\6\7\3\2\2\2\7\5\3\2\2\2\7\b\3\2\2\2\b\3\3\2\2\2\3\7";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
