@@ -7,7 +7,9 @@ IDENTIFIER: ('_'|LETTER) ('_' | DIG | LETTER)* {System.out.println(getText()+" -
 NUMERIC_INTEGER_CONST: ('+' | '-')? INT {System.out.println(getText()+" -> Entero");};  //Las constantes numéricas enteras son una ristra de dígitos, opcionalmente precedida de un signo “+” o “-”.
 NUMERIC_REAL_CONST: ('+' | '-')? INT ('.'INT)? (('e'|'E')('+' | '-')? INT)? {System.out.println(getText()+" -> Real");};
 //STRING_CONST: ('\''~[(\r\n)']*'\'') | ('"' ~[(\r\n)"]*'"') | ('”' ~[(\r\n)”]*'”')  {System.out.println(getText() + " -> String const");};
-STRING_CONST: '\'' LETTER* '\'' {System.out.println(getText() + " -> String const");};
+//STRING_CONST: '\'' LETTER* '\'' {System.out.println(getText() + " -> String const");};
+STRING_CONST: (('\'' ('\'\'' | ~['])* '\'') | ('"' ('""' | ~["])* '"')) {System.out.println(getText() + " -> String const");};
+
 COMMENT_LINE: '{' ~[\r\n]+ '}';
 COMMENT_BLOCK: '(*' (~[*] | '*' ~[)])* '*'+ ')';
 
@@ -19,6 +21,8 @@ LETTER: [A-Za-z]; //Caracteres del alfabeto ingles en mayusculas y minusculas
 DIG:[0-9];  //Un unico digito del 0 al 9
 INT:DIG+;  //Numero entero
 
-
 // Para la memoria:
 // - Aceptamos comentario vacío
+
+// Pensar:
+// - ¿qué debería pasar cuando algo tiene una ñ? A día de hoy da un token recognition error.

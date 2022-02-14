@@ -22,3 +22,14 @@ asd______kfjadfs
 
 
 'BASIC'
+'BÁSICO'
+'BÁSI''CO'
+'BÁSI' 'CO'
+'"BASIC"'
+'B"Á""S"ICO'
+'BÁSI''CO'
+'BÁSI' 'CO'
+"BASIC"
+"BÁSICO"
+"BÁSI"CO"
+"BASI" "CO
