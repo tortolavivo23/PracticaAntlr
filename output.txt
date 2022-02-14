@@ -1,0 +1,22 @@
+hola -> Identificador
+_hola -> Identificador
+adios -> Identificador
+_sdfkjasd -> Identificador
+asd______kfjadfs -> Identificador
+4132 -> Entero
+1234 -> Entero
+-64565 -> Entero
+-654 -> Entero
++6665 -> Entero
++123.456 -> Real
+-00.69 -> Real
+45.07000 -> Real
+123E456 -> Real
+-64E-77 -> Real
++045e1 -> Real
+003E+35 -> Real
+1.23E456 -> Real
+-000.64E-77 -> Real
++045.0e16 -> Real
+0.03E+35 -> Real
+'BASIC' -> String const
