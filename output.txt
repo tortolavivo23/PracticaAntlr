@@ -20,3 +20,51 @@ asd______kfjadfs -> Identificador
 +045.0e16 -> Real
 0.03E+35 -> Real
 'BASIC' -> String const
+'BÁSICO' -> String const
+'BÁSI''CO' -> String const
+'BÁSI' -> String const
+'CO' -> String const
+'"BASIC"' -> String const
+'B"Á""S"ICO' -> String const
+"BASIC" -> String const
+"BÁSICO" -> String const
+"BÁSI""CO" -> String const
+"BASI" -> String const
+"CO" -> String const
+4 -> Entero
+< -> <
+5 -> Entero
+5 -> Entero
+> -> >
+3 -> Entero
+3 -> Entero
+>= -> >=
+12 -> Entero
+2 -> Entero
+<= -> <=
+12 -> Entero
+6 -> Entero
+= -> =
+6 -> Entero
+IF -> if
+THEN -> then
+ELSE -> else
+WHILE -> while
+DO -> do
+REPEAT -> repeat
+FOR ->for 
+UNTIL -> Identificador
+X -> Identificador
+:= -> asignación
+3 -> Entero
+TO -> to
+DOWNTO -> downto
+OR -> or 
+AND -> and 
+( -> ( 
+NOT -> Identificador
+AND -> and 
+DO -> do
+TRUE -> TRUE 
+FALSE -> FALSE 
+) -> ) 

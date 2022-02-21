@@ -1,5 +1,28 @@
 token literal names:
 null
+'<'
+'>'
+'='
+'<='
+'>='
+'IF'
+'THEN'
+'ELSE'
+'WHILE'
+'DO'
+'REPEAT'
+'FOR'
+':='
+'TO'
+'DOWNTO'
+';'
+'OR'
+'AND'
+'('
+')'
+'TRUE'
+'FALSE'
+null
 null
 null
 null
@@ -13,20 +36,43 @@ null
 
 token symbolic names:
 null
-IDENTIFIER
+LSS
+GRT
+EQL
+LSSQ
+GRTQ
+IF
+THEN
+ELSE
+WHILE
+DO
+REPEAT
+FOR
+ASIG
+TO
+DOWNTO
+SEMICOLON
+OR
+AND
+OPEN_PAR
+CLOSE_PAR
+TRUE
+FALSE
 NUMERIC_INTEGER_CONST
 NUMERIC_REAL_CONST
 STRING_CONST
 COMMENT_LINE
 COMMENT_BLOCK
+IDENTIFIER
 IGNORE
 LETTER
 DIG
 INT
+NOT
 
 rule names:
 r
 
 
 atn:
-[3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 12, 10, 4, 2, 9, 2, 3, 2, 6, 2, 6, 10, 2, 13, 2, 14, 2, 7, 3, 2, 2, 2, 3, 2, 2, 3, 3, 2, 3, 8, 2, 9, 2, 5, 3, 2, 2, 2, 4, 6, 9, 2, 2, 2, 5, 4, 3, 2, 2, 2, 6, 7, 3, 2, 2, 2, 7, 5, 3, 2, 2, 2, 7, 8, 3, 2, 2, 2, 8, 3, 3, 2, 2, 2, 3, 7]
+[3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 35, 10, 4, 2, 9, 2, 3, 2, 6, 2, 6, 10, 2, 13, 2, 14, 2, 7, 3, 2, 2, 2, 3, 2, 2, 3, 4, 2, 3, 30, 35, 35, 2, 9, 2, 5, 3, 2, 2, 2, 4, 6, 9, 2, 2, 2, 5, 4, 3, 2, 2, 2, 6, 7, 3, 2, 2, 2, 7, 5, 3, 2, 2, 2, 7, 8, 3, 2, 2, 2, 8, 3, 3, 2, 2, 2, 3, 7]
