@@ -1,6 +1,44 @@
 grammar Main;
 
+
 r: (IDENTIFIER | NUMERIC_INTEGER_CONST | NUMERIC_REAL_CONST | COMMENT_LINE | COMMENT_BLOCK |STRING_CONST)+;
+
+//ANALISIS SEMANTICO PARTE OBLIGATORIA
+
+prg : 'PROGRAM' IDENTIFIER ';' blq '.';
+blq : dcllist 'BEGIN' sentlist 'END';
+dcllist : dcl dcllist | ; //Expresion ʎ  //Cambio para arreglar la recursividad izquierda
+sentlist : sent | sent sentlist;  //Cambio para arreglar recursividad izquierda
+
+dcl : defcte | defvar | defproc | deffun;
+defcte : 'CONST' ctelist;
+ctelist : IDENTIFIER '=' simpvalue ';'      //Cambio para arreglar la recursividad izquierda
+    | IDENTIFIER '=' simpvalue ';' ctelist;
+simpvalue : NUMERIC_INTEGER_CONST | NUMERIC_REAL_CONST
+    | STRING_CONST;
+defvar : 'VAR' defvarlist ';';
+defvarlist : varlist ':' tbas       //Cambio para arreglar la recursividad izquierda
+    | varlist ':' tbas ';' defvarlist;
+varlist : IDENTIFIER | IDENTIFIER ',' varlist;
+defproc : 'PROCEDURE' IDENTIFIER formal_paramlist ';' blq ';';
+deffun : 'FUNCTION' IDENTIFIER formal_paramlist ':' tbas ';' blq ';';
+formal_paramlist : '(' formal_param ')' | ; //Expresion ʎ
+formal_param : varlist ':' tbas
+    | varlist ':' tbas ';' formal_param;
+tbas : 'integer' | 'real';
+
+sent : asig ';' | proc_call ';';
+asig : IDENTIFIER ':=' exp;
+exp : factor op exp | factor;  //Cambio para arreglar la recursividad izquierda
+op : '+' | '-' | '*' | 'DIV' | 'MOD';
+factor : simpvalue | '(' exp ')' | IDENTIFIER subpparamlist;
+subpparamlist : '(' explist ')' | ; //Expresion ʎ
+explist : exp | exp ',' explist ;
+proc_call : IDENTIFIER subpparamlist ;
+
+
+
+//ANALISIS LEXICO PARTE OBLIGATORIA Y OPCIONAL
 
 LSS: '<'{System.out.println(getText()+" -> <");};
 GRT: '>'{System.out.println(getText()+" -> >");};
