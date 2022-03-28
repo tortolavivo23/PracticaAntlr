@@ -25,18 +25,20 @@ varlistFactor :  |',' varlist;
 defproc : 'PROCEDURE' IDENTIFIER formal_paramlist ';' blq ';';
 deffun : 'FUNCTION' IDENTIFIER formal_paramlist ':' tbas ';' blq ';';
 formal_paramlist : '(' formal_param ')' | ; //Expresion ʎ
-formal_param : varlist ':' tbas
-    | varlist ':' tbas ';' formal_param;
+formal_param : varlist ':' tbas formal_paramFactor;
+formal_paramFactor: ';' formal_param | ; //Factorización
 tbas : 'integer' | 'real';
 
-sent : asig ';' | proc_call ';';
+sent : IDENTIFIER sentFactor;
+sentFactor: subpparamlist | ':=' exp; //Factorización
 asig : IDENTIFIER ':=' exp;
 exp : factor expFactor;  //Cambio para arreglar la recursividad izquierda
 expFactor : | op exp; //Factorizacion
 op : '+' | '-' | '*' | 'DIV' | 'MOD';
 factor : simpvalue | '(' exp ')' | IDENTIFIER subpparamlist;
 subpparamlist : '(' explist ')' | ; //Expresion ʎ
-explist : exp | exp ',' explist ;
+explist : exp explistFactor ; //Cambio para arreglar la factorización
+explistFactor:';' explist | ; //Factorización
 proc_call : IDENTIFIER subpparamlist ;
 
 
