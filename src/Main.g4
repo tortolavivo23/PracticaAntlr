@@ -44,6 +44,14 @@ proc_call : IDENTIFIER subpparamlist ;
 
 //ANALISIS SINTACTICO PARTE OPCIONAL
 
+//Las añadidas a sent estan en la de arriba
+inc: 'TO' | 'DOWNTO';
+expcond : factorcond expcondFactor ;
+expcondFactor : oplog expcond | ;
+oplog : 'OR' | 'AND';
+factorcond : exp opcomp exp | '(' expcond ')' | 'NOT' factorcond
+    | 'TRUE' | 'FALSE';
+opcomp : '<' | '>'| '<=' | '>=' |'=';
 
 //ANALISIS LEXICO PARTE OBLIGATORIA Y OPCIONAL
 
@@ -84,8 +92,6 @@ COMMENT_LINE: '{' ~[\r\n]+ '}';
 COMMENT_BLOCK: '(*' (~[*] | '*' ~[)])* '*'+ ')';
 
 IDENTIFIER: ('_'|LETTER) ('_' | DIG | LETTER)* {System.out.println(getText()+" -> Identificador");}; //Ristras de símbolos compuestas por letras del alfabeto inglés, dígitos y guiones bajos "_". No empiezan por numero.
-
-
 
 
 IGNORE : (' '|'\r'|'\n') -> skip;

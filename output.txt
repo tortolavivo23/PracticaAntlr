@@ -1,70 +1,21 @@
-hola -> Identificador
-_hola -> Identificador
-adios -> Identificador
-_sdfkjasd -> Identificador
-asd______kfjadfs -> Identificador
-4132 -> Entero
-1234 -> Entero
--64565 -> Entero
--654 -> Entero
-+6665 -> Entero
-+123.456 -> Real
--00.69 -> Real
-45.07000 -> Real
-123E456 -> Real
--64E-77 -> Real
-+045e1 -> Real
-003E+35 -> Real
-1.23E456 -> Real
--000.64E-77 -> Real
-+045.0e16 -> Real
-0.03E+35 -> Real
-'BASIC' -> String const
-'BÁSICO' -> String const
-'BÁSI''CO' -> String const
-'BÁSI' -> String const
-'CO' -> String const
-'"BASIC"' -> String const
-'B"Á""S"ICO' -> String const
-"BASIC" -> String const
-"BÁSICO" -> String const
-"BÁSI""CO" -> String const
-"BASI" -> String const
-"CO" -> String const
+Hello -> Identificador
+ent -> Identificador
+ent -> Identificador
 4 -> Entero
-< -> <
-5 -> Entero
-5 -> Entero
-> -> >
+ent -> Identificador
+ent -> Identificador
+1 -> Entero
+ent -> Identificador
 3 -> Entero
-3 -> Entero
->= -> >=
+writeln -> Identificador
+"Hola, mundo" -> String const
+readln -> Identificador
+17 -> Entero
+numMes -> Identificador
+0 -> Entero
+numMes -> Identificador
 12 -> Entero
-2 -> Entero
-<= -> <=
-12 -> Entero
-6 -> Entero
-= -> =
-6 -> Entero
-IF -> if
-THEN -> then
-ELSE -> else
-WHILE -> while
-DO -> do
-REPEAT -> repeat
-FOR ->for 
-UNTIL -> Identificador
-X -> Identificador
-:= -> asignación
-3 -> Entero
-TO -> to
-DOWNTO -> downto
-OR -> or 
-AND -> and 
-( -> ( 
-NOT -> Identificador
-AND -> and 
-DO -> do
-TRUE -> TRUE 
-FALSE -> FALSE 
-) -> ) 
+writeln -> Identificador
+'Valor erroneo, introduzca un numero de mes valido' -> String const
+readln -> Identificador
+numMes -> Identificador

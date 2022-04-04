@@ -1,35 +1,27 @@
-hola
-_hola
-adios
-_sdfkjasd
-asd______kfjadfs
-4132
-1234
--64565
--654
-+6665
-+123.456
--00.69
-45.07000
-123E456
--64E-77
-+045e1
-003E+35
-1.23E456
--000.64E-77
-+045.0e16
-0.03E+35
+PROGRAM Hello;
 
+VAR
+    ent : real;
+BEGIN
+  ent := 4; (* Comentario
 
-'BASIC'
-'BÁSICO'
-'BÁSI''CO'
-'BÁSI' 'CO'
-'"BASIC"'
-'B"Á""S"ICO'
-'BÁSI''CO'
-'BÁSI' 'CO'
-"BASIC"
-"BÁSICO"
-"BÁSI"CO"
-"BASI" "CO
+  con varios bloques
+  ent := ent + 1; {Coment 2}
+  { Comentario } *)
+  ent := ent + 1;
+
+  IF (ent <= 3) THEN
+    BEGIN
+        writeln("Hola, mundo");
+    END
+  ELSE
+    BEGIN
+        readln (17) ;
+    END
+  WHILE (numMes < 0) OR (numMes > 12) DO
+  		BEGIN
+  			writeln('Valor erroneo, introduzca un numero de mes valido');
+  			readln(numMes);
+  		END
+
+END.
