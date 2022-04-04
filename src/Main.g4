@@ -66,7 +66,7 @@ COMMENT_BLOCK: '(*' (~[*] | '*' ~[)])* '*'+ ')'-> skip;
 IDENTIFIER: ('_'|LETTER) ('_' | DIG | LETTER)* {System.out.println(getText()+" -> Identificador");}; //Ristras de símbolos compuestas por letras del alfabeto inglés, dígitos y guiones bajos "_". No empiezan por numero.
 
 
-IGNORE : (' '|'\r'|'\n') -> skip;
+IGNORE : (' '|'\r'|'\n'|'\t') -> skip;
 
 fragment
 CHAR:;
