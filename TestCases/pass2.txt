@@ -1,0 +1,104 @@
+PROGRAM prac3;
+
+VAR
+
+
+numMes : integer;
+valorTemp : real;
+valorFunc : real;
+resultadoFunc : real;
+
+CONST
+texto_Resultado = "Un resultado";
+numero_Pos_Resultado = +3.5;
+numero_Neg_Resultado = -3.5;
+
+BEGIN
+
+writeln('****************************************************');
+
+writeln;
+
+writeln('************* EL CUATRIMESTRE **************');
+writeln('Introduzca el mes (entre 1 y 12)');
+readln(numMes);
+
+	WHILE ((numMes < 0) OR (numMes > 12)) DO
+		BEGIN
+			writeln('Valor erroneo, introduzca un numero de mes valido');
+			readln(numMes);
+		END;
+
+writeln;
+
+{___________________________________________________________}
+
+writeln('************* EL TIEMPO *************');
+writeln('Introduce una temperatura');
+readln(valorTemp);
+
+	IF (18 < valorTemp) AND (valorTemp <= 30) THEN
+		writeln('Hace un tiempo agradable')
+
+	ELSE
+		BEGIN
+
+		writeln('Hace viento? (s/n)');
+		readln(respViento);
+
+		WHILE (respViento <> respVientoSi) AND (respViento <> respVientoNo) DO
+			BEGIN
+
+                writeln('Respuesta no valida');
+                writeln('Hace viento? (s/n)');
+                readln(respViento);
+			END;
+
+		IF (respViento=respVientoSi) THEN {condicion de que hay viento}
+			BEGIN
+				IF (valorTemp > 30) THEN
+					writeln('Hace calor');
+				IF (valorTemp <= 18) THEN
+					writeln('Hace mucho frio');
+
+			END
+
+		ELSE {condicion de que no hace viento}
+			BEGIN
+				IF (valorTemp > 30) THEN
+					writeln('Hace mucho calor');
+				IF (valorTemp <=18) THEN
+					writeln('Hace frio');
+			END;
+		END;
+
+writeln;
+{_________________________________________________________________}
+
+
+writeln('************* FUNCION F(x) *************');
+writeln('Introduzca el valor de x:');
+readln(valorFunc);
+
+	WHILE (valorFunc < 0) DO
+		BEGIN
+			writeln('Valor invalido, introduce un valor positivo');
+			readln(valorFunc);
+		END;
+
+	IF (0 <= valorFunc) AND (valorFunc < 1) THEN
+		resultadoFunc := ((exp (2 * ln(valorFunc) ) - 5 ));
+
+	IF (1 <= valorFunc) AND (valorFunc < 3) THEN
+		resultadoFunc := (valorFunc + sin(valorFunc) );
+
+	IF (3 <= valorFunc) AND (valorFunc < 5) THEN
+		resultadoFunc := 3;
+
+	IF (5 <= valorFunc) THEN
+		resultadoFunc := ( exp( 2 * ln(valorFunc) ) );
+
+	writeln('F(', valorFunc, ') = ', resultadoFunc);
+	readln;
+END.
+
