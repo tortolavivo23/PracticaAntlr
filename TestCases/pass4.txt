@@ -1,7 +1,21 @@
 PROGRAM Hello;
+VAR
+Nota: integer;
+
+PROCEDURE funcionAuxiliar(numero: integer; numeroReal: real; cont: integer);
 BEGIN
-  WHILE (FALSE) DO
-  BEGIN
-      hello;
-  END
+    numero := numeroReal * (numero + 2);
+    IF (cont = 3) THEN BEGIN
+        funcionAuxiliar(numero, numeroReal, cont + 1);
+    END
+END;
+
+BEGIN
+    Nota := 1;
+    REPEAT
+      BEGIN
+          Nota := Nota + 1;
+      END
+    UNTIL (Nota = 10);
+    writeln("La nota es", funcionAuxiliar(Nota, 3.05E12)); { Cálculo de la nota }
 END.

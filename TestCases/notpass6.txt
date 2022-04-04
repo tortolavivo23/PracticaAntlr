@@ -1,16 +1,16 @@
-PROGRAM pass2;
+program pass2;
 
 VAR
 
 
-numMes : integer;
+numMes : INTEGER;
 valorTemp : real;
 valorFunc : real;
 resultadoFunc : real;
 
 CONST
 texto_Resultado = "Un resultado";
-numero_Pos_Resultado = +3.5E12;
+numero_Pos_Resultado = +3.5E12E4;
 numero_Neg_Resultado = -3.5;
 
 BEGIN
