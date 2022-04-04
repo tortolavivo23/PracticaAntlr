@@ -2,7 +2,7 @@ PROGRAM Hello;
 VAR
 Nota: integer;
 
-PROCEDURE funcionAuxiliar(numero: integer; numeroReal: real; cont: integer);
+FUNCTION funcionAuxiliar(numero: integer; numeroReal: real; cont: integer);
 BEGIN
     numero := numeroReal * (numero + 2);
     WHILE (cont < "3") DO BEGIN
@@ -11,12 +11,12 @@ BEGIN
 END;
 
 BEGIN
-    Nota := 1;
+    Asignado := 1;
     REPEAT
       BEGIN
           Nota := Nota + 1;
       END
     UNTIL (Nota = 10);
     writeln("La nota es", funcionAuxiliar(Nota, 3.05E12)); { Cálculo de la nota }
-    variable := 4 + 5 DIV 3;
+    writeln("Nota");
 END.
