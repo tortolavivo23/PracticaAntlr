@@ -36,7 +36,7 @@ op : '+' | '-' | '*' | 'DIV' | 'MOD';
 factor : simpvalue | '(' exp ')' | IDENTIFIER subpparamlist;
 subpparamlist : '(' explist ')' | ; //Expresion ʎ
 explist : exp explistFactor ; //Cambio para arreglar la factorización
-explistFactor:';' explist | ; //Factorización
+explistFactor:',' explist | ; //Factorización
 proc_call : IDENTIFIER subpparamlist ;
 
 
