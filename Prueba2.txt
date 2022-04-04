@@ -1,0 +1,172 @@
+
+
+PROGRAM Hello;
+
+	(*el objetivo de este procedimiento es sacar siempre el mismo menú de opciones
+	haciendo uso de un código reciclable que en la función principal se presente
+	de una forma compacta*)
+PROCEDURE menuDeOpciones;
+	BEGIN
+		writeln('****************** MENU DE OPCIONES ******************');
+		writeln('a) Temperaturas');
+		writeln('b) Adivinar');
+		writeln('c) Cuadrado');
+		writeln('d) Primo');
+		writeln('f) Finalizar')
+	END; {procedure menuDeOpciones}
+
+PROCEDURE esPrimo(nPrimo : integer);
+	VAR
+		divisor : integer;
+	BEGIN
+		IF(nPrimo = 1) OR (nPrimo = 2) OR (nPrimo = 3) THEN
+			writeln('El numero es primo')
+		ELSE
+			BEGIN
+				FOR divisor := 2 TO trunc(sqrt(nPrimo)) DO
+					BEGIN
+						IF(nPrimo mod divisor = 0) THEN
+							BEGIN
+								writeln('El numero no es primo');
+								writeln('El primer divisor que encuentra el algoritmo es ', divisor);
+								break;
+							END
+						ELSE
+							BEGIN
+								IF (trunc(sqrt(nPrimo)) = divisor) THEN
+									BEGIN
+										writeln('El numero es primo');
+										writeln;
+									END;
+							END;
+					END;{for}
+			END;{else}
+	END; {procedure esPrimo}
+
+
+VAR
+	eleccion : char;
+	numTemps, numNeg, numAdivinar, numAlAzar, contAdivinacion, numPrimo : integer;
+	med : real;
+	acierto : boolean;
+	ladoCuadrado : real;
+CONST
+	MAX = 100;
+
+BEGIN
+
+	writeln('***********************************************');
+	writeln('    Holi');
+	writeln('***********************************************');
+	writeln;
+
+
+	acierto := false;
+	{inicia el bloque de elección de opciones}
+
+
+	menuDeOpciones; {sacamos por pantalla el menú de opciones}
+	readln(eleccion);
+	errorOpcion(eleccion);
+
+	{se cierra el bloque de elección de opciones}
+
+	WHILE (eleccion <> 'f') DO
+		BEGIN
+			CASE eleccion OF
+				'a':
+					BEGIN {inicia el bloque de temperaturas}
+						writeln('***** TEMPERATURAS *****');
+						writeln('Elige el numero (positivo) de temperaturas:');
+						readln(numTemps);
+						WHILE numTemps <= 0 DO
+							BEGIN
+								writeln('Valor invalido. Introduce un numero positivo');
+								readln(numTemps);
+							END;
+
+						datosTemperaturas(numTemps, med, numNeg);
+
+						writeln ('La media de las temperaturas es: ', med:0:2);
+						writeln('Has introducido ', numNeg, ' temperaturas negativas');
+						writeln;
+						menuDeOpciones;
+						readln(eleccion);
+						errorOpcion(eleccion)
+					END; {se cierra el bloque de temperaturas}
+
+				'b':
+					BEGIN {inicia el bloque de adivinar}
+						writeln('***** ADIVINACION *****');
+						randomize;
+						numAlAzar := random(MAX) + 1; (*la asignación de un valor aleatorio al numero
+						no se puede realizar fuera del case o siempre será el mismo valor*)
+
+						FOR  contAdivinacion := 1  TO 7 DO
+							BEGIN
+								writeln('Intento ', contAdivinacion);
+								readln(numAdivinar);
+								jugarAdivino(numAdivinar, acierto, contAdivinacion, numAlAzar);
+
+								IF acierto THEN
+									BEGIN
+										break;
+										acierto:=false;
+									END;
+
+							END; {for}
+						menuDeOpciones;
+						readln(eleccion);
+						errorOpcion(eleccion)
+					END; {se cierra el bloque de adivinar}
+				'c':
+					BEGIN {inicia el bloque del cuadrado}
+						writeln('***** CUADRADO *****');
+						writeln('Introduzca el lado del cuadrado (impar y mayor que 0):');
+						readln(ladoCuadrado);
+
+						WHILE (trunc(ladoCuadrado) < 0) OR (trunc(ladoCuadrado) mod 2 = 0) DO
+							BEGIN
+								writeln('Valor invalido. Por favor introduce un lado positivo impar');
+								readln(ladoCuadrado);
+							END;{while}
+
+						pintarCuadrado(ladoCuadrado);
+						menuDeOpciones;
+						readln(eleccion);
+						errorOpcion(eleccion)
+					END; {se cierra el bloque del cuadrado}
+
+				'd':
+					BEGIN {inicia el bloque de primos}
+						writeln('***** PRIMO *****');
+						readln(numPrimo);
+
+						WHILE numPrimo < 1 DO
+							BEGIN
+								writeln('Valor invalido, introduce un numero positivo');
+								readln(numPrimo);
+							END;
+
+						esPrimo(numPrimo);
+						menuDeOpciones;
+						readln(eleccion);
+						errorOpcion(eleccion)
+					END; {se cierra el bloque de primos}
+
+				(*no necesitamos un ELSE ya que nos hemos asegurado
+				de que las opciones introducidas son siempre válidas.
+				El caso f va aparte, ya que es una instrucción que finaliza el programa
+				y por tanto no tiene interés meterlo en este bucle, que además
+				solo funciona si la opción introducida no es F*)
+
+			END;{case}
+		END; {while}
+
+	IF (eleccion = 'f') THEN
+		BEGIN
+			writeln('Final del programa');
+			readln
+		END;
+
+END.

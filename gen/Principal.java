@@ -21,7 +21,7 @@ Aquí se le llama "sintesis", pero puede ser cualquier nombre.
 NumbersParser anasint = new NumbersParser(tokens, new sintesis());
 */
 
-            anasint.r();
+            anasint.prg();
         } catch (org.antlr.v4.runtime.RecognitionException e) {
 //Fallo al reconocer la entrada
             System.err.println("REC " + e.getMessage());
