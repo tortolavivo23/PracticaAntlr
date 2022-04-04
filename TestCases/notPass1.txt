@@ -1,0 +1,40 @@
+PROGRAM AAA ;
+ (* Declaraciones de AAA *) (* ... constantes, variables funciones y procedimientos ... *)
+    PROCEDURE BBB (a, b, c integer ; d: real) ;
+         (* Declaraciones de BBB *)(* ... constantes, variables funciones y procedimientos ... *)
+              FUNCTION DDD (h : integer) : integer ;
+                (* Declaraciones de CCC *)(* ... constantes, variables funciones y procedimientos ... *)
+                 BEGIN
+
+                 END;
+    BEGIN
+        rodrigo := "superman" ;
+        IF (rodrigo == "superman") THEN
+            BEGIN
+                cry (3);
+            END
+        ELSE
+            BEGIN
+                cry (-1);
+            END
+    END;
+    FUNCTION CCC (a b : real) : real ;
+         (* Declaraciones de CCC *)     (* ... constantes, variables funciones y procedimientos ... *)
+              PROCEDURE EEE (* parámetros EEE *) ;
+                       (* Declaraciones de EEE *)         (* ... constantes, variables funciones y procedimientos ... *)
+                       BEGIN         (* Sentencias de EEE *)
+                           writeln(no);
+
+                       END;
+VAR i : intger
+BEGIN
+    paco := "batman" ;
+    WHILE (paco = batman) DO
+        BEGIN
+            happy ("infinity");
+        END
+
+END;
+BEGIN
+    variable : 3 ;
+END.
