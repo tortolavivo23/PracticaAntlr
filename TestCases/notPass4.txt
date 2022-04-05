@@ -5,7 +5,7 @@ Nota: integer;
 FUNCTION funcionAuxiliar(numero: integer; numeroReal: real; cont: integer);
 BEGIN
     numero := numeroReal * (numero + 2);
-    WHILE (cont < "3") DO BEGIN
+    WHILE (cont < 3) DO BEGIN
         funcionAuxiliar(numero, numeroReal, cont + 1);
     END
 END;
@@ -16,7 +16,7 @@ BEGIN
       BEGIN
           Nota := Nota + 1;
       END
-    UNTIL (Nota = 10);
+    UNTIL (Nota = 10)
     writeln("La nota es", funcionAuxiliar(Nota, 3.05E12)); { Cálculo de la nota }
     writeln("Nota");
 END.
