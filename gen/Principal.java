@@ -22,6 +22,8 @@ NumbersParser anasint = new NumbersParser(tokens, new sintesis());
 */
 
             anasint.prg();
+
+            System.out.println("</html>");
         } catch (org.antlr.v4.runtime.RecognitionException e) {
 //Fallo al reconocer la entrada
             System.err.println("REC " + e.getMessage());

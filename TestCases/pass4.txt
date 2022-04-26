@@ -10,6 +10,14 @@ BEGIN
     END
 END;
 
+PROCEDURE funcionAuxiliar2(numero: integer; numeroReal: real; cont: integer);
+BEGIN
+    numero := numeroReal * (numero + 2);
+    WHILE (cont < "3") DO BEGIN
+        funcionAuxiliar(numero, numeroReal, cont + 1);
+    END
+END;
+
 BEGIN
     Nota := 1;
     REPEAT

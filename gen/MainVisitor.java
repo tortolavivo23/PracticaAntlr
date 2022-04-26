@@ -1,4 +1,4 @@
-// Generated from /home/sergio/ProcesadoresDeLenguajes/PracticaAntlr/src/Main.g4 by ANTLR 4.9.2
+// Generated from C:/Users/hr.iglesias.2018/IdeaProjects/PracticaAntlr/src\Main.g4 by ANTLR 4.9.1
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
