@@ -2,13 +2,13 @@ grammar Main;
 
 //ANALISIS SEMANTICO PARTE OBLIGATORIA
 
-prg : 'PROGRAM' IDENTIFIER ';' blq '.';
-blq : dcllist 'BEGIN' sentlist 'END';
-dcllist : | dcl dcllist  ; //Expresion ʎ  //Cambio para arreglar la recursividad izquierda
+prg : 'PROGRAM' IDENTIFIER {System.out.println("<H1>"+$IDENTIFIER.text+"</H1>");} ';' {System.out.println("<UL>");} blq {System.out.println($blq.s+"</UL>");} '.';
+blq returns [String s]: dcllist {$s = $dcllist.s;}  'BEGIN' sentlist 'END' ;
+dcllist returns [String s] : {$s = "";}| dcl  dcllist {$s = $dcl.s+$dcllist.s;}  ; //Expresion ʎ  //Cambio para arreglar la recursividad izquierda
 sentlist : sent sentlistFactor;  //Cambio para arreglar recursividad izquierda
 sentlistFactor :  | sentlist  ;  //Cambio para factorizar, expresion ʎ
 
-dcl : defcte | defvar | defproc | deffun;
+dcl returns [String s] : defcte {$s = "";} | defvar {$s="";}| defproc {$s = $defproc.s;}| deffun{$s = $deffun.s;};
 defcte : 'CONST' ctelist;
 ctelist : IDENTIFIER '=' simpvalue ';' ctelistFactor; //Cambio para arreglar reccursividad izquierda
 ctelistFactor : | ctelist; //Factorizado
@@ -16,14 +16,14 @@ simpvalue : NUMERIC_INTEGER_CONST | NUMERIC_REAL_CONST | STRING_CONST;
 defvar : 'VAR' defvarlist ';';
 defvarlist : varlist ':' tbas  defvarlistFactor;     //Cambio para arreglar la recursividad izquierda
 defvarlistFactor : | ';' defvarlist;           //Factorizado
-varlist : IDENTIFIER  varlistFactor;           //Factorizado
-varlistFactor :  |',' varlist;
-defproc : 'PROCEDURE' IDENTIFIER formal_paramlist ';' blq ';';
-deffun : 'FUNCTION' IDENTIFIER formal_paramlist ':' tbas ';' blq ';';
-formal_paramlist : '(' formal_param ')' | ; //Expresion ʎ
-formal_param : varlist ':' tbas formal_paramFactor;
-formal_paramFactor: | ';' formal_param  ; //Factorización
-tbas : 'integer' | 'real';
+varlist returns[String s] : IDENTIFIER  varlistFactor {$s = $IDENTIFIER.text +", "+ $varlistFactor.s;};           //Factorizado
+varlistFactor returns[String s] : {$s = "";} |',' varlist {$s = $varlist.s;};
+defproc returns [String s]: 'PROCEDURE' IDENTIFIER  formal_paramlist {$s ="<LI>"+$IDENTIFIER.text+" "+$formal_paramlist.s+"</LI>\n";}  ';' blq ';';
+deffun returns[String s] : 'FUNCTION' IDENTIFIER   formal_paramlist {$s ="<LI>"+$IDENTIFIER.text+" "+$formal_paramlist.s+"</LI>\n";} ':' tbas ';' blq ';';
+formal_paramlist returns[String s] : '(' formal_param ')' {$s = "("+$formal_param.s.substring(0,$formal_param.s.length()-2)+")";}| {$s = "";} ; //Expresion ʎ
+formal_param returns[String s] : varlist ':' tbas  formal_paramFactor{$s = $tbas.s+": "+$varlist.s.substring(0,$varlist.s.length()-2)+"; "+$formal_paramFactor.s;};
+formal_paramFactor returns[String s]: {$s = "";}| ';' formal_param {$s = $formal_param.s ;}  ; //Factorización
+tbas returns[String s] : 'integer' {$s = "integer";} | 'real' {$s = "real";};
 
 sent : IDENTIFIER sentFactor ';' | 'IF' expcond 'THEN' blq 'ELSE' blq | 'WHILE' expcond 'DO' blq |
     'REPEAT' blq 'UNTIL' expcond ';' | 'FOR' IDENTIFIER ':=' exp inc exp 'DO' blq;
@@ -54,15 +54,15 @@ opcomp : '<' | '>'| '<=' | '>=' |'=';
 
 
 //Las constantes numéricas enteras son una ristra de dígitos, opcionalmente precedida de un signo “+” o “-”.
-NUMERIC_INTEGER_CONST: ('+' | '-')? INT {System.out.println(getText()+" -> Entero");};
-NUMERIC_REAL_CONST: ('+' | '-')? INT ('.'INT)? (('e'|'E')('+' | '-')? INT)? {System.out.println(getText()+" -> Real");};
-STRING_CONST: (('\'' ('\'\'' | ~['])* '\'') | ('"' ('""' | ~["])* '"')) {System.out.println(getText() + " -> String const");};
+NUMERIC_INTEGER_CONST: ('+' | '-')? INT ;
+NUMERIC_REAL_CONST: ('+' | '-')? INT ('.'INT)? (('e'|'E')('+' | '-')? INT)? ;
+STRING_CONST: (('\'' ('\'\'' | ~['])* '\'') | ('"' ('""' | ~["])* '"')) ;
 
 COMMENT_LINE: '{' ~[\r\n]+ '}'-> skip;
 COMMENT_BLOCK: '(*' (~[*] | '*' ~[)])* '*'+ ')'-> skip;
 
 //Ristras de símbolos compuestas por letras del alfabeto inglés, dígitos y guiones bajos "_". No empiezan por numero.
-IDENTIFIER: ('_'|LETTER) ('_' | DIG | LETTER)* {System.out.println(getText()+" -> Identificador");};
+IDENTIFIER: ('_'|LETTER) ('_' | DIG | LETTER)* ;
 
 
 IGNORE : (' '|'\r'|'\n'|'\t') -> skip;

@@ -7,6 +7,10 @@ public class Principal {
 
             CharStream input = CharStreams.fromFileName(args[0]);
 
+            System.out.println("<!dOCtYPE html>\n <html>");
+            System.out.println("<head>");
+            System.out.println("<title>"+args[0]+"</title>");
+            System.out.println("</head>");
 
             MainLexer analex = new MainLexer(input);
 
