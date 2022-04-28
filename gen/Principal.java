@@ -24,9 +24,10 @@ este deberá ser de una clase del mismo paquete
 Aquí se le llama "sintesis", pero puede ser cualquier nombre.
 NumbersParser anasint = new NumbersParser(tokens, new sintesis());
 */
+            System.out.println("<body>");
 
             anasint.prg();
-
+            System.out.println("</body>");
             System.out.println("</html>");
         } catch (org.antlr.v4.runtime.RecognitionException e) {
 //Fallo al reconocer la entrada
