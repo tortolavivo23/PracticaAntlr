@@ -162,7 +162,7 @@ public class MainParser extends Parser {
 			System.out.println("<UL>");
 			setState(81);
 			((PrgContext)_localctx).blq = blq();
-			System.out.println(((PrgContext)_localctx).blq.s+"</UL>");
+			System.out.println(((PrgContext)_localctx).blq.s+"</UL>\n<HR/>");
 			setState(83);
 			match(T__2);
 			}
