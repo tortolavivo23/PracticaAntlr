@@ -4,7 +4,7 @@ grammar Main;
 
 //ANALISIS SEMANTICO PARTE OBLIGATORIA
 
-prg : 'PROGRAM' IDENTIFIER {System.out.println("<H1> Programa: "+$IDENTIFIER.text+" </H1>");} ';' {System.out.println("<UL>");} blq {System.out.println($blq.s+"</UL>");} '.';
+prg : 'PROGRAM' IDENTIFIER {System.out.println("<H1> Programa: "+$IDENTIFIER.text+" </H1>");} ';' {System.out.println("<UL>");} blq {System.out.println($blq.s+"</UL>\n<HR/>");} '.';
 blq returns [String s]: dcllist {$s = $dcllist.s;}  'BEGIN' sentlist 'END' ;
 dcllist returns [String s] : {$s = "";}| dcl  dcllist {$s = $dcl.s+$dcllist.s;}  ; //Expresion ʎ  //Cambio para arreglar la recursividad izquierda
 sentlist : sent sentlistFactor;  //Cambio para arreglar recursividad izquierda
