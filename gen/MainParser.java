@@ -226,8 +226,6 @@ public class MainParser extends Parser {
 
 			            ((BlqContext)_localctx).procYFunc =  ((BlqContext)_localctx).dcllist.procYFunc;
 			            ((BlqContext)_localctx).codigo =  ((BlqContext)_localctx).dcllist.codigo;
-			            //((BlqContext)_localctx).codigo =  "<div style=\"margin-left:1cm\">"+
-			                //((BlqContext)_localctx).dcllist.codigo + "</div>";
 			    
 			setState(87);
 			match(T__3);
@@ -2552,18 +2550,19 @@ public class MainParser extends Parser {
 
 	public static class FactorcondContext extends ParserRuleContext {
 		public String condicion;
-		public ExpContext exp;
+		public ExpContext e1;
 		public OpcompContext opcomp;
+		public ExpContext e2;
 		public ExpcondContext expcond;
 		public FactorcondContext factorcond;
+		public OpcompContext opcomp() {
+			return getRuleContext(OpcompContext.class,0);
+		}
 		public List<ExpContext> exp() {
 			return getRuleContexts(ExpContext.class);
 		}
 		public ExpContext exp(int i) {
 			return getRuleContext(ExpContext.class,i);
-		}
-		public OpcompContext opcomp() {
-			return getRuleContext(OpcompContext.class,0);
 		}
 		public ExpcondContext expcond() {
 			return getRuleContext(ExpcondContext.class,0);
@@ -2601,12 +2600,12 @@ public class MainParser extends Parser {
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(348);
-				((FactorcondContext)_localctx).exp = exp();
+				((FactorcondContext)_localctx).e1 = exp();
 				setState(349);
 				((FactorcondContext)_localctx).opcomp = opcomp();
 				setState(350);
-				((FactorcondContext)_localctx).exp = exp();
-				((FactorcondContext)_localctx).condicion =  ((FactorcondContext)_localctx).exp.expresion + ((FactorcondContext)_localctx).opcomp.comparador + ((FactorcondContext)_localctx).exp.expresion;
+				((FactorcondContext)_localctx).e2 = exp();
+				((FactorcondContext)_localctx).condicion =  ((FactorcondContext)_localctx).e1.expresion + ((FactorcondContext)_localctx).opcomp.comparador + ((FactorcondContext)_localctx).e2.expresion;
 				}
 				break;
 			case 2:

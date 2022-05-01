@@ -176,7 +176,7 @@ inc returns [String incremento]: 'TO' {$incremento = "TO";} | 'DOWNTO' {$increme
 expcond returns [String condicion] : factorcond expcondFactor {$condicion = $factorcond.condicion + $expcondFactor.condicion;};
 expcondFactor returns[String condicion] : {$condicion = "";} | oplog expcond {$condicion = $oplog.bool + $expcond.condicion;};
 oplog returns[String bool]: 'OR'{$bool= "OR";} | 'AND'{$bool = "AND";};
-factorcond returns[String condicion]: exp opcomp exp {$condicion = $exp.expresion + $opcomp.comparador + $exp.expresion;} |
+factorcond returns[String condicion]: e1=exp opcomp e2=exp {$condicion = $e1.expresion + $opcomp.comparador + $e2.expresion;} |
     '(' expcond ')' {$condicion = "(" + $expcond.condicion + ")";} |
     'NOT' factorcond  {$condicion="NOT " + $factorcond.condicion;}|
     'TRUE' {$condicion="TRUE";} |
