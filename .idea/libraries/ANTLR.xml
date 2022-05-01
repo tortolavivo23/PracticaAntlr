@@ -1,14 +1,9 @@
 <component name="libraryTable">
   <library name="ANTLR">
     <CLASSES>
-      <root url="file://C:/Program Files (x86)/ANTLR" />
-      <root url="jar://$USER_HOME$/.ApuntesOneDrive/Uni/#4/Segundo cuatrimestre/PL/antlr-4.9.1-complete.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../antlr-4.9.3-complete.jar!/" />
-      <root url="jar://$USER_HOME$/.ApuntesOneDrive/Uni/#4/Segundo cuatrimestre/PL/antlr-4.9.1-complete.jar!/" />
-      <root url="jar://$PROJECT_DIR$/antlr-4.10.1-complete.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../antlr-4.10.1-complete.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
-    <jarDirectory url="file://C:/Program Files (x86)/ANTLR" recursive="false" />
   </library>
 </component>

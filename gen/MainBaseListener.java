@@ -1,4 +1,4 @@
-// Generated from /home/heqro/IdeaProjects/PracticaAntlr/src/Main.g4 by ANTLR 4.10.1
+// Generated from C:/Users/serxu/Desktop/Universidad/PracticaAntlr/src\Main.g4 by ANTLR 4.10.1
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
