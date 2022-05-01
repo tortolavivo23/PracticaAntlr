@@ -168,7 +168,7 @@ public class MainParser extends Parser {
 			((PrgContext)_localctx).blq = blq();
 
 			            System.out.println(((PrgContext)_localctx).blq.procYFunc+"</UL>\n<HR/>");
-			            System.out.println(((PrgContext)_localctx).blq.codigo);
+			            System.out.println(((PrgContext)_localctx).blq.codigo + ".");
 			        
 			setState(83);
 			match(T__2);

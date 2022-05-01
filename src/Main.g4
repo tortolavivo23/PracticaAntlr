@@ -13,7 +13,7 @@ prg:
         }
     blq {
             System.out.println($blq.procYFunc+"</UL>\n<HR/>");
-            System.out.println($blq.codigo);
+            System.out.println($blq.codigo + ".");
         }
     '.';
 
