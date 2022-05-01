@@ -20,11 +20,11 @@ prg:
 blq [int nivel_identacion] returns [String procYFunc, String codigo]:
     dcllist[$nivel_identacion] {
             $procYFunc = $dcllist.procYFunc;
-            $codigo = "<div style=\"text-indent:"+$nivel_identacion+"cm\">"+
+            $codigo = "<div style=\"margin-left:"+$nivel_identacion+"cm\">"+
                 $dcllist.codigo + "</div>";
     }
     'BEGIN' sentlist[$nivel_identacion] 'END'{
-        $codigo += "<div style=\"text-indent:"+$nivel_identacion+"cm\">BEGIN<br/>"+
+        $codigo += "<div style=\"margin-left:"+$nivel_identacion+"cm\">BEGIN<br/>"+
                                     $sentlist.codigo + "<br/>END</div>";
     } ;
 

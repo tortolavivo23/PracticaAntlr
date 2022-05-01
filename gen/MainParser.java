@@ -1,4 +1,4 @@
-// Generated from C:/Users/serxu/Desktop/Universidad/PracticaAntlr/src\Main.g4 by ANTLR 4.10.1
+// Generated from /home/heqro/IdeaProjects/PracticaAntlr/src/Main.g4 by ANTLR 4.10.1
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -228,7 +228,7 @@ public class MainParser extends Parser {
 			((BlqContext)_localctx).dcllist = dcllist(_localctx.nivel_identacion);
 
 			            ((BlqContext)_localctx).procYFunc =  ((BlqContext)_localctx).dcllist.procYFunc;
-			            ((BlqContext)_localctx).codigo =  "<div style=\"text-indent:"+_localctx.nivel_identacion+"cm\">"+
+			            ((BlqContext)_localctx).codigo =  "<div style=\"margin-left:"+_localctx.nivel_identacion+"cm\">"+
 			                ((BlqContext)_localctx).dcllist.codigo + "</div>";
 			    
 			setState(87);
@@ -238,7 +238,7 @@ public class MainParser extends Parser {
 			setState(89);
 			match(T__4);
 
-			        _localctx.codigo += "<div style=\"text-indent:"+_localctx.nivel_identacion+"cm\">BEGIN<br/>"+
+			        _localctx.codigo += "<div style=\"margin-left:"+_localctx.nivel_identacion+"cm\">BEGIN<br/>"+
 			                                    ((BlqContext)_localctx).sentlist.codigo + "<br/>END</div>";
 			    
 			}
