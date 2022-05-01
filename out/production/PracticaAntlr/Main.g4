@@ -82,7 +82,7 @@ defproc[int nivel_identacion] returns [String procedimiento, String codigo]:
             $procedimiento ="<LI> <a href=\"#"+$IDENTIFIER.text+"\">"+$IDENTIFIER.text+" "+$formal_paramlist.variables+"</a></LI>\n";
         }
     ';' blq[$nivel_identacion+1] ';'{
-        $codigo ="<a NAME= \""+ $IDENTIFIER.text +"\" > PROCEDURE" + $IDENTIFIER.text + " " + $formal_paramlist.variables + "</a> <br/>" + $blq.codigo+";";
+        $codigo ="<a NAME= \""+ $IDENTIFIER.text +"\" > PROCEDURE " + $IDENTIFIER.text + " " + $formal_paramlist.variables + "</a> <br/>" + $blq.codigo+";";
     };
 
 deffun[int nivel_identacion] returns[String funcion, String codigo]:
