@@ -174,8 +174,8 @@ proc_call returns[String parametros]:  subpparamlist {$parametros = $subpparamli
 
 //Las añadidas a sent estan en la de arriba
 inc returns [String incremento]: 'TO' {$incremento = "TO";} | 'DOWNTO' {$incremento = "DOWNTO";};
-expcond returns [String condicion] : factorcond expcondFactor ;
-expcondFactor : | oplog expcond ;
+expcond returns [String condicion] : factorcond expcondFactor {$condicion = $factorcond.condicion + $expcondFactor.condicion;};
+expcondFactor returns[String condicion] : {$condicion = "";} | oplog expcond {$condicion = $oplog.bool + $expcond.condicion;};
 oplog returns[String bool]: 'OR'{$bool= "OR";} | 'AND'{$bool = "AND";};
 factorcond returns[String condicion]: exp opcomp exp {$condicion = $exp.expresion + $opcomp.comparador + $exp.expresion;} |
     '(' expcond ')' {$condicion = "(" + $expcond.condicion + ")";} |
