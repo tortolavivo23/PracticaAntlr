@@ -4,11 +4,53 @@ grammar Main;
 
 //ANALISIS SEMANTICO PARTE OBLIGATORIA
 
-prg : 'PROGRAM' IDENTIFIER {System.out.println("<H1> Programa: "+$IDENTIFIER.text+" </H1>");} ';' {System.out.println("<UL>");} blq {System.out.println($blq.s+"</UL>\n<HR/>");} '.';
-blq returns [String s]: dcllist {$s = $dcllist.s;}  'BEGIN' sentlist 'END' ;
-dcllist returns [String s] : {$s = "";}| dcl  dcllist {$s = $dcl.s+$dcllist.s;}  ; //Expresion ʎ  //Cambio para arreglar la recursividad izquierda
-sentlist : sent sentlistFactor;  //Cambio para arreglar recursividad izquierda
-sentlistFactor :  | sentlist  ;  //Cambio para factorizar, expresion ʎ
+prg:
+    'PROGRAM' IDENTIFIER {
+            System.out.println("<H1> Programa: "+$IDENTIFIER.text+" </H1>");
+        }
+    ';' {
+            System.out.println("<UL>");
+        }
+    blq[0] {
+            System.out.println($blq.procYFunc+"</UL>\n<HR/>");
+            System.out.println($blq.codigo);
+        }
+    '.';
+
+blq [int nivel_identacion] returns [String procYFunc, String codigo]:
+    dcllist[$nivel_identacion] {
+            $procYFunc = $dcllist.procYFunc;
+            $codigo = "<div style=\"text-indent:"+$nivel_identacion+"cm\">"+
+                $dcllist.codigo + "</div>";
+    }
+    'BEGIN' sentlist[$nivel_identacion] 'END'{
+        $codigo += "<div style=\"text-indent:"+$nivel_identacion+"cm\">BEGIN<br/>"+
+                                    $sentlist.codigo + "<br/>END</div>";
+    } ;
+
+dcllist [int nivel_identacion] returns [String procYFunc, String codigo] :
+    {
+        $procYFunc = "";
+        $codigo = "";
+    }|
+    dcl[$nivel_identacion] dcllist[$nivel_identacion] {
+        $procYFunc = $dcl.procYFunc+$dcllist.procYFunc;
+        $codigo = $dcl.codigo+"<br/>"+$dcllist.codigo;
+    };
+
+sentlist[int nivel_identacion]  returns [String codigo]:
+    sent[$nivel_identacion] sentlistFactor[$nivel_identacion]{
+        $codigo = $sent.sentencia+"<br/>"+$sentlistFactor.codigo;
+    };
+
+
+sentlistFactor[int nivel_identacion] returns [String codigo] :
+  {
+    $codigo = "";
+  }|
+   sentlist[$nivel_identacion]{
+        $codigo = $sentlist.codigo;
+   };
 
 dcl [int nivel_identacion] returns [String procYFunc, String codigo] :
     defcte {$procYFunc = "";} |
