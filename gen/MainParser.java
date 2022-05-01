@@ -225,8 +225,9 @@ public class MainParser extends Parser {
 			((BlqContext)_localctx).dcllist = dcllist();
 
 			            ((BlqContext)_localctx).procYFunc =  ((BlqContext)_localctx).dcllist.procYFunc;
-			            ((BlqContext)_localctx).codigo =  "<div style=\"margin-left:1cm\">"+
-			                ((BlqContext)_localctx).dcllist.codigo + "</div>";
+			            ((BlqContext)_localctx).codigo =  ((BlqContext)_localctx).dcllist.codigo;
+			            //((BlqContext)_localctx).codigo =  "<div style=\"margin-left:1cm\">"+
+			                //((BlqContext)_localctx).dcllist.codigo + "</div>";
 			    
 			setState(87);
 			match(T__3);

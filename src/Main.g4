@@ -20,8 +20,7 @@ prg:
 blq  returns [String procYFunc, String codigo]:
     dcllist {
             $procYFunc = $dcllist.procYFunc;
-            $codigo = "<div style=\"margin-left:1cm\">"+
-                $dcllist.codigo + "</div>";
+            $codigo = $dcllist.codigo;
     }
     'BEGIN' sentlist 'END'{
         $codigo += "BEGIN<br/><div style=\"margin-left:1cm\">" +
