@@ -11,55 +11,56 @@ prg:
     ';' {
             System.out.println("<UL>");
         }
-    blq[0] {
+    blq {
             System.out.println($blq.procYFunc+"</UL>\n<HR/>");
             System.out.println($blq.codigo);
         }
     '.';
 
-blq [int nivel_identacion] returns [String procYFunc, String codigo]:
-    dcllist[$nivel_identacion] {
+blq  returns [String procYFunc, String codigo]:
+    dcllist {
             $procYFunc = $dcllist.procYFunc;
-            $codigo = "<div style=\"margin-left:"+$nivel_identacion+"cm\">"+
+            $codigo = "<div style=\"margin-left:1cm\">"+
                 $dcllist.codigo + "</div>";
     }
-    'BEGIN' sentlist[$nivel_identacion] 'END'{
-        $codigo += "<div style=\"margin-left:"+$nivel_identacion+"cm\">BEGIN<br/>"+
-                                    $sentlist.codigo + "<br/>END</div>";
+    'BEGIN' sentlist 'END'{
+        $codigo += "BEGIN<br/><div style=\"margin-left:1cm\">" +
+                                    $sentlist.codigo +
+                                    "<br/></div>END";
     } ;
 
-dcllist [int nivel_identacion] returns [String procYFunc, String codigo] :
+dcllist  returns [String procYFunc, String codigo] :
     {
         $procYFunc = "";
         $codigo = "";
     }|
-    dcl[$nivel_identacion] dcllist[$nivel_identacion] {
+    dcl dcllist {
         $procYFunc = $dcl.procYFunc+$dcllist.procYFunc;
         $codigo = $dcl.codigo+"<br/>"+$dcllist.codigo;
     };
 
-sentlist[int nivel_identacion]  returns [String codigo]:
-    sent[$nivel_identacion] sentlistFactor[$nivel_identacion]{
+sentlist  returns [String codigo]:
+    sent sentlistFactor{
         $codigo = $sent.sentencia+"<br/>"+$sentlistFactor.codigo;
     };
 
 
-sentlistFactor[int nivel_identacion] returns [String codigo] :
+sentlistFactor returns [String codigo] :
   {
     $codigo = "";
   }|
-   sentlist[$nivel_identacion]{
+   sentlist{
         $codigo = $sentlist.codigo;
    };
 
-dcl [int nivel_identacion] returns [String procYFunc, String codigo] :
+dcl  returns [String procYFunc, String codigo] :
     defcte {$procYFunc = "";} |
     defvar {$procYFunc="";}|
-    defproc[$nivel_identacion] {
+    defproc {
         $procYFunc = $defproc.procedimiento;
         $codigo = $defproc.codigo;
     }|
-    deffun [$nivel_identacion] {
+    deffun  {
         $procYFunc = $deffun.funcion;
         $codigo = $deffun.codigo;
     };
@@ -77,19 +78,19 @@ defvarlistFactor : | ';' defvarlist;           //Factorizado
 varlist returns[String nombreVariables] : IDENTIFIER  varlistFactor {$nombreVariables = $IDENTIFIER.text +", "+ $varlistFactor.nombreVariables;};           //Factorizado
 varlistFactor returns[String nombreVariables] : {$nombreVariables = "";} |',' varlist {$nombreVariables = $varlist.nombreVariables;};
 
-defproc[int nivel_identacion] returns [String procedimiento, String codigo]:
+defproc returns [String procedimiento, String codigo]:
     'PROCEDURE' IDENTIFIER  formal_paramlist {
             $procedimiento ="<LI> <a href=\"#"+$IDENTIFIER.text+"\">"+$IDENTIFIER.text+" "+$formal_paramlist.variables+"</a></LI>\n";
         }
-    ';' blq[$nivel_identacion+1] ';'{
+    ';' blq ';'{
         $codigo ="<a NAME= \""+ $IDENTIFIER.text +"\" > PROCEDURE " + $IDENTIFIER.text + " " + $formal_paramlist.variables + "</a> <br/>" + $blq.codigo+";";
     };
 
-deffun[int nivel_identacion] returns[String funcion, String codigo]:
+deffun returns[String funcion, String codigo]:
     'FUNCTION' IDENTIFIER   formal_paramlist {
             $funcion ="<LI><a href=\"#"+$IDENTIFIER.text+"\">"+$IDENTIFIER.text+" "+$formal_paramlist.variables+"</a></LI>\n";
         }
-    ':' tbas ';' blq[$nivel_identacion + 1] ';'{
+    ':' tbas ';' blq ';'{
         $codigo = "<a NAME=\""+$IDENTIFIER.text+"\"> FUNCTION "+ $IDENTIFIER.text + " "+$formal_paramlist.variables+":"+$tbas.tipoDevuelto+ ";<br/>"
                     +$blq.codigo+";";
     };
@@ -98,20 +99,20 @@ formal_param returns[String variables] : varlist ':' tbas  formal_paramFactor{$v
 formal_paramFactor returns[String variables]: {$variables = "";}| ';' formal_param {$variables = $formal_param.variables ;}  ; //Factorización
 tbas returns[String tipoDevuelto] : 'integer' {$tipoDevuelto = "integer";} | 'real' {$tipoDevuelto = "real";};
 
-sent[int nivel_identacion] returns[String sentencia] :
+sent returns[String sentencia] :
      IDENTIFIER sentFactor ';'{
         $sentencia = $IDENTIFIER.text + " " + $sentFactor.sentencia + "; <br/>";
      } |
-     'IF' expcond 'THEN' blq[$nivel_identacion+1] 'ELSE' blq[$nivel_identacion+1] {
+     'IF' expcond 'THEN' blq 'ELSE' blq {
         $sentencia = "IF " + $expcond.condicion + "<br/> THEN "+ $blq.codigo + "<br/> ELSE " +$blq.codigo + ";<br/>";
      } |
-     'WHILE' expcond 'DO' blq[$nivel_identacion+1]{
+     'WHILE' expcond 'DO' blq{
         $sentencia = "WHILE " + $expcond.condicion + "<br/>" + "DO " + $blq.codigo + ";<br/>";
      } |
-     'REPEAT' blq[$nivel_identacion + 1] 'UNTIL' expcond ';' {
+     'REPEAT' blq 'UNTIL' expcond ';' {
         $sentencia = "REPEAT " + $blq.codigo + "<br/>" + "UNTIL" + $expcond.condicion + ";<br/>";
      }|
-     'FOR' IDENTIFIER ':=' exp inc exp 'DO' blq[$nivel_identacion+1] {
+     'FOR' IDENTIFIER ':=' exp inc exp 'DO' blq {
         $sentencia = "FOR " + $IDENTIFIER.text + " := " + $exp.expresion + $inc.incremento + $exp.expresion + "DO " + $blq.codigo+ "<br/>";
      };
 

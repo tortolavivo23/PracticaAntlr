@@ -165,7 +165,7 @@ public class MainParser extends Parser {
 			            System.out.println("<UL>");
 			        
 			setState(81);
-			((PrgContext)_localctx).blq = blq(0);
+			((PrgContext)_localctx).blq = blq();
 
 			            System.out.println(((PrgContext)_localctx).blq.procYFunc+"</UL>\n<HR/>");
 			            System.out.println(((PrgContext)_localctx).blq.codigo);
@@ -186,7 +186,6 @@ public class MainParser extends Parser {
 	}
 
 	public static class BlqContext extends ParserRuleContext {
-		public int nivel_identacion;
 		public String procYFunc;
 		public String codigo;
 		public DcllistContext dcllist;
@@ -197,10 +196,8 @@ public class MainParser extends Parser {
 		public SentlistContext sentlist() {
 			return getRuleContext(SentlistContext.class,0);
 		}
-		public BlqContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public BlqContext(ParserRuleContext parent, int invokingState, int nivel_identacion) {
+		public BlqContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
-			this.nivel_identacion = nivel_identacion;
 		}
 		@Override public int getRuleIndex() { return RULE_blq; }
 		@Override
@@ -218,28 +215,29 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final BlqContext blq(int nivel_identacion) throws RecognitionException {
-		BlqContext _localctx = new BlqContext(_ctx, getState(), nivel_identacion);
+	public final BlqContext blq() throws RecognitionException {
+		BlqContext _localctx = new BlqContext(_ctx, getState());
 		enterRule(_localctx, 2, RULE_blq);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(85);
-			((BlqContext)_localctx).dcllist = dcllist(_localctx.nivel_identacion);
+			((BlqContext)_localctx).dcllist = dcllist();
 
 			            ((BlqContext)_localctx).procYFunc =  ((BlqContext)_localctx).dcllist.procYFunc;
-			            ((BlqContext)_localctx).codigo =  "<div style=\"margin-left:"+_localctx.nivel_identacion+"cm\">"+
+			            ((BlqContext)_localctx).codigo =  "<div style=\"margin-left:1cm\">"+
 			                ((BlqContext)_localctx).dcllist.codigo + "</div>";
 			    
 			setState(87);
 			match(T__3);
 			setState(88);
-			((BlqContext)_localctx).sentlist = sentlist(_localctx.nivel_identacion);
+			((BlqContext)_localctx).sentlist = sentlist();
 			setState(89);
 			match(T__4);
 
-			        _localctx.codigo += "<div style=\"margin-left:"+_localctx.nivel_identacion+"cm\">BEGIN<br/>"+
-			                                    ((BlqContext)_localctx).sentlist.codigo + "<br/>END</div>";
+			        _localctx.codigo += "BEGIN<br/><div style=\"margin-left:1cm\">" +
+			                                    ((BlqContext)_localctx).sentlist.codigo +
+			                                    "<br/></div>END";
 			    
 			}
 		}
@@ -255,7 +253,6 @@ public class MainParser extends Parser {
 	}
 
 	public static class DcllistContext extends ParserRuleContext {
-		public int nivel_identacion;
 		public String procYFunc;
 		public String codigo;
 		public DclContext dcl;
@@ -266,10 +263,8 @@ public class MainParser extends Parser {
 		public DcllistContext dcllist() {
 			return getRuleContext(DcllistContext.class,0);
 		}
-		public DcllistContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public DcllistContext(ParserRuleContext parent, int invokingState, int nivel_identacion) {
+		public DcllistContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
-			this.nivel_identacion = nivel_identacion;
 		}
 		@Override public int getRuleIndex() { return RULE_dcllist; }
 		@Override
@@ -287,8 +282,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final DcllistContext dcllist(int nivel_identacion) throws RecognitionException {
-		DcllistContext _localctx = new DcllistContext(_ctx, getState(), nivel_identacion);
+	public final DcllistContext dcllist() throws RecognitionException {
+		DcllistContext _localctx = new DcllistContext(_ctx, getState());
 		enterRule(_localctx, 4, RULE_dcllist);
 		try {
 			setState(97);
@@ -310,9 +305,9 @@ public class MainParser extends Parser {
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(93);
-				((DcllistContext)_localctx).dcl = dcl(_localctx.nivel_identacion);
+				((DcllistContext)_localctx).dcl = dcl();
 				setState(94);
-				((DcllistContext)_localctx).dcllist = dcllist(_localctx.nivel_identacion);
+				((DcllistContext)_localctx).dcllist = dcllist();
 
 				        ((DcllistContext)_localctx).procYFunc =  ((DcllistContext)_localctx).dcl.procYFunc+((DcllistContext)_localctx).dcllist.procYFunc;
 				        ((DcllistContext)_localctx).codigo =  ((DcllistContext)_localctx).dcl.codigo+"<br/>"+((DcllistContext)_localctx).dcllist.codigo;
@@ -335,7 +330,6 @@ public class MainParser extends Parser {
 	}
 
 	public static class SentlistContext extends ParserRuleContext {
-		public int nivel_identacion;
 		public String codigo;
 		public SentContext sent;
 		public SentlistFactorContext sentlistFactor;
@@ -345,10 +339,8 @@ public class MainParser extends Parser {
 		public SentlistFactorContext sentlistFactor() {
 			return getRuleContext(SentlistFactorContext.class,0);
 		}
-		public SentlistContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public SentlistContext(ParserRuleContext parent, int invokingState, int nivel_identacion) {
+		public SentlistContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
-			this.nivel_identacion = nivel_identacion;
 		}
 		@Override public int getRuleIndex() { return RULE_sentlist; }
 		@Override
@@ -366,16 +358,16 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final SentlistContext sentlist(int nivel_identacion) throws RecognitionException {
-		SentlistContext _localctx = new SentlistContext(_ctx, getState(), nivel_identacion);
+	public final SentlistContext sentlist() throws RecognitionException {
+		SentlistContext _localctx = new SentlistContext(_ctx, getState());
 		enterRule(_localctx, 6, RULE_sentlist);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(99);
-			((SentlistContext)_localctx).sent = sent(_localctx.nivel_identacion);
+			((SentlistContext)_localctx).sent = sent();
 			setState(100);
-			((SentlistContext)_localctx).sentlistFactor = sentlistFactor(_localctx.nivel_identacion);
+			((SentlistContext)_localctx).sentlistFactor = sentlistFactor();
 
 			        ((SentlistContext)_localctx).codigo =  ((SentlistContext)_localctx).sent.sentencia+"<br/>"+((SentlistContext)_localctx).sentlistFactor.codigo;
 			    
@@ -393,16 +385,13 @@ public class MainParser extends Parser {
 	}
 
 	public static class SentlistFactorContext extends ParserRuleContext {
-		public int nivel_identacion;
 		public String codigo;
 		public SentlistContext sentlist;
 		public SentlistContext sentlist() {
 			return getRuleContext(SentlistContext.class,0);
 		}
-		public SentlistFactorContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public SentlistFactorContext(ParserRuleContext parent, int invokingState, int nivel_identacion) {
+		public SentlistFactorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
-			this.nivel_identacion = nivel_identacion;
 		}
 		@Override public int getRuleIndex() { return RULE_sentlistFactor; }
 		@Override
@@ -420,8 +409,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final SentlistFactorContext sentlistFactor(int nivel_identacion) throws RecognitionException {
-		SentlistFactorContext _localctx = new SentlistFactorContext(_ctx, getState(), nivel_identacion);
+	public final SentlistFactorContext sentlistFactor() throws RecognitionException {
+		SentlistFactorContext _localctx = new SentlistFactorContext(_ctx, getState());
 		enterRule(_localctx, 8, RULE_sentlistFactor);
 		try {
 			setState(107);
@@ -443,7 +432,7 @@ public class MainParser extends Parser {
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(104);
-				((SentlistFactorContext)_localctx).sentlist = sentlist(_localctx.nivel_identacion);
+				((SentlistFactorContext)_localctx).sentlist = sentlist();
 
 				        ((SentlistFactorContext)_localctx).codigo =  ((SentlistFactorContext)_localctx).sentlist.codigo;
 				   
@@ -465,7 +454,6 @@ public class MainParser extends Parser {
 	}
 
 	public static class DclContext extends ParserRuleContext {
-		public int nivel_identacion;
 		public String procYFunc;
 		public String codigo;
 		public DefprocContext defproc;
@@ -482,10 +470,8 @@ public class MainParser extends Parser {
 		public DeffunContext deffun() {
 			return getRuleContext(DeffunContext.class,0);
 		}
-		public DclContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public DclContext(ParserRuleContext parent, int invokingState, int nivel_identacion) {
+		public DclContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
-			this.nivel_identacion = nivel_identacion;
 		}
 		@Override public int getRuleIndex() { return RULE_dcl; }
 		@Override
@@ -503,8 +489,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final DclContext dcl(int nivel_identacion) throws RecognitionException {
-		DclContext _localctx = new DclContext(_ctx, getState(), nivel_identacion);
+	public final DclContext dcl() throws RecognitionException {
+		DclContext _localctx = new DclContext(_ctx, getState());
 		enterRule(_localctx, 10, RULE_dcl);
 		try {
 			setState(121);
@@ -530,7 +516,7 @@ public class MainParser extends Parser {
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(115);
-				((DclContext)_localctx).defproc = defproc(_localctx.nivel_identacion);
+				((DclContext)_localctx).defproc = defproc();
 
 				        ((DclContext)_localctx).procYFunc =  ((DclContext)_localctx).defproc.procedimiento;
 				        ((DclContext)_localctx).codigo =  ((DclContext)_localctx).defproc.codigo;
@@ -541,7 +527,7 @@ public class MainParser extends Parser {
 				enterOuterAlt(_localctx, 4);
 				{
 				setState(118);
-				((DclContext)_localctx).deffun = deffun(_localctx.nivel_identacion);
+				((DclContext)_localctx).deffun = deffun();
 
 				        ((DclContext)_localctx).procYFunc =  ((DclContext)_localctx).deffun.funcion;
 				        ((DclContext)_localctx).codigo =  ((DclContext)_localctx).deffun.codigo;
@@ -1075,7 +1061,6 @@ public class MainParser extends Parser {
 	}
 
 	public static class DefprocContext extends ParserRuleContext {
-		public int nivel_identacion;
 		public String procedimiento;
 		public String codigo;
 		public Token IDENTIFIER;
@@ -1088,10 +1073,8 @@ public class MainParser extends Parser {
 		public BlqContext blq() {
 			return getRuleContext(BlqContext.class,0);
 		}
-		public DefprocContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public DefprocContext(ParserRuleContext parent, int invokingState, int nivel_identacion) {
+		public DefprocContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
-			this.nivel_identacion = nivel_identacion;
 		}
 		@Override public int getRuleIndex() { return RULE_defproc; }
 		@Override
@@ -1109,8 +1092,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final DefprocContext defproc(int nivel_identacion) throws RecognitionException {
-		DefprocContext _localctx = new DefprocContext(_ctx, getState(), nivel_identacion);
+	public final DefprocContext defproc() throws RecognitionException {
+		DefprocContext _localctx = new DefprocContext(_ctx, getState());
 		enterRule(_localctx, 30, RULE_defproc);
 		try {
 			enterOuterAlt(_localctx, 1);
@@ -1127,7 +1110,7 @@ public class MainParser extends Parser {
 			setState(173);
 			match(T__1);
 			setState(174);
-			((DefprocContext)_localctx).blq = blq(_localctx.nivel_identacion+1);
+			((DefprocContext)_localctx).blq = blq();
 			setState(175);
 			match(T__1);
 
@@ -1147,7 +1130,6 @@ public class MainParser extends Parser {
 	}
 
 	public static class DeffunContext extends ParserRuleContext {
-		public int nivel_identacion;
 		public String funcion;
 		public String codigo;
 		public Token IDENTIFIER;
@@ -1164,10 +1146,8 @@ public class MainParser extends Parser {
 		public BlqContext blq() {
 			return getRuleContext(BlqContext.class,0);
 		}
-		public DeffunContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public DeffunContext(ParserRuleContext parent, int invokingState, int nivel_identacion) {
+		public DeffunContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
-			this.nivel_identacion = nivel_identacion;
 		}
 		@Override public int getRuleIndex() { return RULE_deffun; }
 		@Override
@@ -1185,8 +1165,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final DeffunContext deffun(int nivel_identacion) throws RecognitionException {
-		DeffunContext _localctx = new DeffunContext(_ctx, getState(), nivel_identacion);
+	public final DeffunContext deffun() throws RecognitionException {
+		DeffunContext _localctx = new DeffunContext(_ctx, getState());
 		enterRule(_localctx, 32, RULE_deffun);
 		try {
 			enterOuterAlt(_localctx, 1);
@@ -1207,7 +1187,7 @@ public class MainParser extends Parser {
 			setState(184);
 			match(T__1);
 			setState(185);
-			((DeffunContext)_localctx).blq = blq(_localctx.nivel_identacion + 1);
+			((DeffunContext)_localctx).blq = blq();
 			setState(186);
 			match(T__1);
 
@@ -1477,7 +1457,6 @@ public class MainParser extends Parser {
 	}
 
 	public static class SentContext extends ParserRuleContext {
-		public int nivel_identacion;
 		public String sentencia;
 		public Token IDENTIFIER;
 		public SentFactorContext sentFactor;
@@ -1507,10 +1486,8 @@ public class MainParser extends Parser {
 		public IncContext inc() {
 			return getRuleContext(IncContext.class,0);
 		}
-		public SentContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public SentContext(ParserRuleContext parent, int invokingState, int nivel_identacion) {
+		public SentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
-			this.nivel_identacion = nivel_identacion;
 		}
 		@Override public int getRuleIndex() { return RULE_sent; }
 		@Override
@@ -1528,8 +1505,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final SentContext sent(int nivel_identacion) throws RecognitionException {
-		SentContext _localctx = new SentContext(_ctx, getState(), nivel_identacion);
+	public final SentContext sent() throws RecognitionException {
+		SentContext _localctx = new SentContext(_ctx, getState());
 		enterRule(_localctx, 42, RULE_sent);
 		try {
 			setState(252);
@@ -1559,11 +1536,11 @@ public class MainParser extends Parser {
 				setState(223);
 				match(T__17);
 				setState(224);
-				((SentContext)_localctx).blq = blq(_localctx.nivel_identacion+1);
+				((SentContext)_localctx).blq = blq();
 				setState(225);
 				match(T__18);
 				setState(226);
-				((SentContext)_localctx).blq = blq(_localctx.nivel_identacion+1);
+				((SentContext)_localctx).blq = blq();
 
 				        ((SentContext)_localctx).sentencia =  "IF " + ((SentContext)_localctx).expcond.condicion + "<br/> THEN "+ ((SentContext)_localctx).blq.codigo + "<br/> ELSE " +((SentContext)_localctx).blq.codigo + ";<br/>";
 				     
@@ -1579,7 +1556,7 @@ public class MainParser extends Parser {
 				setState(231);
 				match(T__20);
 				setState(232);
-				((SentContext)_localctx).blq = blq(_localctx.nivel_identacion+1);
+				((SentContext)_localctx).blq = blq();
 
 				        ((SentContext)_localctx).sentencia =  "WHILE " + ((SentContext)_localctx).expcond.condicion + "<br/>" + "DO " + ((SentContext)_localctx).blq.codigo + ";<br/>";
 				     
@@ -1591,7 +1568,7 @@ public class MainParser extends Parser {
 				setState(235);
 				match(T__21);
 				setState(236);
-				((SentContext)_localctx).blq = blq(_localctx.nivel_identacion + 1);
+				((SentContext)_localctx).blq = blq();
 				setState(237);
 				match(T__22);
 				setState(238);
@@ -1621,7 +1598,7 @@ public class MainParser extends Parser {
 				setState(248);
 				match(T__20);
 				setState(249);
-				((SentContext)_localctx).blq = blq(_localctx.nivel_identacion+1);
+				((SentContext)_localctx).blq = blq();
 
 				        ((SentContext)_localctx).sentencia =  "FOR " + (((SentContext)_localctx).IDENTIFIER!=null?((SentContext)_localctx).IDENTIFIER.getText():null) + " := " + ((SentContext)_localctx).exp.expresion + ((SentContext)_localctx).inc.incremento + ((SentContext)_localctx).exp.expresion + "DO " + ((SentContext)_localctx).blq.codigo+ "<br/>";
 				     
