@@ -23,9 +23,9 @@ blq  returns [String procYFunc, String codigo]:
             $codigo = $dcllist.codigo;
     }
     'BEGIN' sentlist 'END'{
-        $codigo += "BEGIN<br/><div style=\"margin-left:1cm\">" +
+        $codigo += "BEGIN<div style=\"margin-left:1cm\">" +
                                     $sentlist.codigo +
-                                    "<br/></div>END";
+                                    "</div>END";
     } ;
 
 dcllist  returns [String procYFunc, String codigo] :
@@ -40,7 +40,7 @@ dcllist  returns [String procYFunc, String codigo] :
 
 sentlist  returns [String codigo]:
     sent sentlistFactor{
-        $codigo = $sent.sentencia+"<br/>"+$sentlistFactor.codigo;
+        $codigo = $sent.sentencia+$sentlistFactor.codigo;
     };
 
 
@@ -82,7 +82,7 @@ defproc returns [String procedimiento, String codigo]:
             $procedimiento ="<LI> <a href=\"#"+$IDENTIFIER.text+"\">"+$IDENTIFIER.text+" "+$formal_paramlist.variables+"</a></LI>\n";
         }
     ';' blq ';'{
-        $codigo ="<a NAME= \""+ $IDENTIFIER.text +"\" > PROCEDURE " + $IDENTIFIER.text + " " + $formal_paramlist.variables + "</a> <br/>" + $blq.codigo+";";
+        $codigo ="<a NAME= \""+ $IDENTIFIER.text +"\" > PROCEDURE " + $IDENTIFIER.text + " " + $formal_paramlist.variables + "</a> <br/>" + $blq.codigo+";<br>";
     };
 
 deffun returns[String funcion, String codigo]:
@@ -90,7 +90,7 @@ deffun returns[String funcion, String codigo]:
             $funcion ="<LI><a href=\"#"+$IDENTIFIER.text+"\">"+$IDENTIFIER.text+" "+$formal_paramlist.variables+"</a></LI>\n";
         }
     ':' tbas ';' blq ';'{
-        $codigo = "<a NAME=\""+$IDENTIFIER.text+"\"> FUNCTION "+ $IDENTIFIER.text + " "+$formal_paramlist.variables+":"+$tbas.tipoDevuelto+ ";<br/>"
+        $codigo = "<a NAME=\""+$IDENTIFIER.text+"\"> FUNCTION "+ $IDENTIFIER.text + " "+$formal_paramlist.variables+":"+$tbas.tipoDevuelto+ ";<br>"
                     +$blq.codigo+";";
     };
 formal_paramlist returns[String variables] : '(' formal_param ')' {$variables = "("+$formal_param.variables.substring(0,$formal_param.variables.length()-2)+")";}| {$variables = "";} ; //Expresion ʎ
@@ -100,19 +100,19 @@ tbas returns[String tipoDevuelto] : 'integer' {$tipoDevuelto = "integer";} | 're
 
 sent returns[String sentencia] :
      IDENTIFIER sentFactor ';'{
-        $sentencia = $IDENTIFIER.text + " " + $sentFactor.sentencia + "; <br/>";
+        $sentencia = $IDENTIFIER.text + " " + $sentFactor.sentencia + ";";
      } |
      'IF' expcond 'THEN' blq 'ELSE' blq {
-        $sentencia = "IF " + $expcond.condicion + "<br/> THEN "+ $blq.codigo + "<br/> ELSE " +$blq.codigo + ";<br/>";
+        $sentencia = "<br> IF " + $expcond.condicion + " THEN <br>" + $blq.codigo + "<br/> ELSE " +$blq.codigo + ";<br/>";
      } |
      'WHILE' expcond 'DO' blq{
-        $sentencia = "WHILE " + $expcond.condicion + "<br/>" + "DO " + $blq.codigo + ";<br/>";
+        $sentencia = "<br> WHILE " + $expcond.condicion + " DO <br> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div>";
      } |
      'REPEAT' blq 'UNTIL' expcond ';' {
-        $sentencia = "REPEAT " + $blq.codigo + "<br/>" + "UNTIL" + $expcond.condicion + ";<br/>";
+        $sentencia = "<br> REPEAT <br> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div> UNTIL " + $expcond.condicion + "; <br/>";
      }|
      'FOR' IDENTIFIER ':=' exp inc exp 'DO' blq {
-        $sentencia = "FOR " + $IDENTIFIER.text + " := " + $exp.expresion + $inc.incremento + $exp.expresion + "DO " + $blq.codigo+ "<br/>";
+        $sentencia = "<br> FOR " + $IDENTIFIER.text + " := " + $exp.expresion + $inc.incremento + $exp.expresion + "DO <br>" + $blq.codigo+ "<br/>";
      };
 
 sentFactor returns[String sentencia]:
@@ -163,7 +163,7 @@ explist returns[String expresiones]:
 
 explistFactor returns[String expresiones]:
     {$expresiones="";} |
-     ',' explist {$expresiones = " ,"+$explist.expresiones;}; //Factorización
+     ',' explist {$expresiones = ", "+$explist.expresiones;}; //Factorización
 
 proc_call returns[String parametros]:  subpparamlist {$parametros = $subpparamlist.parametros;} ;
 
