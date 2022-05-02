@@ -167,10 +167,18 @@ public class MainParser extends Parser {
 			setState(81);
 			((PrgContext)_localctx).blq = blq();
 
+			            // Lista de cabeceras de procedimientos y funciones
 			            System.out.println(((PrgContext)_localctx).blq.procYFunc+"</UL>\n<HR/>");
 
-			            System.out.println("<H2> Programa principal </H2>");
-			            System.out.println(((PrgContext)_localctx).blq.codigo + ".");
+			            // Código de todas las funciones y procedimientos
+
+			            // Declaraciones y sentencias del programa principal
+			            System.out.println("<HR/> \n <H2> Programa principal </H2>");
+			                // Mostramos primero constantes y variables
+			            System.out.println(((PrgContext)_localctx).blq.constantes);
+			            System.out.println(((PrgContext)_localctx).blq.variables);
+			                // Queda mostrar el código principal
+			            System.out.println(((PrgContext)_localctx).blq.codigo + "."); // ahora mismo esto muestra el código del tirón (funciones y procedimientos inclusive)
 			        
 			setState(83);
 			match(T__2);
@@ -190,6 +198,8 @@ public class MainParser extends Parser {
 	public static class BlqContext extends ParserRuleContext {
 		public String procYFunc;
 		public String codigo;
+		public String constantes;
+		public String variables;
 		public DcllistContext dcllist;
 		public SentlistContext sentlist;
 		public DcllistContext dcllist() {
@@ -228,6 +238,8 @@ public class MainParser extends Parser {
 
 			            ((BlqContext)_localctx).procYFunc =  ((BlqContext)_localctx).dcllist.procYFunc;
 			            ((BlqContext)_localctx).codigo =  ((BlqContext)_localctx).dcllist.codigo;
+			            ((BlqContext)_localctx).constantes =  ((BlqContext)_localctx).dcllist.constantes;
+			            ((BlqContext)_localctx).variables =  ((BlqContext)_localctx).dcllist.variables;
 			    
 			setState(87);
 			match(T__3);
@@ -256,6 +268,8 @@ public class MainParser extends Parser {
 	public static class DcllistContext extends ParserRuleContext {
 		public String procYFunc;
 		public String codigo;
+		public String constantes;
+		public String variables;
 		public DclContext dcl;
 		public DcllistContext dcllist;
 		public DclContext dcl() {
@@ -296,6 +310,8 @@ public class MainParser extends Parser {
 
 				        ((DcllistContext)_localctx).procYFunc =  "";
 				        ((DcllistContext)_localctx).codigo =  "";
+				        ((DcllistContext)_localctx).constantes =  "";
+				        ((DcllistContext)_localctx).variables =  "";
 				    
 				}
 				break;
@@ -312,6 +328,8 @@ public class MainParser extends Parser {
 
 				        ((DcllistContext)_localctx).procYFunc =  ((DcllistContext)_localctx).dcl.procYFunc+((DcllistContext)_localctx).dcllist.procYFunc;
 				        ((DcllistContext)_localctx).codigo =  ((DcllistContext)_localctx).dcl.codigo+"<br/>"+((DcllistContext)_localctx).dcllist.codigo;
+				        ((DcllistContext)_localctx).constantes =  ((DcllistContext)_localctx).dcl.constantes + ((DcllistContext)_localctx).dcllist.constantes;
+				        ((DcllistContext)_localctx).variables =  ((DcllistContext)_localctx).dcl.variables + ((DcllistContext)_localctx).dcllist.variables;
 				    
 				}
 				break;
@@ -457,6 +475,8 @@ public class MainParser extends Parser {
 	public static class DclContext extends ParserRuleContext {
 		public String procYFunc;
 		public String codigo;
+		public String constantes;
+		public String variables;
 		public DefcteContext defcte;
 		public DefvarContext defvar;
 		public DefprocContext defproc;
@@ -506,7 +526,9 @@ public class MainParser extends Parser {
 				((DclContext)_localctx).defcte = defcte();
 
 				        ((DclContext)_localctx).procYFunc =  "";
-				        ((DclContext)_localctx).codigo =  ((DclContext)_localctx).defcte.defConstantes;
+				        ((DclContext)_localctx).codigo =  "";
+				        ((DclContext)_localctx).constantes =  ((DclContext)_localctx).defcte.defConstantes;
+				        ((DclContext)_localctx).variables =  "";
 				    
 				}
 				break;
@@ -517,7 +539,9 @@ public class MainParser extends Parser {
 				((DclContext)_localctx).defvar = defvar();
 
 				        ((DclContext)_localctx).procYFunc = "";
-				        ((DclContext)_localctx).codigo =  ((DclContext)_localctx).defvar.defVariables;
+				        ((DclContext)_localctx).codigo =  "";
+				        ((DclContext)_localctx).constantes =  "";
+				        ((DclContext)_localctx).variables =  ((DclContext)_localctx).defvar.defVariables;
 				    
 				}
 				break;
@@ -529,6 +553,8 @@ public class MainParser extends Parser {
 
 				        ((DclContext)_localctx).procYFunc =  ((DclContext)_localctx).defproc.procedimiento;
 				        ((DclContext)_localctx).codigo =  ((DclContext)_localctx).defproc.codigo;
+				        ((DclContext)_localctx).constantes =  "";
+				        ((DclContext)_localctx).variables =  "";
 				    
 				}
 				break;
@@ -540,6 +566,8 @@ public class MainParser extends Parser {
 
 				        ((DclContext)_localctx).procYFunc =  ((DclContext)_localctx).deffun.funcion;
 				        ((DclContext)_localctx).codigo =  ((DclContext)_localctx).deffun.codigo;
+				        ((DclContext)_localctx).constantes =  "";
+				        ((DclContext)_localctx).variables =  "";
 				    
 				}
 				break;
