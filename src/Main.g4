@@ -24,8 +24,8 @@ prg:
                 // Mostramos primero constantes y variables
             System.out.println($blq.constantes);
             System.out.println($blq.variables);
-                // Queda mostrar el código principal
-            System.out.println($blq.codigo + "."); // ahora mismo esto muestra el código del tirón (funciones y procedimientos inclusive)
+                // Mostrar el código principal
+            System.out.println($blq.codigo + ".");
         }
     '.';
 
