@@ -105,7 +105,7 @@ sent returns[String sentencia] :
         $sentencia = $IDENTIFIER.text + " " + $sentFactor.sentencia + ";";
      } |
      'IF' expcond 'THEN' blq 'ELSE' blq {
-        $sentencia = "<br> IF " + $expcond.condicion + " THEN <br>" + $blq.codigo + "<br/> ELSE " +$blq.codigo + ";<br/>";
+        $sentencia = "<br> IF " + $expcond.condicion + " THEN <br> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div> ELSE <br> <div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
      } |
      'WHILE' expcond 'DO' blq{
         $sentencia = "<br> WHILE " + $expcond.condicion + " DO <br> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div>";

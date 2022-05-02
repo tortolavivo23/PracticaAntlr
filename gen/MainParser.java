@@ -168,6 +168,8 @@ public class MainParser extends Parser {
 			((PrgContext)_localctx).blq = blq();
 
 			            System.out.println(((PrgContext)_localctx).blq.procYFunc+"</UL>\n<HR/>");
+
+			            System.out.println("<H2> Programa principal </H2>");
 			            System.out.println(((PrgContext)_localctx).blq.codigo + ".");
 			        
 			setState(83);
@@ -1541,7 +1543,7 @@ public class MainParser extends Parser {
 				setState(226);
 				((SentContext)_localctx).blq = blq();
 
-				        ((SentContext)_localctx).sentencia =  "<br> IF " + ((SentContext)_localctx).expcond.condicion + " THEN <br>" + ((SentContext)_localctx).blq.codigo + "<br/> ELSE " +((SentContext)_localctx).blq.codigo + ";<br/>";
+				        ((SentContext)_localctx).sentencia =  "<br> IF " + ((SentContext)_localctx).expcond.condicion + " THEN <br> <div style=\"margin-left:1cm\">" + ((SentContext)_localctx).blq.codigo + "</div> ELSE <br> <div style=\"margin-left:1cm\"> " + ((SentContext)_localctx).blq.codigo + "</div>";
 				     
 				}
 				break;
