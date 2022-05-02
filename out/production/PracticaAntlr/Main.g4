@@ -55,7 +55,10 @@ sentlistFactor returns [String codigo] :
    };
 
 dcl  returns [String procYFunc, String codigo] :
-    defcte {$procYFunc = "";} |
+    defcte {
+        $procYFunc = "";
+        $codigo = $defcte.defConstantes;
+    } |
     defvar {
         $procYFunc="";
         $codigo = $defvar.defVariables;
@@ -69,9 +72,11 @@ dcl  returns [String procYFunc, String codigo] :
         $codigo = $deffun.codigo;
     };
 
-defcte : 'CONST' ctelist;
-ctelist : IDENTIFIER '=' simpvalue ';' ctelistFactor;
-ctelistFactor : | ctelist;
+defcte returns [String defConstantes]: 'CONST' ctelist {$defConstantes = "CONST <br>" + $ctelist.constantes + " <br>";};
+ctelist returns [String constantes]:
+    IDENTIFIER '=' simpvalue ';' ctelistFactor {$constantes = $IDENTIFIER.text + " = " + $simpvalue.constante + ";" + $ctelistFactor.constantes;};
+ctelistFactor returns [String constantes] : {$constantes = "";}| ctelist {$constantes = "<br>" + $ctelist.constantes;};
+
 simpvalue returns [String constante] :
     NUMERIC_INTEGER_CONST {$constante = $NUMERIC_INTEGER_CONST.text;} |
     NUMERIC_REAL_CONST{$constante = $NUMERIC_REAL_CONST.text;}|
