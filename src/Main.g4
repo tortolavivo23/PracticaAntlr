@@ -13,6 +13,8 @@ prg:
         }
     blq {
             System.out.println($blq.procYFunc+"</UL>\n<HR/>");
+
+            System.out.println("<H2> Programa principal </H2>");
             System.out.println($blq.codigo + ".");
         }
     '.';
