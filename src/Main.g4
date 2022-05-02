@@ -95,10 +95,10 @@ varlistFactor returns[String nombreVariables]:
 
 defproc returns [String procedimiento, String codigo]:
     'PROCEDURE' IDENTIFIER  formal_paramlist {
-            $procedimiento ="<LI> <a href=\"#"+$IDENTIFIER.text+"\">"+$IDENTIFIER.text+" "+$formal_paramlist.variables+"</a></LI>\n";
+            $procedimiento ="<LI> <a href=\"#"+$IDENTIFIER.text+"\">"+$IDENTIFIER.text+" "+$formal_paramlist.variables+";</a></LI>\n";
         }
     ';' blq ';'{
-        $codigo ="<a NAME= \""+ $IDENTIFIER.text +"\" > PROCEDURE " + $IDENTIFIER.text + " " + $formal_paramlist.variables + "</a> <br/>" + $blq.codigo+";<br>";
+        $codigo ="<a NAME= \""+ $IDENTIFIER.text +"\" > PROCEDURE " + $IDENTIFIER.text + " " + $formal_paramlist.variables + ";</a> <br/>" + $blq.codigo+";<br>";
     };
 
 deffun returns[String funcion, String codigo]:
@@ -110,8 +110,8 @@ deffun returns[String funcion, String codigo]:
                     +$blq.codigo+";";
     };
 formal_paramlist returns[String variables] : '(' formal_param ')' {$variables = "("+$formal_param.variables+")";}| {$variables = "";} ; //Expresion ʎ
-formal_param returns[String variables] : varlist ':' tbas  formal_paramFactor{$variables = $tbas.tipoDevuelto+": "+$varlist.nombreVariables+"; "+$formal_paramFactor.variables;};
-formal_paramFactor returns[String variables]: {$variables = "";}| ';' formal_param {$variables = $formal_param.variables ;}  ; //Factorización
+formal_param returns[String variables] : varlist ':' tbas  formal_paramFactor{$variables = $tbas.tipoDevuelto+": "+$varlist.nombreVariables+$formal_paramFactor.variables;};
+formal_paramFactor returns[String variables]: {$variables = "";}| ';' formal_param {$variables = "; " + $formal_param.variables ;}  ; //Factorización
 tbas returns[String tipoDevuelto] : 'integer' {$tipoDevuelto = "integer";} | 'real' {$tipoDevuelto = "real";};
 
 sent returns[String sentencia] :

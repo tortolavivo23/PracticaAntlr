@@ -1138,7 +1138,7 @@ public class MainParser extends Parser {
 			setState(179);
 			((DefprocContext)_localctx).formal_paramlist = formal_paramlist();
 
-			            ((DefprocContext)_localctx).procedimiento = "<LI> <a href=\"#"+(((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null)+"\">"+(((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null)+" "+((DefprocContext)_localctx).formal_paramlist.variables+"</a></LI>\n";
+			            ((DefprocContext)_localctx).procedimiento = "<LI> <a href=\"#"+(((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null)+"\">"+(((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null)+" "+((DefprocContext)_localctx).formal_paramlist.variables+";</a></LI>\n";
 			        
 			setState(181);
 			match(T__1);
@@ -1147,7 +1147,7 @@ public class MainParser extends Parser {
 			setState(183);
 			match(T__1);
 
-			        ((DefprocContext)_localctx).codigo = "<a NAME= \""+ (((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null) +"\" > PROCEDURE " + (((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null) + " " + ((DefprocContext)_localctx).formal_paramlist.variables + "</a> <br/>" + ((DefprocContext)_localctx).blq.codigo+";<br>";
+			        ((DefprocContext)_localctx).codigo = "<a NAME= \""+ (((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null) +"\" > PROCEDURE " + (((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null) + " " + ((DefprocContext)_localctx).formal_paramlist.variables + ";</a> <br/>" + ((DefprocContext)_localctx).blq.codigo+";<br>";
 			    
 			}
 		}
@@ -1353,7 +1353,7 @@ public class MainParser extends Parser {
 			((Formal_paramContext)_localctx).tbas = tbas();
 			setState(208);
 			((Formal_paramContext)_localctx).formal_paramFactor = formal_paramFactor();
-			((Formal_paramContext)_localctx).variables =  ((Formal_paramContext)_localctx).tbas.tipoDevuelto+": "+((Formal_paramContext)_localctx).varlist.nombreVariables+"; "+((Formal_paramContext)_localctx).formal_paramFactor.variables;
+			((Formal_paramContext)_localctx).variables =  ((Formal_paramContext)_localctx).tbas.tipoDevuelto+": "+((Formal_paramContext)_localctx).varlist.nombreVariables+((Formal_paramContext)_localctx).formal_paramFactor.variables;
 			}
 		}
 		catch (RecognitionException re) {
@@ -1412,7 +1412,7 @@ public class MainParser extends Parser {
 				match(T__1);
 				setState(213);
 				((Formal_paramFactorContext)_localctx).formal_param = formal_param();
-				((Formal_paramFactorContext)_localctx).variables =  ((Formal_paramFactorContext)_localctx).formal_param.variables ;
+				((Formal_paramFactorContext)_localctx).variables =  "; " + ((Formal_paramFactorContext)_localctx).formal_param.variables ;
 				}
 				break;
 			default:
