@@ -1,6 +1,6 @@
 PROGRAM Hello;
 VAR
-Nota: integer;
+Nota, Nota2: integer;
 
 PROCEDURE funcionAuxiliar(numero: integer; numeroReal: real; cont: integer);
 BEGIN

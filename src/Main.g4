@@ -56,7 +56,10 @@ sentlistFactor returns [String codigo] :
 
 dcl  returns [String procYFunc, String codigo] :
     defcte {$procYFunc = "";} |
-    defvar {$procYFunc="";}|
+    defvar {
+        $procYFunc="";
+        $codigo = $defvar.defVariables;
+    }|
     defproc {
         $procYFunc = $defproc.procedimiento;
         $codigo = $defproc.codigo;
@@ -73,11 +76,17 @@ simpvalue returns [String constante] :
     NUMERIC_INTEGER_CONST {$constante = $NUMERIC_INTEGER_CONST.text;} |
     NUMERIC_REAL_CONST{$constante = $NUMERIC_REAL_CONST.text;}|
     STRING_CONST{$constante = $STRING_CONST.text;};
-defvar : 'VAR' defvarlist ';';
-defvarlist : varlist ':' tbas  defvarlistFactor;     //Cambio para arreglar la recursividad izquierda
-defvarlistFactor : | ';' defvarlist;           //Factorizado
-varlist returns[String nombreVariables] : IDENTIFIER  varlistFactor {$nombreVariables = $IDENTIFIER.text +", "+ $varlistFactor.nombreVariables;};           //Factorizado
-varlistFactor returns[String nombreVariables] : {$nombreVariables = "";} |',' varlist {$nombreVariables = $varlist.nombreVariables;};
+defvar returns [String defVariables] : 'VAR' defvarlist ';' {$defVariables = "VAR <br>" + $defvarlist.variables + ";<br>";};
+defvarlist returns [String variables] :
+    varlist ':' tbas  defvarlistFactor {$variables = $varlist.nombreVariables + ": " + $tbas.tipoDevuelto + $defvarlistFactor.variables;};     //Cambio para arreglar la recursividad izquierda
+defvarlistFactor returns [String variables] :
+    {$variables = "";} |
+    ';' defvarlist {$variables = "; " + $defvarlist.variables;};           //Factorizado
+varlist returns[String nombreVariables] :
+    IDENTIFIER  varlistFactor {$nombreVariables = $IDENTIFIER.text + $varlistFactor.nombreVariables;};           //Factorizado
+varlistFactor returns[String nombreVariables]:
+    {$nombreVariables = "";} |
+    ',' varlist {$nombreVariables = ", " + $varlist.nombreVariables;};
 
 defproc returns [String procedimiento, String codigo]:
     'PROCEDURE' IDENTIFIER  formal_paramlist {
