@@ -12,25 +12,31 @@ prg:
             System.out.println("<UL>");
         }
     blq {
-            // Lista de procedimientos y funciones
+            // Lista de cabeceras de procedimientos y funciones
             System.out.println($blq.procYFunc+"</UL>\n<HR/>");
 
             // Código de todas las funciones y procedimientos
+            System.out.println($blq.codigoProc);
+            System.out.println($blq.codigoFunc);
 
             // Declaraciones y sentencias del programa principal
             System.out.println("<HR/> \n <H2> Programa principal </H2>");
+                // Mostramos primero constantes y variables
             System.out.println($blq.constantes);
             System.out.println($blq.variables);
-            System.out.println($blq.codigo + "."); // ahora mismo esto muestra el código del tirón
+                // Queda mostrar el código principal
+            System.out.println($blq.codigo + "."); // ahora mismo esto muestra el código del tirón (funciones y procedimientos inclusive)
         }
     '.';
 
-blq  returns [String procYFunc, String codigo, String constantes, String variables]:
+blq  returns [String procYFunc, String codigo, String constantes, String variables, String codigoProc, String codigoFunc]:
     dcllist {
             $procYFunc = $dcllist.procYFunc;
             $codigo = $dcllist.codigo;
             $constantes = $dcllist.constantes;
             $variables = $dcllist.variables;
+            $codigoProc = $dcllist.codigoProc;
+            $codigoFunc = $dcllist.codigoFunc;
     }
     'BEGIN' sentlist 'END'{
         $codigo += "BEGIN<div style=\"margin-left:1cm\">" +
@@ -38,18 +44,22 @@ blq  returns [String procYFunc, String codigo, String constantes, String variabl
                                     "</div>END";
     } ;
 
-dcllist  returns [String procYFunc, String codigo, String constantes, String variables] :
+dcllist  returns [String procYFunc, String codigo, String constantes, String variables, String codigoProc, String codigoFunc] :
     {
         $procYFunc = "";
         $codigo = "";
         $constantes = "";
         $variables = "";
+        $codigoProc = "";
+        $codigoFunc = "";
     }|
     dcl dcllist {
         $procYFunc = $dcl.procYFunc+$dcllist.procYFunc;
-        $codigo = $dcl.codigo+"<br/>"+$dcllist.codigo;
+        $codigo = $dcl.codigo+$dcllist.codigo;
         $constantes = $dcl.constantes + $dcllist.constantes;
         $variables = $dcl.variables + $dcllist.variables;
+        $codigoProc = $dcl.codigoProc + $dcllist.codigoProc;
+        $codigoFunc = $dcl.codigoFunc + $dcllist.codigoFunc;
     };
 
 sentlist  returns [String codigo]:
@@ -66,30 +76,38 @@ sentlistFactor returns [String codigo] :
         $codigo = $sentlist.codigo;
    };
 
-dcl  returns [String procYFunc, String codigo, String constantes, String variables] :
+dcl  returns [String procYFunc, String codigo, String constantes, String variables, String codigoProc, String codigoFunc] :
     defcte {
         $procYFunc = "";
         $codigo = "";
         $constantes = $defcte.defConstantes;
         $variables = "";
+        $codigoProc = "";
+        $codigoFunc = "";
     } |
     defvar {
         $procYFunc="";
         $codigo = "";
         $constantes = "";
         $variables = $defvar.defVariables;
+        $codigoProc = "";
+        $codigoFunc = "";
     }|
     defproc {
         $procYFunc = $defproc.procedimiento;
-        $codigo = $defproc.codigo;
+        $codigo = "";
         $constantes = "";
         $variables = "";
+        $codigoProc = $defproc.codigo;
+        $codigoFunc = "";
     }|
     deffun  {
         $procYFunc = $deffun.funcion;
-        $codigo = $deffun.codigo;
+        $codigo = "";
         $constantes = "";
         $variables = "";
+        $codigoProc = "";
+        $codigoFunc = $deffun.codigo;
     };
 
 defcte returns [String defConstantes]: 'CONST' ctelist {$defConstantes = "CONST <br>" + $ctelist.constantes + " <br>";};

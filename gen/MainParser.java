@@ -171,6 +171,8 @@ public class MainParser extends Parser {
 			            System.out.println(((PrgContext)_localctx).blq.procYFunc+"</UL>\n<HR/>");
 
 			            // Código de todas las funciones y procedimientos
+			            System.out.println(((PrgContext)_localctx).blq.codigoProc);
+			            System.out.println(((PrgContext)_localctx).blq.codigoFunc);
 
 			            // Declaraciones y sentencias del programa principal
 			            System.out.println("<HR/> \n <H2> Programa principal </H2>");
@@ -200,6 +202,8 @@ public class MainParser extends Parser {
 		public String codigo;
 		public String constantes;
 		public String variables;
+		public String codigoProc;
+		public String codigoFunc;
 		public DcllistContext dcllist;
 		public SentlistContext sentlist;
 		public DcllistContext dcllist() {
@@ -240,6 +244,8 @@ public class MainParser extends Parser {
 			            ((BlqContext)_localctx).codigo =  ((BlqContext)_localctx).dcllist.codigo;
 			            ((BlqContext)_localctx).constantes =  ((BlqContext)_localctx).dcllist.constantes;
 			            ((BlqContext)_localctx).variables =  ((BlqContext)_localctx).dcllist.variables;
+			            ((BlqContext)_localctx).codigoProc =  ((BlqContext)_localctx).dcllist.codigoProc;
+			            ((BlqContext)_localctx).codigoFunc =  ((BlqContext)_localctx).dcllist.codigoFunc;
 			    
 			setState(87);
 			match(T__3);
@@ -270,6 +276,8 @@ public class MainParser extends Parser {
 		public String codigo;
 		public String constantes;
 		public String variables;
+		public String codigoProc;
+		public String codigoFunc;
 		public DclContext dcl;
 		public DcllistContext dcllist;
 		public DclContext dcl() {
@@ -312,6 +320,8 @@ public class MainParser extends Parser {
 				        ((DcllistContext)_localctx).codigo =  "";
 				        ((DcllistContext)_localctx).constantes =  "";
 				        ((DcllistContext)_localctx).variables =  "";
+				        ((DcllistContext)_localctx).codigoProc =  "";
+				        ((DcllistContext)_localctx).codigoFunc =  "";
 				    
 				}
 				break;
@@ -327,9 +337,11 @@ public class MainParser extends Parser {
 				((DcllistContext)_localctx).dcllist = dcllist();
 
 				        ((DcllistContext)_localctx).procYFunc =  ((DcllistContext)_localctx).dcl.procYFunc+((DcllistContext)_localctx).dcllist.procYFunc;
-				        ((DcllistContext)_localctx).codigo =  ((DcllistContext)_localctx).dcl.codigo+"<br/>"+((DcllistContext)_localctx).dcllist.codigo;
+				        ((DcllistContext)_localctx).codigo =  ((DcllistContext)_localctx).dcl.codigo+((DcllistContext)_localctx).dcllist.codigo;
 				        ((DcllistContext)_localctx).constantes =  ((DcllistContext)_localctx).dcl.constantes + ((DcllistContext)_localctx).dcllist.constantes;
 				        ((DcllistContext)_localctx).variables =  ((DcllistContext)_localctx).dcl.variables + ((DcllistContext)_localctx).dcllist.variables;
+				        ((DcllistContext)_localctx).codigoProc =  ((DcllistContext)_localctx).dcl.codigoProc + ((DcllistContext)_localctx).dcllist.codigoProc;
+				        ((DcllistContext)_localctx).codigoFunc =  ((DcllistContext)_localctx).dcl.codigoFunc + ((DcllistContext)_localctx).dcllist.codigoFunc;
 				    
 				}
 				break;
@@ -477,6 +489,8 @@ public class MainParser extends Parser {
 		public String codigo;
 		public String constantes;
 		public String variables;
+		public String codigoProc;
+		public String codigoFunc;
 		public DefcteContext defcte;
 		public DefvarContext defvar;
 		public DefprocContext defproc;
@@ -529,6 +543,8 @@ public class MainParser extends Parser {
 				        ((DclContext)_localctx).codigo =  "";
 				        ((DclContext)_localctx).constantes =  ((DclContext)_localctx).defcte.defConstantes;
 				        ((DclContext)_localctx).variables =  "";
+				        ((DclContext)_localctx).codigoProc =  "";
+				        ((DclContext)_localctx).codigoFunc =  "";
 				    
 				}
 				break;
@@ -542,6 +558,8 @@ public class MainParser extends Parser {
 				        ((DclContext)_localctx).codigo =  "";
 				        ((DclContext)_localctx).constantes =  "";
 				        ((DclContext)_localctx).variables =  ((DclContext)_localctx).defvar.defVariables;
+				        ((DclContext)_localctx).codigoProc =  "";
+				        ((DclContext)_localctx).codigoFunc =  "";
 				    
 				}
 				break;
@@ -552,9 +570,11 @@ public class MainParser extends Parser {
 				((DclContext)_localctx).defproc = defproc();
 
 				        ((DclContext)_localctx).procYFunc =  ((DclContext)_localctx).defproc.procedimiento;
-				        ((DclContext)_localctx).codigo =  ((DclContext)_localctx).defproc.codigo;
+				        ((DclContext)_localctx).codigo =  "";
 				        ((DclContext)_localctx).constantes =  "";
 				        ((DclContext)_localctx).variables =  "";
+				        ((DclContext)_localctx).codigoProc =  ((DclContext)_localctx).defproc.codigo;
+				        ((DclContext)_localctx).codigoFunc =  "";
 				    
 				}
 				break;
@@ -565,9 +585,11 @@ public class MainParser extends Parser {
 				((DclContext)_localctx).deffun = deffun();
 
 				        ((DclContext)_localctx).procYFunc =  ((DclContext)_localctx).deffun.funcion;
-				        ((DclContext)_localctx).codigo =  ((DclContext)_localctx).deffun.codigo;
+				        ((DclContext)_localctx).codigo =  "";
 				        ((DclContext)_localctx).constantes =  "";
 				        ((DclContext)_localctx).variables =  "";
+				        ((DclContext)_localctx).codigoProc =  "";
+				        ((DclContext)_localctx).codigoFunc =  ((DclContext)_localctx).deffun.codigo;
 				    
 				}
 				break;
