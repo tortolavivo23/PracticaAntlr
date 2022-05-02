@@ -104,26 +104,26 @@ deffun returns[String funcion, String codigo]:
         $codigo = "<a NAME=\""+$IDENTIFIER.text+"\"> FUNCTION "+ $IDENTIFIER.text + " "+$formal_paramlist.variables+":"+$tbas.tipoDevuelto+ ";<br>"
                     +$blq.codigo+";";
     };
-formal_paramlist returns[String variables] : '(' formal_param ')' {$variables = "("+$formal_param.variables.substring(0,$formal_param.variables.length()-2)+")";}| {$variables = "";} ; //Expresion ʎ
-formal_param returns[String variables] : varlist ':' tbas  formal_paramFactor{$variables = $tbas.tipoDevuelto+": "+$varlist.nombreVariables.substring(0,$varlist.nombreVariables.length()-2)+"; "+$formal_paramFactor.variables;};
+formal_paramlist returns[String variables] : '(' formal_param ')' {$variables = "("+$formal_param.variables+")";}| {$variables = "";} ; //Expresion ʎ
+formal_param returns[String variables] : varlist ':' tbas  formal_paramFactor{$variables = $tbas.tipoDevuelto+": "+$varlist.nombreVariables+"; "+$formal_paramFactor.variables;};
 formal_paramFactor returns[String variables]: {$variables = "";}| ';' formal_param {$variables = $formal_param.variables ;}  ; //Factorización
 tbas returns[String tipoDevuelto] : 'integer' {$tipoDevuelto = "integer";} | 'real' {$tipoDevuelto = "real";};
 
 sent returns[String sentencia] :
      IDENTIFIER sentFactor ';'{
-        $sentencia = $IDENTIFIER.text + " " + $sentFactor.sentencia + ";";
+        $sentencia = "<div>" + $IDENTIFIER.text + " " + $sentFactor.sentencia + ";</div>";
      } |
      'IF' expcond 'THEN' blq 'ELSE' blq {
-        $sentencia = "<br> IF " + $expcond.condicion + " THEN <br> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div> ELSE <br> <div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
+        $sentencia = "<div> IF " + $expcond.condicion + " THEN </div> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div> <div> ELSE </div> <div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
      } |
      'WHILE' expcond 'DO' blq{
-        $sentencia = "<br> WHILE " + $expcond.condicion + " DO <br> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div>";
+        $sentencia = "<div> WHILE " + $expcond.condicion + " DO <br> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div></div>";
      } |
      'REPEAT' blq 'UNTIL' expcond ';' {
-        $sentencia = "<br> REPEAT <br> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div> UNTIL " + $expcond.condicion + "; <br/>";
+        $sentencia = "<div> REPEAT </div> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div> UNTIL " + $expcond.condicion + ";";
      }|
      'FOR' IDENTIFIER ':=' exp inc exp 'DO' blq {
-        $sentencia = "<br> FOR " + $IDENTIFIER.text + " := " + $exp.expresion + $inc.incremento + $exp.expresion + "DO <br>" + $blq.codigo+ "<br/>";
+        $sentencia = "<div> FOR " + $IDENTIFIER.text + " := " + $exp.expresion + $inc.incremento + $exp.expresion + "DO </div> <div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
      };
 
 sentFactor returns[String sentencia]:

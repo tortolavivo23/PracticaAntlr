@@ -1265,7 +1265,7 @@ public class MainParser extends Parser {
 				((Formal_paramlistContext)_localctx).formal_param = formal_param();
 				setState(195);
 				match(T__13);
-				((Formal_paramlistContext)_localctx).variables =  "("+((Formal_paramlistContext)_localctx).formal_param.variables.substring(0,((Formal_paramlistContext)_localctx).formal_param.variables.length()-2)+")";
+				((Formal_paramlistContext)_localctx).variables =  "("+((Formal_paramlistContext)_localctx).formal_param.variables+")";
 				}
 				break;
 			case T__1:
@@ -1337,7 +1337,7 @@ public class MainParser extends Parser {
 			((Formal_paramContext)_localctx).tbas = tbas();
 			setState(204);
 			((Formal_paramContext)_localctx).formal_paramFactor = formal_paramFactor();
-			((Formal_paramContext)_localctx).variables =  ((Formal_paramContext)_localctx).tbas.tipoDevuelto+": "+((Formal_paramContext)_localctx).varlist.nombreVariables.substring(0,((Formal_paramContext)_localctx).varlist.nombreVariables.length()-2)+"; "+((Formal_paramContext)_localctx).formal_paramFactor.variables;
+			((Formal_paramContext)_localctx).variables =  ((Formal_paramContext)_localctx).tbas.tipoDevuelto+": "+((Formal_paramContext)_localctx).varlist.nombreVariables+"; "+((Formal_paramContext)_localctx).formal_paramFactor.variables;
 			}
 		}
 		catch (RecognitionException re) {
@@ -1539,7 +1539,7 @@ public class MainParser extends Parser {
 				setState(222);
 				match(T__1);
 
-				        ((SentContext)_localctx).sentencia =  (((SentContext)_localctx).IDENTIFIER!=null?((SentContext)_localctx).IDENTIFIER.getText():null) + " " + ((SentContext)_localctx).sentFactor.sentencia + ";";
+				        ((SentContext)_localctx).sentencia =  "<div>" + (((SentContext)_localctx).IDENTIFIER!=null?((SentContext)_localctx).IDENTIFIER.getText():null) + " " + ((SentContext)_localctx).sentFactor.sentencia + ";</div>";
 				     
 				}
 				break;
@@ -1559,7 +1559,7 @@ public class MainParser extends Parser {
 				setState(230);
 				((SentContext)_localctx).blq = blq();
 
-				        ((SentContext)_localctx).sentencia =  "<br> IF " + ((SentContext)_localctx).expcond.condicion + " THEN <br> <div style=\"margin-left:1cm\">" + ((SentContext)_localctx).blq.codigo + "</div> ELSE <br> <div style=\"margin-left:1cm\"> " + ((SentContext)_localctx).blq.codigo + "</div>";
+				        ((SentContext)_localctx).sentencia =  "<div> IF " + ((SentContext)_localctx).expcond.condicion + " THEN </div> <div style=\"margin-left:1cm\">" + ((SentContext)_localctx).blq.codigo + "</div> <div> ELSE </div> <div style=\"margin-left:1cm\"> " + ((SentContext)_localctx).blq.codigo + "</div>";
 				     
 				}
 				break;
@@ -1575,7 +1575,7 @@ public class MainParser extends Parser {
 				setState(236);
 				((SentContext)_localctx).blq = blq();
 
-				        ((SentContext)_localctx).sentencia =  "<br> WHILE " + ((SentContext)_localctx).expcond.condicion + " DO <br> <div style=\"margin-left:1cm\">" + ((SentContext)_localctx).blq.codigo + "</div>";
+				        ((SentContext)_localctx).sentencia =  "<div> WHILE " + ((SentContext)_localctx).expcond.condicion + " DO <br> <div style=\"margin-left:1cm\">" + ((SentContext)_localctx).blq.codigo + "</div></div>";
 				     
 				}
 				break;
@@ -1593,7 +1593,7 @@ public class MainParser extends Parser {
 				setState(243);
 				match(T__1);
 
-				        ((SentContext)_localctx).sentencia =  "<br> REPEAT <br> <div style=\"margin-left:1cm\">" + ((SentContext)_localctx).blq.codigo + "</div> UNTIL " + ((SentContext)_localctx).expcond.condicion + "; <br/>";
+				        ((SentContext)_localctx).sentencia =  "<div> REPEAT </div> <div style=\"margin-left:1cm\">" + ((SentContext)_localctx).blq.codigo + "</div> UNTIL " + ((SentContext)_localctx).expcond.condicion + ";";
 				     
 				}
 				break;
@@ -1617,7 +1617,7 @@ public class MainParser extends Parser {
 				setState(253);
 				((SentContext)_localctx).blq = blq();
 
-				        ((SentContext)_localctx).sentencia =  "<br> FOR " + (((SentContext)_localctx).IDENTIFIER!=null?((SentContext)_localctx).IDENTIFIER.getText():null) + " := " + ((SentContext)_localctx).exp.expresion + ((SentContext)_localctx).inc.incremento + ((SentContext)_localctx).exp.expresion + "DO <br>" + ((SentContext)_localctx).blq.codigo+ "<br/>";
+				        ((SentContext)_localctx).sentencia =  "<div> FOR " + (((SentContext)_localctx).IDENTIFIER!=null?((SentContext)_localctx).IDENTIFIER.getText():null) + " := " + ((SentContext)_localctx).exp.expresion + ((SentContext)_localctx).inc.incremento + ((SentContext)_localctx).exp.expresion + "DO </div> <div style=\"margin-left:1cm\"> " + ((SentContext)_localctx).blq.codigo + "</div>";
 				     
 				}
 				break;

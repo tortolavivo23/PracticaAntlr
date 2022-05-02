@@ -23,6 +23,7 @@ BEGIN
     REPEAT
       BEGIN
           Nota := Nota + 1;
+          writeln("Nota aumentada!");
       END
     UNTIL (Nota = 10);
     writeln("La nota es", funcionAuxiliar(Nota, 3.05E12)); { Cálculo de la nota }
