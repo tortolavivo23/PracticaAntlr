@@ -12,10 +12,14 @@ prg:
             System.out.println("<UL>");
         }
     blq {
+            // Lista de procedimientos y funciones
             System.out.println($blq.procYFunc+"</UL>\n<HR/>");
 
+            // Código de todas las funciones y procedimientos
+
+            // Declaraciones y sentencias del programa principal
             System.out.println("<H2> Programa principal </H2>");
-            System.out.println($blq.codigo + ".");
+            System.out.println($blq.codigo + "."); // ahora mismo esto muestra todo el código del tirón
         }
     '.';
 
