@@ -234,9 +234,9 @@ public class MainParser extends Parser {
 			setState(89);
 			match(T__4);
 
-			        _localctx.codigo += "BEGIN<br/><div style=\"margin-left:1cm\">" +
+			        _localctx.codigo += "BEGIN<div style=\"margin-left:1cm\">" +
 			                                    ((BlqContext)_localctx).sentlist.codigo +
-			                                    "<br/></div>END";
+			                                    "</div>END";
 			    
 			}
 		}
@@ -368,7 +368,7 @@ public class MainParser extends Parser {
 			setState(100);
 			((SentlistContext)_localctx).sentlistFactor = sentlistFactor();
 
-			        ((SentlistContext)_localctx).codigo =  ((SentlistContext)_localctx).sent.sentencia+"<br/>"+((SentlistContext)_localctx).sentlistFactor.codigo;
+			        ((SentlistContext)_localctx).codigo =  ((SentlistContext)_localctx).sent.sentencia+((SentlistContext)_localctx).sentlistFactor.codigo;
 			    
 			}
 		}
@@ -1113,7 +1113,7 @@ public class MainParser extends Parser {
 			setState(175);
 			match(T__1);
 
-			        ((DefprocContext)_localctx).codigo = "<a NAME= \""+ (((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null) +"\" > PROCEDURE " + (((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null) + " " + ((DefprocContext)_localctx).formal_paramlist.variables + "</a> <br/>" + ((DefprocContext)_localctx).blq.codigo+";";
+			        ((DefprocContext)_localctx).codigo = "<a NAME= \""+ (((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null) +"\" > PROCEDURE " + (((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null) + " " + ((DefprocContext)_localctx).formal_paramlist.variables + "</a> <br/>" + ((DefprocContext)_localctx).blq.codigo+";<br>";
 			    
 			}
 		}
@@ -1190,7 +1190,7 @@ public class MainParser extends Parser {
 			setState(186);
 			match(T__1);
 
-			        ((DeffunContext)_localctx).codigo =  "<a NAME=\""+(((DeffunContext)_localctx).IDENTIFIER!=null?((DeffunContext)_localctx).IDENTIFIER.getText():null)+"\"> FUNCTION "+ (((DeffunContext)_localctx).IDENTIFIER!=null?((DeffunContext)_localctx).IDENTIFIER.getText():null) + " "+((DeffunContext)_localctx).formal_paramlist.variables+":"+((DeffunContext)_localctx).tbas.tipoDevuelto+ ";<br/>"
+			        ((DeffunContext)_localctx).codigo =  "<a NAME=\""+(((DeffunContext)_localctx).IDENTIFIER!=null?((DeffunContext)_localctx).IDENTIFIER.getText():null)+"\"> FUNCTION "+ (((DeffunContext)_localctx).IDENTIFIER!=null?((DeffunContext)_localctx).IDENTIFIER.getText():null) + " "+((DeffunContext)_localctx).formal_paramlist.variables+":"+((DeffunContext)_localctx).tbas.tipoDevuelto+ ";<br>"
 			                    +((DeffunContext)_localctx).blq.codigo+";";
 			    
 			}
@@ -1521,7 +1521,7 @@ public class MainParser extends Parser {
 				setState(218);
 				match(T__1);
 
-				        ((SentContext)_localctx).sentencia =  (((SentContext)_localctx).IDENTIFIER!=null?((SentContext)_localctx).IDENTIFIER.getText():null) + " " + ((SentContext)_localctx).sentFactor.sentencia + "; <br/>";
+				        ((SentContext)_localctx).sentencia =  (((SentContext)_localctx).IDENTIFIER!=null?((SentContext)_localctx).IDENTIFIER.getText():null) + " " + ((SentContext)_localctx).sentFactor.sentencia + ";";
 				     
 				}
 				break;
@@ -1541,7 +1541,7 @@ public class MainParser extends Parser {
 				setState(226);
 				((SentContext)_localctx).blq = blq();
 
-				        ((SentContext)_localctx).sentencia =  "IF " + ((SentContext)_localctx).expcond.condicion + "<br/> THEN "+ ((SentContext)_localctx).blq.codigo + "<br/> ELSE " +((SentContext)_localctx).blq.codigo + ";<br/>";
+				        ((SentContext)_localctx).sentencia =  "<br> IF " + ((SentContext)_localctx).expcond.condicion + " THEN <br>" + ((SentContext)_localctx).blq.codigo + "<br/> ELSE " +((SentContext)_localctx).blq.codigo + ";<br/>";
 				     
 				}
 				break;
@@ -1557,7 +1557,7 @@ public class MainParser extends Parser {
 				setState(232);
 				((SentContext)_localctx).blq = blq();
 
-				        ((SentContext)_localctx).sentencia =  "WHILE " + ((SentContext)_localctx).expcond.condicion + "<br/>" + "DO " + ((SentContext)_localctx).blq.codigo + ";<br/>";
+				        ((SentContext)_localctx).sentencia =  "<br> WHILE " + ((SentContext)_localctx).expcond.condicion + " DO <br> <div style=\"margin-left:1cm\">" + ((SentContext)_localctx).blq.codigo + "</div>";
 				     
 				}
 				break;
@@ -1575,7 +1575,7 @@ public class MainParser extends Parser {
 				setState(239);
 				match(T__1);
 
-				        ((SentContext)_localctx).sentencia =  "REPEAT " + ((SentContext)_localctx).blq.codigo + "<br/>" + "UNTIL" + ((SentContext)_localctx).expcond.condicion + ";<br/>";
+				        ((SentContext)_localctx).sentencia =  "<br> REPEAT <br> <div style=\"margin-left:1cm\">" + ((SentContext)_localctx).blq.codigo + "</div> UNTIL " + ((SentContext)_localctx).expcond.condicion + "; <br/>";
 				     
 				}
 				break;
@@ -1599,7 +1599,7 @@ public class MainParser extends Parser {
 				setState(249);
 				((SentContext)_localctx).blq = blq();
 
-				        ((SentContext)_localctx).sentencia =  "FOR " + (((SentContext)_localctx).IDENTIFIER!=null?((SentContext)_localctx).IDENTIFIER.getText():null) + " := " + ((SentContext)_localctx).exp.expresion + ((SentContext)_localctx).inc.incremento + ((SentContext)_localctx).exp.expresion + "DO " + ((SentContext)_localctx).blq.codigo+ "<br/>";
+				        ((SentContext)_localctx).sentencia =  "<br> FOR " + (((SentContext)_localctx).IDENTIFIER!=null?((SentContext)_localctx).IDENTIFIER.getText():null) + " := " + ((SentContext)_localctx).exp.expresion + ((SentContext)_localctx).inc.incremento + ((SentContext)_localctx).exp.expresion + "DO <br>" + ((SentContext)_localctx).blq.codigo+ "<br/>";
 				     
 				}
 				break;
@@ -2241,7 +2241,7 @@ public class MainParser extends Parser {
 				match(T__9);
 				setState(317);
 				((ExplistFactorContext)_localctx).explist = explist();
-				((ExplistFactorContext)_localctx).expresiones =  " ,"+((ExplistFactorContext)_localctx).explist.expresiones;
+				((ExplistFactorContext)_localctx).expresiones =  ", "+((ExplistFactorContext)_localctx).explist.expresiones;
 				}
 				break;
 			default:
