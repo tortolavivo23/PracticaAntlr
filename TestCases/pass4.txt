@@ -1,6 +1,9 @@
 PROGRAM Hello;
 VAR
 Nota, Nota2: integer;
+CONST
+unaConstante = 3;
+dosConstantes = "Hola";
 
 PROCEDURE funcionAuxiliar(numero: integer; numeroReal: real; cont: integer);
 BEGIN
