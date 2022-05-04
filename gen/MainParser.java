@@ -2803,7 +2803,7 @@ public class MainParser extends Parser {
 				{
 				setState(376);
 				match(T__37);
-				((OpcompContext)_localctx).comparador =  "<";
+				((OpcompContext)_localctx).comparador =  " < ";
 				}
 				break;
 			case T__38:
@@ -2811,7 +2811,7 @@ public class MainParser extends Parser {
 				{
 				setState(378);
 				match(T__38);
-				((OpcompContext)_localctx).comparador =  ">";
+				((OpcompContext)_localctx).comparador =  " > ";
 				}
 				break;
 			case T__39:
@@ -2819,7 +2819,7 @@ public class MainParser extends Parser {
 				{
 				setState(380);
 				match(T__39);
-				((OpcompContext)_localctx).comparador =  "<=";
+				((OpcompContext)_localctx).comparador =  " <= ";
 				}
 				break;
 			case T__40:
@@ -2827,7 +2827,7 @@ public class MainParser extends Parser {
 				{
 				setState(382);
 				match(T__40);
-				((OpcompContext)_localctx).comparador =  ">=";
+				((OpcompContext)_localctx).comparador =  " >= ";
 				}
 				break;
 			case T__6:
@@ -2835,7 +2835,7 @@ public class MainParser extends Parser {
 				{
 				setState(384);
 				match(T__6);
-				((OpcompContext)_localctx).comparador =  "=";
+				((OpcompContext)_localctx).comparador =  " = ";
 				}
 				break;
 			default:

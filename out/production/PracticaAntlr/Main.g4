@@ -259,17 +259,21 @@ inc returns [String incremento]: 'TO' {$incremento = formatear("TO");} | 'DOWNTO
 expcond returns [String condicion] : factorcond expcondFactor {$condicion = $factorcond.condicion + $expcondFactor.condicion;};
 expcondFactor returns[String condicion] : {$condicion = "";} | oplog expcond {$condicion = $oplog.bool + $expcond.condicion;};
 oplog returns[String bool]: 'OR'{$bool= formatear("OR");} | 'AND'{$bool = formatear("AND");};
-factorcond returns[String condicion]: e1=exp opcomp e2=exp {$condicion = $e1.expresion + $opcomp.comparador + $e2.expresion;} |
+factorcond returns[String condicion]:
+    e1=exp opcomp e2=exp {$condicion = $e1.expresion + $opcomp.comparador + $e2.expresion;
+    System.err.println($e1.expresion+"3");
+    System.err.println($e2.expresion+"3");
+    System.err.println($opcomp.comparador+"3");} |
     '(' expcond ')' {$condicion = "(" + $expcond.condicion + ")";} |
     'NOT' factorcond  {$condicion="NOT " + $factorcond.condicion;}|
     'TRUE' {$condicion="TRUE";} |
     'FALSE' {$condicion="FALSE";};
 opcomp returns[String comparador] :
-    '<' {$comparador = "<";} |
-    '>' {$comparador = ">";} |
-    '<=' {$comparador = "<=";} |
-    '>=' {$comparador = ">=";} |
-    '='{$comparador = "=";};
+    '<' {$comparador = " < ";} |
+    '>' {$comparador = " > ";} |
+    '<=' {$comparador = " <= ";} |
+    '>=' {$comparador = " >= ";} |
+    '='{$comparador = " = ";};
 
 //ANALISIS LEXICO PARTE OBLIGATORIA Y OPCIONAL
 
