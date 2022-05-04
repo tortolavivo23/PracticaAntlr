@@ -109,17 +109,20 @@ public class MainLexer extends Lexer {
 
 	    Set<String> constantesDeclaradas = new HashSet<>();
 	    Set<String> palabrasReservadas = new HashSet<String>(Arrays.asList("PROGRAM,BEGIN,END,PROCEDURE,FUNCTION,IF,THEN,ELSE,WHILE,DO,REPEAT,UNTIL,FOR,DO,DIV,MOD,NOT,TRUE,FALSE,CONST,VAR,integer,real".split(",")));
+	    Set<String> variablesDeclaradas = new HashSet<>();
 
 	    public String formatear(String cadena) {
 	        if (constantesDeclaradas.contains(cadena))
 	            return "<SPAN CLASS=\"cte\">"+cadena+"</SPAN>";
 	        if (palabrasReservadas.contains(cadena))
 	            return "<SPAN CLASS=\"palres\">"+cadena+"</SPAN>";
+	        if (variablesDeclaradas.contains(cadena))
+	            return "<SPAN CLASS=\"var\">"+cadena+"</SPAN>";
 	        return cadena;
 	    }
 
 	    public String cteSinDeclarar(String cte) {
-	        return "<SPAN CLASS=\"cte\">"+cte+"</SPAN>";
+	        return "<SPAN CLASS=\"ctesindeclarar\">"+cte+"</SPAN>";
 	    }
 
 

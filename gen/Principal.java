@@ -1,8 +1,4 @@
 import java.io.*;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-
 import org.antlr.v4.runtime.*;
 
 public class Principal {
@@ -18,8 +14,14 @@ public class Principal {
             System.out.println(".cte {" +
                     "color: blue;" +
                     "}");
+            System.out.println(".ctesindeclarar {" +
+                    "color:   #7a81d0;" +
+                    "}");
             System.out.println(".palres {" +
                     "color:  #a3350a;" +
+                    "}");
+            System.out.println(".ident {" +
+                    "color:  #4b8562;" +
                     "}");
             System.out.println("</style>");
             System.out.println("</head>");
@@ -37,6 +39,7 @@ Aquí se le llama "sintesis", pero puede ser cualquier nombre.
 NumbersParser anasint = new NumbersParser(tokens, new sintesis());
 */
             System.out.println("<body>");
+
 
             anasint.prg();
             System.out.println("</body>");

@@ -13,17 +13,20 @@ grammar Main;
 
     Set<String> constantesDeclaradas = new HashSet<>();
     Set<String> palabrasReservadas = new HashSet<String>(Arrays.asList("PROGRAM,BEGIN,END,PROCEDURE,FUNCTION,IF,THEN,ELSE,WHILE,DO,REPEAT,UNTIL,FOR,DO,DIV,MOD,NOT,TRUE,FALSE,CONST,VAR,integer,real".split(",")));
+    Set<String> variablesDeclaradas = new HashSet<>();
 
     public String formatear(String cadena) {
         if (constantesDeclaradas.contains(cadena))
             return "<SPAN CLASS=\"cte\">"+cadena+"</SPAN>";
         if (palabrasReservadas.contains(cadena))
             return "<SPAN CLASS=\"palres\">"+cadena+"</SPAN>";
+        if (variablesDeclaradas.contains(cadena))
+            return "<SPAN CLASS=\"var\">"+cadena+"</SPAN>";
         return cadena;
     }
 
     public String cteSinDeclarar(String cte) {
-        return "<SPAN CLASS=\"cte\">"+cte+"</SPAN>";
+        return "<SPAN CLASS=\"ctesindeclarar\">"+cte+"</SPAN>";
     }
 }
 
@@ -155,7 +158,10 @@ defvarlistFactor returns [String variables] :
     {$variables = "";} |
     ';' defvarlist {$variables = "; " + $defvarlist.variables;};           //Factorizado
 varlist returns[String nombreVariables] :
-    IDENTIFIER  varlistFactor {$nombreVariables = $IDENTIFIER.text + $varlistFactor.nombreVariables;};           //Factorizado
+    IDENTIFIER  varlistFactor {
+        $nombreVariables = $IDENTIFIER.text + $varlistFactor.nombreVariables;
+        variablesDeclaradas.add($IDENTIFIER.text);
+    };           //Factorizado
 varlistFactor returns[String nombreVariables]:
     {$nombreVariables = "";} |
     ',' varlist {$nombreVariables = ", " + $varlist.nombreVariables;};
@@ -260,10 +266,7 @@ expcond returns [String condicion] : factorcond expcondFactor {$condicion = $fac
 expcondFactor returns[String condicion] : {$condicion = "";} | oplog expcond {$condicion = $oplog.bool + $expcond.condicion;};
 oplog returns[String bool]: 'OR'{$bool= formatear("OR");} | 'AND'{$bool = formatear("AND");};
 factorcond returns[String condicion]:
-    e1=exp opcomp e2=exp {$condicion = $e1.expresion + $opcomp.comparador + $e2.expresion;
-    System.err.println($e1.expresion+"3");
-    System.err.println($e2.expresion+"3");
-    System.err.println($opcomp.comparador+"3");} |
+    e1=exp opcomp e2=exp {$condicion = $e1.expresion + $opcomp.comparador + $e2.expresion;} |
     '(' expcond ')' {$condicion = "(" + $expcond.condicion + ")";} |
     'NOT' factorcond  {$condicion="NOT " + $factorcond.condicion;}|
     'TRUE' {$condicion="TRUE";} |
