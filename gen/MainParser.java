@@ -3,6 +3,8 @@
     import java.util.Set;
     import java.util.HashSet;
     import java.util.Arrays;
+    import java.util.Map;
+    import java.util.HashMap;
 
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -124,15 +126,13 @@ public class MainParser extends Parser {
 
 	    Set<String> constantesDeclaradas = new HashSet<>();
 	    Set<String> palabrasReservadas = new HashSet<String>(Arrays.asList("PROGRAM,BEGIN,END,PROCEDURE,FUNCTION,IF,THEN,ELSE,WHILE,DO,REPEAT,UNTIL,FOR,DO,DIV,MOD,NOT,TRUE,FALSE,CONST,VAR,integer,real".split(",")));
-	    Set<String> variablesDeclaradas = new HashSet<>();
+
 
 	    public String formatear(String cadena) {
 	        if (constantesDeclaradas.contains(cadena))
 	            return "<SPAN CLASS=\"cte\">"+cadena+"</SPAN>";
 	        if (palabrasReservadas.contains(cadena))
 	            return "<SPAN CLASS=\"palres\">"+cadena+"</SPAN>";
-	        if (variablesDeclaradas.contains(cadena))
-	            return "<SPAN CLASS=\"var\">"+cadena+"</SPAN>";
 	        return cadena;
 	    }
 
@@ -1098,7 +1098,6 @@ public class MainParser extends Parser {
 			((VarlistContext)_localctx).varlistFactor = varlistFactor();
 
 			        ((VarlistContext)_localctx).nombreVariables =  (((VarlistContext)_localctx).IDENTIFIER!=null?((VarlistContext)_localctx).IDENTIFIER.getText():null) + ((VarlistContext)_localctx).varlistFactor.nombreVariables;
-			        variablesDeclaradas.add((((VarlistContext)_localctx).IDENTIFIER!=null?((VarlistContext)_localctx).IDENTIFIER.getText():null));
 			    
 			}
 		}
@@ -1222,6 +1221,7 @@ public class MainParser extends Parser {
 			((DefprocContext)_localctx).formal_paramlist = formal_paramlist();
 
 			            ((DefprocContext)_localctx).procedimiento = "<LI> <a href=\"#"+(((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null)+"\">"+(((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null)+" "+((DefprocContext)_localctx).formal_paramlist.variables+";</a></LI>\n";
+
 			        
 			setState(181);
 			match(T__1);

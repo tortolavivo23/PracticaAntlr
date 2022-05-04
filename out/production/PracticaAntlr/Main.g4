@@ -7,21 +7,21 @@ grammar Main;
     import java.util.Set;
     import java.util.HashSet;
     import java.util.Arrays;
+    import java.util.Map;
+    import java.util.HashMap;
 }
 
 @members {
 
     Set<String> constantesDeclaradas = new HashSet<>();
     Set<String> palabrasReservadas = new HashSet<String>(Arrays.asList("PROGRAM,BEGIN,END,PROCEDURE,FUNCTION,IF,THEN,ELSE,WHILE,DO,REPEAT,UNTIL,FOR,DO,DIV,MOD,NOT,TRUE,FALSE,CONST,VAR,integer,real".split(",")));
-    Set<String> variablesDeclaradas = new HashSet<>();
+
 
     public String formatear(String cadena) {
         if (constantesDeclaradas.contains(cadena))
             return "<SPAN CLASS=\"cte\">"+cadena+"</SPAN>";
         if (palabrasReservadas.contains(cadena))
             return "<SPAN CLASS=\"palres\">"+cadena+"</SPAN>";
-        if (variablesDeclaradas.contains(cadena))
-            return "<SPAN CLASS=\"var\">"+cadena+"</SPAN>";
         return cadena;
     }
 
@@ -160,7 +160,6 @@ defvarlistFactor returns [String variables] :
 varlist returns[String nombreVariables] :
     IDENTIFIER  varlistFactor {
         $nombreVariables = $IDENTIFIER.text + $varlistFactor.nombreVariables;
-        variablesDeclaradas.add($IDENTIFIER.text);
     };           //Factorizado
 varlistFactor returns[String nombreVariables]:
     {$nombreVariables = "";} |
@@ -169,6 +168,7 @@ varlistFactor returns[String nombreVariables]:
 defproc returns [String procedimiento, String codigo]:
     'PROCEDURE' IDENTIFIER  formal_paramlist {
             $procedimiento ="<LI> <a href=\"#"+$IDENTIFIER.text+"\">"+$IDENTIFIER.text+" "+$formal_paramlist.variables+";</a></LI>\n";
+
         }
     ';' blq ';'{
         $codigo ="<a NAME= \""+ $IDENTIFIER.text +"\" >"+ formatear("PROCEDURE") + "  " + $IDENTIFIER.text + " " + $formal_paramlist.variables + ";</a> <br/>" + $blq.codigo+";<br>";
