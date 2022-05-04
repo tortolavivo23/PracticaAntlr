@@ -3,6 +3,26 @@
 grammar Main;
 
 //ANALISIS SEMANTICO PARTE OBLIGATORIA
+@header {
+    import java.util.Set;
+    import java.util.HashSet;
+    import java.util.Arrays;
+}
+
+@members {
+
+    Set<String> constantesDeclaradas = new HashSet<>();
+    Set<String> palabrasReservadas = new HashSet<String>(Arrays.asList("PROGRAM,BEGIN,END,PROCEDURE,FUNCTION,IF,THEN,ELSE,WHILE,DO,REPEAT,UNTIL,FOR,DO,DIV,MOD,NOT,TRUE,FALSE,CONST,VAR,integer,real".split(",")));
+
+    public String formatear(String cadena) {
+        if (constantesDeclaradas.contains(cadena))
+            return "<SPAN CLASS=\"cte\">"+cadena+"</SPAN>";
+        if (palabrasReservadas.contains(cadena))
+            return "<SPAN CLASS=\"palres\">"+cadena+"</SPAN>";
+        return cadena;
+    }
+}
+
 
 prg:
     'PROGRAM' IDENTIFIER {
@@ -39,9 +59,9 @@ blq  returns [String procYFunc, String codigo, String constantes, String variabl
             $codigoFunc = $dcllist.codigoFunc;
     }
     'BEGIN' sentlist 'END'{
-        $codigo += "BEGIN<div style=\"margin-left:1cm\">" +
+        $codigo += formatear("BEGIN") + "<div style=\"margin-left:1cm\">" +
                                     $sentlist.codigo +
-                                    "</div>END";
+                                    "</div>"+ formatear("END");
     } ;
 
 dcllist  returns [String procYFunc, String codigo, String constantes, String variables, String codigoProc, String codigoFunc] :
@@ -110,16 +130,21 @@ dcl  returns [String procYFunc, String codigo, String constantes, String variabl
         $codigoFunc = $deffun.codigo;
     };
 
-defcte returns [String defConstantes]: 'CONST' ctelist {$defConstantes = "CONST <br>" + $ctelist.constantes + " <br>";};
-ctelist returns [String constantes]:
-    IDENTIFIER '=' simpvalue ';' ctelistFactor {$constantes = $IDENTIFIER.text + " = " + $simpvalue.constante + ";" + $ctelistFactor.constantes;};
+defcte returns [String defConstantes]: 'CONST' ctelist {$defConstantes = formatear("CONST")+" <br>" + $ctelist.constantes + " <br>";};
+ctelist returns [String constantes, String tipoId]:
+    IDENTIFIER '=' simpvalue ';' ctelistFactor
+        {
+            // if (constantesDeclaradas.contains($IDENTIFIER.text)||variables||...) // esto debería dar un error de oye ya hay una constante declarada
+            $constantes = $IDENTIFIER.text + " = " + $simpvalue.constante + ";" + $ctelistFactor.constantes;
+            constantesDeclaradas.add($IDENTIFIER.text);
+        };
 ctelistFactor returns [String constantes] : {$constantes = "";}| ctelist {$constantes = "<br>" + $ctelist.constantes;};
 
 simpvalue returns [String constante] :
     NUMERIC_INTEGER_CONST {$constante = $NUMERIC_INTEGER_CONST.text;} |
     NUMERIC_REAL_CONST{$constante = $NUMERIC_REAL_CONST.text;}|
     STRING_CONST{$constante = $STRING_CONST.text;};
-defvar returns [String defVariables] : 'VAR' defvarlist ';' {$defVariables = "VAR <br>" + $defvarlist.variables + ";<br>";};
+defvar returns [String defVariables] : 'VAR' defvarlist ';' {$defVariables = formatear("VAR")+" <br>" + $defvarlist.variables + ";<br>";};
 defvarlist returns [String variables] :
     varlist ':' tbas  defvarlistFactor {$variables = $varlist.nombreVariables + ": " + $tbas.tipoDevuelto + $defvarlistFactor.variables;};     //Cambio para arreglar la recursividad izquierda
 defvarlistFactor returns [String variables] :
@@ -136,7 +161,7 @@ defproc returns [String procedimiento, String codigo]:
             $procedimiento ="<LI> <a href=\"#"+$IDENTIFIER.text+"\">"+$IDENTIFIER.text+" "+$formal_paramlist.variables+";</a></LI>\n";
         }
     ';' blq ';'{
-        $codigo ="<a NAME= \""+ $IDENTIFIER.text +"\" > PROCEDURE " + $IDENTIFIER.text + " " + $formal_paramlist.variables + ";</a> <br/>" + $blq.codigo+";<br>";
+        $codigo ="<a NAME= \""+ $IDENTIFIER.text +"\" >"+ formatear("PROCEDURE") + "  " + $IDENTIFIER.text + " " + $formal_paramlist.variables + ";</a> <br/>" + $blq.codigo+";<br>";
     };
 
 deffun returns[String funcion, String codigo]:
@@ -144,29 +169,29 @@ deffun returns[String funcion, String codigo]:
             $funcion ="<LI><a href=\"#"+$IDENTIFIER.text+"\">"+$IDENTIFIER.text+" "+$formal_paramlist.variables+"</a></LI>\n";
         }
     ':' tbas ';' blq ';'{
-        $codigo = "<a NAME=\""+$IDENTIFIER.text+"\"> FUNCTION "+ $IDENTIFIER.text + " "+$formal_paramlist.variables+":"+$tbas.tipoDevuelto+ ";<br>"
+        $codigo = "<a NAME=\""+$IDENTIFIER.text+"\">"+ formatear("FUNCTION") + " " + $IDENTIFIER.text + " "+$formal_paramlist.variables+":"+$tbas.tipoDevuelto+ ";<br>"
                     +$blq.codigo+";";
     };
 formal_paramlist returns[String variables] : '(' formal_param ')' {$variables = "("+$formal_param.variables+")";}| {$variables = "";} ; //Expresion ʎ
 formal_param returns[String variables] : varlist ':' tbas  formal_paramFactor{$variables = $tbas.tipoDevuelto+": "+$varlist.nombreVariables+$formal_paramFactor.variables;};
 formal_paramFactor returns[String variables]: {$variables = "";}| ';' formal_param {$variables = "; " + $formal_param.variables ;}  ; //Factorización
-tbas returns[String tipoDevuelto] : 'integer' {$tipoDevuelto = "integer";} | 'real' {$tipoDevuelto = "real";};
+tbas returns[String tipoDevuelto] : 'integer' {$tipoDevuelto = formatear("integer");} | 'real' {$tipoDevuelto = formatear("real");};
 
 sent returns[String sentencia] :
      IDENTIFIER sentFactor ';'{
-        $sentencia = "<div>" + $IDENTIFIER.text + " " + $sentFactor.sentencia + ";</div>";
+        $sentencia = "<div>" + formatear($IDENTIFIER.text) + " " + $sentFactor.sentencia + ";</div>";
      } |
      'IF' expcond 'THEN' blq 'ELSE' blq {
-        $sentencia = "<div> IF " + $expcond.condicion + " THEN </div> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div> <div> ELSE </div> <div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
+        $sentencia = "<div> "+formatear("IF")+" " + $expcond.condicion + " "+formatear("THEN")+" </div> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div> <div> "+formatear("ELSE")+" </div> <div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
      } |
      'WHILE' expcond 'DO' blq{
-        $sentencia = "<div> WHILE " + $expcond.condicion + " DO <br> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div></div>";
+        $sentencia = "<div> "+formatear("WHILE")+" " + $expcond.condicion + " "+formatear("DO")+" <br> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div></div>";
      } |
      'REPEAT' blq 'UNTIL' expcond ';' {
-        $sentencia = "<div> REPEAT </div> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div> UNTIL " + $expcond.condicion + ";";
+        $sentencia = "<div> "+formatear("REPEAT")+" </div> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div> "+formatear("UNTIL")+" " + $expcond.condicion + ";";
      }|
      'FOR' IDENTIFIER ':=' exp inc exp 'DO' blq {
-        $sentencia = "<div> FOR " + $IDENTIFIER.text + " := " + $exp.expresion + $inc.incremento + $exp.expresion + "DO </div> <div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
+        $sentencia = "<div> "+formatear("FOR")+" " + $IDENTIFIER.text + " := " + $exp.expresion + $inc.incremento + $exp.expresion + formatear("DO") +" </div> <div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
      };
 
 sentFactor returns[String sentencia]:
@@ -193,8 +218,8 @@ op returns[String simbolo]:
     '+' {$simbolo = "+";} |
     '-' {$simbolo = "-";}|
     '*' {$simbolo = "*";} |
-    'DIV' {$simbolo = "DIV";} |
-    'MOD' {$simbolo = "MOD";};
+    'DIV' {$simbolo = formatear("DIV");} |
+    'MOD' {$simbolo = formatear("MOD");};
 
 factor returns[String variable] :
     simpvalue{
@@ -204,7 +229,7 @@ factor returns[String variable] :
         $variable = "("+$exp.expresion+")";
     } |
     IDENTIFIER subpparamlist{
-        $variable = $IDENTIFIER.text +" " + $subpparamlist.parametros;
+        $variable = formatear($IDENTIFIER.text) +" " + $subpparamlist.parametros;
     };
 subpparamlist returns[String parametros]:
     {$parametros="";} |
@@ -226,10 +251,10 @@ proc_call returns[String parametros]:  subpparamlist {$parametros = $subpparamli
 //ANALISIS SINTACTICO PARTE OPCIONAL
 
 //Las añadidas a sent estan en la de arriba
-inc returns [String incremento]: 'TO' {$incremento = "TO";} | 'DOWNTO' {$incremento = "DOWNTO";};
+inc returns [String incremento]: 'TO' {$incremento = formatear("TO");} | 'DOWNTO' {$incremento = formatear("DOWNTO");};
 expcond returns [String condicion] : factorcond expcondFactor {$condicion = $factorcond.condicion + $expcondFactor.condicion;};
 expcondFactor returns[String condicion] : {$condicion = "";} | oplog expcond {$condicion = $oplog.bool + $expcond.condicion;};
-oplog returns[String bool]: 'OR'{$bool= "OR";} | 'AND'{$bool = "AND";};
+oplog returns[String bool]: 'OR'{$bool= formatear("OR");} | 'AND'{$bool = formatear("AND");};
 factorcond returns[String condicion]: e1=exp opcomp e2=exp {$condicion = $e1.expresion + $opcomp.comparador + $e2.expresion;} |
     '(' expcond ')' {$condicion = "(" + $expcond.condicion + ")";} |
     'NOT' factorcond  {$condicion="NOT " + $factorcond.condicion;}|

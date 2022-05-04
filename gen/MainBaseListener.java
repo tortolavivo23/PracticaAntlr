@@ -1,5 +1,10 @@
 // Generated from /home/heqro/IdeaProjects/PracticaAntlr/src/Main.g4 by ANTLR 4.10.1
 
+    import java.util.Set;
+    import java.util.HashSet;
+    import java.util.Arrays;
+
+
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;

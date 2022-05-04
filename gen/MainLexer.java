@@ -1,4 +1,9 @@
 // Generated from /home/heqro/IdeaProjects/PracticaAntlr/src/Main.g4 by ANTLR 4.10.1
+
+    import java.util.Set;
+    import java.util.HashSet;
+    import java.util.Arrays;
+
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
@@ -99,6 +104,19 @@ public class MainLexer extends Lexer {
 	public Vocabulary getVocabulary() {
 		return VOCABULARY;
 	}
+
+
+
+	    Set<String> constantesDeclaradas = new HashSet<>();
+	    Set<String> palabrasReservadas = new HashSet<String>(Arrays.asList("PROGRAM,BEGIN,END,PROCEDURE,FUNCTION,IF,THEN,ELSE,WHILE,DO,REPEAT,UNTIL,FOR,DO,DIV,MOD,NOT,TRUE,FALSE,CONST,VAR,integer,real".split(",")));
+
+	    public String formatear(String cadena) {
+	        if (constantesDeclaradas.contains(cadena))
+	            return "<SPAN CLASS=\"cte\">"+cadena+"</SPAN>";
+	        if (palabrasReservadas.contains(cadena))
+	            return "<SPAN CLASS=\"palres\">"+cadena+"</SPAN>";
+	        return cadena;
+	    }
 
 
 	public MainLexer(CharStream input) {

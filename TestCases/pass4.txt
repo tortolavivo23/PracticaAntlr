@@ -16,7 +16,7 @@ END;
 PROCEDURE funcionAuxiliar2(numero: integer; numeroReal: real; cont: integer);
 BEGIN
     numero := numeroReal * (numero + 2);
-    WHILE (cont < "3") DO BEGIN
+    WHILE (cont < unaConstante) DO BEGIN
         funcionAuxiliar(numero, numeroReal, cont + 1);
     END
 END;
@@ -28,7 +28,8 @@ BEGIN
           Nota := Nota + 1;
           writeln("Nota aumentada!");
       END
-    UNTIL (Nota = 10);
+    UNTIL (Nota = unaConstante);
     writeln("La nota es", funcionAuxiliar(Nota, 3.05E12)); { Cálculo de la nota }
     variable := 4 + 5 DIV 3;
+    writeln(dosConstantes);
 END.

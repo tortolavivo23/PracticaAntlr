@@ -1,4 +1,9 @@
 // Generated from /home/heqro/IdeaProjects/PracticaAntlr/src/Main.g4 by ANTLR 4.10.1
+
+    import java.util.Set;
+    import java.util.HashSet;
+    import java.util.Arrays;
+
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -115,6 +120,19 @@ public class MainParser extends Parser {
 	@Override
 	public ATN getATN() { return _ATN; }
 
+
+
+	    Set<String> constantesDeclaradas = new HashSet<>();
+	    Set<String> palabrasReservadas = new HashSet<String>(Arrays.asList("PROGRAM,BEGIN,END,PROCEDURE,FUNCTION,IF,THEN,ELSE,WHILE,DO,REPEAT,UNTIL,FOR,DO,DIV,MOD,NOT,TRUE,FALSE,CONST,VAR,integer,real".split(",")));
+
+	    public String formatear(String cadena) {
+	        if (constantesDeclaradas.contains(cadena))
+	            return "<SPAN CLASS=\"cte\">"+cadena+"</SPAN>";
+	        if (palabrasReservadas.contains(cadena))
+	            return "<SPAN CLASS=\"palres\">"+cadena+"</SPAN>";
+	        return cadena;
+	    }
+
 	public MainParser(TokenStream input) {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
@@ -179,8 +197,8 @@ public class MainParser extends Parser {
 			                // Mostramos primero constantes y variables
 			            System.out.println(((PrgContext)_localctx).blq.constantes);
 			            System.out.println(((PrgContext)_localctx).blq.variables);
-			                // Queda mostrar el código principal
-			            System.out.println(((PrgContext)_localctx).blq.codigo + "."); // ahora mismo esto muestra el código del tirón (funciones y procedimientos inclusive)
+			                // Mostrar el código principal
+			            System.out.println(((PrgContext)_localctx).blq.codigo + ".");
 			        
 			setState(83);
 			match(T__2);
@@ -254,9 +272,9 @@ public class MainParser extends Parser {
 			setState(89);
 			match(T__4);
 
-			        _localctx.codigo += "BEGIN<div style=\"margin-left:1cm\">" +
+			        _localctx.codigo += formatear("BEGIN") + "<div style=\"margin-left:1cm\">" +
 			                                    ((BlqContext)_localctx).sentlist.codigo +
-			                                    "</div>END";
+			                                    "</div>"+ formatear("END");
 			    
 			}
 		}
@@ -643,7 +661,7 @@ public class MainParser extends Parser {
 			match(T__5);
 			setState(124);
 			((DefcteContext)_localctx).ctelist = ctelist();
-			((DefcteContext)_localctx).defConstantes =  "CONST <br>" + ((DefcteContext)_localctx).ctelist.constantes + " <br>";
+			((DefcteContext)_localctx).defConstantes =  formatear("CONST")+" <br>" + ((DefcteContext)_localctx).ctelist.constantes + " <br>";
 			}
 		}
 		catch (RecognitionException re) {
@@ -659,6 +677,7 @@ public class MainParser extends Parser {
 
 	public static class CtelistContext extends ParserRuleContext {
 		public String constantes;
+		public String tipoId;
 		public Token IDENTIFIER;
 		public SimpvalueContext simpvalue;
 		public CtelistFactorContext ctelistFactor;
@@ -704,7 +723,11 @@ public class MainParser extends Parser {
 			match(T__1);
 			setState(131);
 			((CtelistContext)_localctx).ctelistFactor = ctelistFactor();
-			((CtelistContext)_localctx).constantes =  (((CtelistContext)_localctx).IDENTIFIER!=null?((CtelistContext)_localctx).IDENTIFIER.getText():null) + " = " + ((CtelistContext)_localctx).simpvalue.constante + ";" + ((CtelistContext)_localctx).ctelistFactor.constantes;
+
+			            // if (constantesDeclaradas.contains((((CtelistContext)_localctx).IDENTIFIER!=null?((CtelistContext)_localctx).IDENTIFIER.getText():null))||variables||...) // esto debería dar un error de oye ya hay una constante declarada
+			            ((CtelistContext)_localctx).constantes =  (((CtelistContext)_localctx).IDENTIFIER!=null?((CtelistContext)_localctx).IDENTIFIER.getText():null) + " = " + ((CtelistContext)_localctx).simpvalue.constante + ";" + ((CtelistContext)_localctx).ctelistFactor.constantes;
+			            constantesDeclaradas.add((((CtelistContext)_localctx).IDENTIFIER!=null?((CtelistContext)_localctx).IDENTIFIER.getText():null));
+			        
 			}
 		}
 		catch (RecognitionException re) {
@@ -893,7 +916,7 @@ public class MainParser extends Parser {
 			((DefvarContext)_localctx).defvarlist = defvarlist();
 			setState(150);
 			match(T__1);
-			((DefvarContext)_localctx).defVariables =  "VAR <br>" + ((DefvarContext)_localctx).defvarlist.variables + ";<br>";
+			((DefvarContext)_localctx).defVariables =  formatear("VAR")+" <br>" + ((DefvarContext)_localctx).defvarlist.variables + ";<br>";
 			}
 		}
 		catch (RecognitionException re) {
@@ -1197,7 +1220,7 @@ public class MainParser extends Parser {
 			setState(183);
 			match(T__1);
 
-			        ((DefprocContext)_localctx).codigo = "<a NAME= \""+ (((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null) +"\" > PROCEDURE " + (((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null) + " " + ((DefprocContext)_localctx).formal_paramlist.variables + ";</a> <br/>" + ((DefprocContext)_localctx).blq.codigo+";<br>";
+			        ((DefprocContext)_localctx).codigo = "<a NAME= \""+ (((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null) +"\" >"+ formatear("PROCEDURE") + "  " + (((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null) + " " + ((DefprocContext)_localctx).formal_paramlist.variables + ";</a> <br/>" + ((DefprocContext)_localctx).blq.codigo+";<br>";
 			    
 			}
 		}
@@ -1274,7 +1297,7 @@ public class MainParser extends Parser {
 			setState(194);
 			match(T__1);
 
-			        ((DeffunContext)_localctx).codigo =  "<a NAME=\""+(((DeffunContext)_localctx).IDENTIFIER!=null?((DeffunContext)_localctx).IDENTIFIER.getText():null)+"\"> FUNCTION "+ (((DeffunContext)_localctx).IDENTIFIER!=null?((DeffunContext)_localctx).IDENTIFIER.getText():null) + " "+((DeffunContext)_localctx).formal_paramlist.variables+":"+((DeffunContext)_localctx).tbas.tipoDevuelto+ ";<br>"
+			        ((DeffunContext)_localctx).codigo =  "<a NAME=\""+(((DeffunContext)_localctx).IDENTIFIER!=null?((DeffunContext)_localctx).IDENTIFIER.getText():null)+"\">"+ formatear("FUNCTION") + " " + (((DeffunContext)_localctx).IDENTIFIER!=null?((DeffunContext)_localctx).IDENTIFIER.getText():null) + " "+((DeffunContext)_localctx).formal_paramlist.variables+":"+((DeffunContext)_localctx).tbas.tipoDevuelto+ ";<br>"
 			                    +((DeffunContext)_localctx).blq.codigo+";";
 			    
 			}
@@ -1513,7 +1536,7 @@ public class MainParser extends Parser {
 				{
 				setState(218);
 				match(T__14);
-				((TbasContext)_localctx).tipoDevuelto =  "integer";
+				((TbasContext)_localctx).tipoDevuelto =  formatear("integer");
 				}
 				break;
 			case T__15:
@@ -1521,7 +1544,7 @@ public class MainParser extends Parser {
 				{
 				setState(220);
 				match(T__15);
-				((TbasContext)_localctx).tipoDevuelto =  "real";
+				((TbasContext)_localctx).tipoDevuelto =  formatear("real");
 				}
 				break;
 			default:
@@ -1605,7 +1628,7 @@ public class MainParser extends Parser {
 				setState(226);
 				match(T__1);
 
-				        ((SentContext)_localctx).sentencia =  "<div>" + (((SentContext)_localctx).IDENTIFIER!=null?((SentContext)_localctx).IDENTIFIER.getText():null) + " " + ((SentContext)_localctx).sentFactor.sentencia + ";</div>";
+				        ((SentContext)_localctx).sentencia =  "<div>" + formatear((((SentContext)_localctx).IDENTIFIER!=null?((SentContext)_localctx).IDENTIFIER.getText():null)) + " " + ((SentContext)_localctx).sentFactor.sentencia + ";</div>";
 				     
 				}
 				break;
@@ -1625,7 +1648,7 @@ public class MainParser extends Parser {
 				setState(234);
 				((SentContext)_localctx).blq = blq();
 
-				        ((SentContext)_localctx).sentencia =  "<div> IF " + ((SentContext)_localctx).expcond.condicion + " THEN </div> <div style=\"margin-left:1cm\">" + ((SentContext)_localctx).blq.codigo + "</div> <div> ELSE </div> <div style=\"margin-left:1cm\"> " + ((SentContext)_localctx).blq.codigo + "</div>";
+				        ((SentContext)_localctx).sentencia =  "<div> "+formatear("IF")+" " + ((SentContext)_localctx).expcond.condicion + " "+formatear("THEN")+" </div> <div style=\"margin-left:1cm\">" + ((SentContext)_localctx).blq.codigo + "</div> <div> "+formatear("ELSE")+" </div> <div style=\"margin-left:1cm\"> " + ((SentContext)_localctx).blq.codigo + "</div>";
 				     
 				}
 				break;
@@ -1641,7 +1664,7 @@ public class MainParser extends Parser {
 				setState(240);
 				((SentContext)_localctx).blq = blq();
 
-				        ((SentContext)_localctx).sentencia =  "<div> WHILE " + ((SentContext)_localctx).expcond.condicion + " DO <br> <div style=\"margin-left:1cm\">" + ((SentContext)_localctx).blq.codigo + "</div></div>";
+				        ((SentContext)_localctx).sentencia =  "<div> "+formatear("WHILE")+" " + ((SentContext)_localctx).expcond.condicion + " "+formatear("DO")+" <br> <div style=\"margin-left:1cm\">" + ((SentContext)_localctx).blq.codigo + "</div></div>";
 				     
 				}
 				break;
@@ -1659,7 +1682,7 @@ public class MainParser extends Parser {
 				setState(247);
 				match(T__1);
 
-				        ((SentContext)_localctx).sentencia =  "<div> REPEAT </div> <div style=\"margin-left:1cm\">" + ((SentContext)_localctx).blq.codigo + "</div> UNTIL " + ((SentContext)_localctx).expcond.condicion + ";";
+				        ((SentContext)_localctx).sentencia =  "<div> "+formatear("REPEAT")+" </div> <div style=\"margin-left:1cm\">" + ((SentContext)_localctx).blq.codigo + "</div> "+formatear("UNTIL")+" " + ((SentContext)_localctx).expcond.condicion + ";";
 				     
 				}
 				break;
@@ -1683,7 +1706,7 @@ public class MainParser extends Parser {
 				setState(257);
 				((SentContext)_localctx).blq = blq();
 
-				        ((SentContext)_localctx).sentencia =  "<div> FOR " + (((SentContext)_localctx).IDENTIFIER!=null?((SentContext)_localctx).IDENTIFIER.getText():null) + " := " + ((SentContext)_localctx).exp.expresion + ((SentContext)_localctx).inc.incremento + ((SentContext)_localctx).exp.expresion + "DO </div> <div style=\"margin-left:1cm\"> " + ((SentContext)_localctx).blq.codigo + "</div>";
+				        ((SentContext)_localctx).sentencia =  "<div> "+formatear("FOR")+" " + (((SentContext)_localctx).IDENTIFIER!=null?((SentContext)_localctx).IDENTIFIER.getText():null) + " := " + ((SentContext)_localctx).exp.expresion + ((SentContext)_localctx).inc.incremento + ((SentContext)_localctx).exp.expresion + formatear("DO") +" </div> <div style=\"margin-left:1cm\"> " + ((SentContext)_localctx).blq.codigo + "</div>";
 				     
 				}
 				break;
@@ -2021,7 +2044,7 @@ public class MainParser extends Parser {
 				{
 				setState(291);
 				match(T__28);
-				((OpContext)_localctx).simbolo =  "DIV";
+				((OpContext)_localctx).simbolo =  formatear("DIV");
 				}
 				break;
 			case T__29:
@@ -2029,7 +2052,7 @@ public class MainParser extends Parser {
 				{
 				setState(293);
 				match(T__29);
-				((OpContext)_localctx).simbolo =  "MOD";
+				((OpContext)_localctx).simbolo =  formatear("MOD");
 				}
 				break;
 			default:
@@ -2123,7 +2146,7 @@ public class MainParser extends Parser {
 				setState(306);
 				((FactorContext)_localctx).subpparamlist = subpparamlist();
 
-				        ((FactorContext)_localctx).variable =  (((FactorContext)_localctx).IDENTIFIER!=null?((FactorContext)_localctx).IDENTIFIER.getText():null) +" " + ((FactorContext)_localctx).subpparamlist.parametros;
+				        ((FactorContext)_localctx).variable =  formatear((((FactorContext)_localctx).IDENTIFIER!=null?((FactorContext)_localctx).IDENTIFIER.getText():null)) +" " + ((FactorContext)_localctx).subpparamlist.parametros;
 				    
 				}
 				break;
@@ -2423,7 +2446,7 @@ public class MainParser extends Parser {
 				{
 				setState(333);
 				match(T__30);
-				((IncContext)_localctx).incremento =  "TO";
+				((IncContext)_localctx).incremento =  formatear("TO");
 				}
 				break;
 			case T__31:
@@ -2431,7 +2454,7 @@ public class MainParser extends Parser {
 				{
 				setState(335);
 				match(T__31);
-				((IncContext)_localctx).incremento =  "DOWNTO";
+				((IncContext)_localctx).incremento =  formatear("DOWNTO");
 				}
 				break;
 			default:
@@ -2606,7 +2629,7 @@ public class MainParser extends Parser {
 				{
 				setState(350);
 				match(T__32);
-				((OplogContext)_localctx).bool =  "OR";
+				((OplogContext)_localctx).bool =  formatear("OR");
 				}
 				break;
 			case T__33:
@@ -2614,7 +2637,7 @@ public class MainParser extends Parser {
 				{
 				setState(352);
 				match(T__33);
-				((OplogContext)_localctx).bool =  "AND";
+				((OplogContext)_localctx).bool =  formatear("AND");
 				}
 				break;
 			default:

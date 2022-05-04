@@ -1,4 +1,8 @@
 import java.io.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+
 import org.antlr.v4.runtime.*;
 
 public class Principal {
@@ -10,6 +14,14 @@ public class Principal {
             System.out.println("<!dOCtYPE html>\n <html>");
             System.out.println("<head>");
             System.out.println("<title>"+args[0]+"</title>");
+            System.out.println("<style>");
+            System.out.println(".cte {" +
+                    "color: blue;" +
+                    "}");
+            System.out.println(".palres {" +
+                    "color:  #a3350a;" +
+                    "}");
+            System.out.println("</style>");
             System.out.println("</head>");
 
             MainLexer analex = new MainLexer(input);
