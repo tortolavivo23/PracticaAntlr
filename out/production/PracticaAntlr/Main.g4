@@ -21,6 +21,10 @@ grammar Main;
             return "<SPAN CLASS=\"palres\">"+cadena+"</SPAN>";
         return cadena;
     }
+
+    public String cteSinDeclarar(String cte) {
+        return "<SPAN CLASS=\"cte\">"+cte+"</SPAN>";
+    }
 }
 
 
@@ -135,7 +139,7 @@ ctelist returns [String constantes, String tipoId]:
     IDENTIFIER '=' simpvalue ';' ctelistFactor
         {
             // if (constantesDeclaradas.contains($IDENTIFIER.text)||variables||...) // esto debería dar un error de oye ya hay una constante declarada
-            $constantes = $IDENTIFIER.text + " = " + $simpvalue.constante + ";" + $ctelistFactor.constantes;
+            $constantes = $IDENTIFIER.text + " = " + cteSinDeclarar($simpvalue.constante) + ";" + $ctelistFactor.constantes;
             constantesDeclaradas.add($IDENTIFIER.text);
         };
 ctelistFactor returns [String constantes] : {$constantes = "";}| ctelist {$constantes = "<br>" + $ctelist.constantes;};
@@ -223,7 +227,7 @@ op returns[String simbolo]:
 
 factor returns[String variable] :
     simpvalue{
-        $variable = $simpvalue.constante;
+        $variable = cteSinDeclarar($simpvalue.constante);
     } |
     '(' exp ')'{
         $variable = "("+$exp.expresion+")";

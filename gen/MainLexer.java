@@ -118,6 +118,10 @@ public class MainLexer extends Lexer {
 	        return cadena;
 	    }
 
+	    public String cteSinDeclarar(String cte) {
+	        return "<SPAN CLASS=\"cte\">"+cte+"</SPAN>";
+	    }
+
 
 	public MainLexer(CharStream input) {
 		super(input);

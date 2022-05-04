@@ -133,6 +133,10 @@ public class MainParser extends Parser {
 	        return cadena;
 	    }
 
+	    public String cteSinDeclarar(String cte) {
+	        return "<SPAN CLASS=\"cte\">"+cte+"</SPAN>";
+	    }
+
 	public MainParser(TokenStream input) {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
@@ -725,7 +729,7 @@ public class MainParser extends Parser {
 			((CtelistContext)_localctx).ctelistFactor = ctelistFactor();
 
 			            // if (constantesDeclaradas.contains((((CtelistContext)_localctx).IDENTIFIER!=null?((CtelistContext)_localctx).IDENTIFIER.getText():null))||variables||...) // esto debería dar un error de oye ya hay una constante declarada
-			            ((CtelistContext)_localctx).constantes =  (((CtelistContext)_localctx).IDENTIFIER!=null?((CtelistContext)_localctx).IDENTIFIER.getText():null) + " = " + ((CtelistContext)_localctx).simpvalue.constante + ";" + ((CtelistContext)_localctx).ctelistFactor.constantes;
+			            ((CtelistContext)_localctx).constantes =  (((CtelistContext)_localctx).IDENTIFIER!=null?((CtelistContext)_localctx).IDENTIFIER.getText():null) + " = " + cteSinDeclarar(((CtelistContext)_localctx).simpvalue.constante) + ";" + ((CtelistContext)_localctx).ctelistFactor.constantes;
 			            constantesDeclaradas.add((((CtelistContext)_localctx).IDENTIFIER!=null?((CtelistContext)_localctx).IDENTIFIER.getText():null));
 			        
 			}
@@ -2120,7 +2124,7 @@ public class MainParser extends Parser {
 				setState(297);
 				((FactorContext)_localctx).simpvalue = simpvalue();
 
-				        ((FactorContext)_localctx).variable =  ((FactorContext)_localctx).simpvalue.constante;
+				        ((FactorContext)_localctx).variable =  cteSinDeclarar(((FactorContext)_localctx).simpvalue.constante);
 				    
 				}
 				break;
