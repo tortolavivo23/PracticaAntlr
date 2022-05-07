@@ -12,7 +12,6 @@ grammar Main;
 @members {
     public String formatearReservada(String cadena){
             return "<SPAN CLASS=\"palres\">"+cadena+"</SPAN>";
-        return cadena;
     }
 
     public String formatear(String cadena, Map<String,String> identificadores) {
@@ -197,17 +196,17 @@ sent returns[String sentencia] :
      IDENTIFIER sentFactor ';'{
         $sentencia = "<div>" + formatear($IDENTIFIER.text) + " " + $sentFactor.sentencia + ";</div>";
      } |
-     'IF' expcond 'THEN' blq 'ELSE' blq {
-        $sentencia = "<div> "+formatear("IF")+" " + $expcond.condicion + " "+formatear("THEN")+" </div> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div> <div> "+formatear("ELSE")+" </div> <div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
+     'IF' expcond[$map] 'THEN' blq 'ELSE' blq {
+        $sentencia = "<div> "+formatearReservada("IF")+" " + $expcond.condicion + " "+formatearReservada("THEN")+" </div> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div> <div> "+formatearReservada("ELSE")+" </div> <div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
      } |
-     'WHILE' expcond 'DO' blq{
-        $sentencia = "<div> "+formatear("WHILE")+" " + $expcond.condicion + " "+formatear("DO")+" <br> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div></div>";
+     'WHILE' expcond[$map] 'DO' blq{
+        $sentencia = "<div> "+formatearReservada("WHILE")+" " + $expcond.condicion + " "+formatearReservada("DO")+" <br> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div></div>";
      } |
-     'REPEAT' blq 'UNTIL' expcond ';' {
-        $sentencia = "<div> "+formatear("REPEAT")+" </div> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div> "+formatear("UNTIL")+" " + $expcond.condicion + ";";
+     'REPEAT' blq 'UNTIL' expcond[$map] ';' {
+        $sentencia = "<div> "+formatearReservada("REPEAT")+" </div> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div> "+formatearReservada("UNTIL")+" " + $expcond.condicion + ";";
      }|
-     'FOR' IDENTIFIER ':=' exp inc exp 'DO' blq {
-        $sentencia = "<div> "+formatear("FOR")+" " + $IDENTIFIER.text + " := " + $exp.expresion + $inc.incremento + $exp.expresion + formatear("DO") +" </div> <div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
+     'FOR' IDENTIFIER ':=' exp[$map] inc exp[$map] 'DO' blq {
+        $sentencia = "<div> "+formatearReservada("FOR")+" " + $IDENTIFIER.text + " := " + $exp.expresion + $inc.incremento + $exp.expresion + formatearReservada("DO") +" </div> <div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
      };
 
 sentFactor[Map<String, String> map] returns[String sentencia]:
@@ -239,7 +238,7 @@ op returns[String simbolo]:
 
 factor returns[String variable] :
     simpvalue{
-        $variable = cteSinDeclarar($simpvalue.constante);
+        $variable = formatear($simpvalue.constante,$map);
     } |
     '(' exp ')'{
         $variable = "("+$exp.expresion+")";

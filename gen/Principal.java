@@ -20,8 +20,11 @@ public class Principal {
             System.out.println(".palres {" +
                     "color:  #a3350a;" +
                     "}");
-            System.out.println(".ident {" +
+            System.out.println(".var {" +
                     "color:  #4b8562;" +
+                    "}");
+            System.out.println(".procFunc {" +
+                    "color:  #986592;" +
                     "}");
             System.out.println("</style>");
             System.out.println("</head>");
