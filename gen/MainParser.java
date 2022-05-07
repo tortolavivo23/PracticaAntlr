@@ -2724,7 +2724,7 @@ public class MainParser extends Parser {
 				{
 				setState(349);
 				match(T__32);
-				((OplogContext)_localctx).bool =  formatearReservada("OR");
+				((OplogContext)_localctx).bool =  formatearReservada(" OR ");
 				}
 				break;
 			case T__33:
@@ -2732,7 +2732,7 @@ public class MainParser extends Parser {
 				{
 				setState(351);
 				match(T__33);
-				((OplogContext)_localctx).bool =  formatearReservada("AND");
+				((OplogContext)_localctx).bool =  formatearReservada(" AND ");
 				}
 				break;
 			default:
