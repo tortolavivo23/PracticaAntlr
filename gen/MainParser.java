@@ -1,4 +1,4 @@
-// Generated from /home/paco/IdeaProjects/ProgComp/Codeforces/PracticaAntlr/src/Main.g4 by ANTLR 4.10.1
+// Generated from /home/heqro/IdeaProjects/PracticaAntlr/src/Main.g4 by ANTLR 4.10.1
 
     import java.util.Arrays;
     import java.util.HashMap;
@@ -2721,7 +2721,7 @@ public class MainParser extends Parser {
 				{
 				setState(349);
 				match(T__32);
-				((OplogContext)_localctx).bool =  formatearReservada("OR");
+				((OplogContext)_localctx).bool =  formatearReservada(" OR ");
 				}
 				break;
 			case T__33:
@@ -2729,7 +2729,7 @@ public class MainParser extends Parser {
 				{
 				setState(351);
 				match(T__33);
-				((OplogContext)_localctx).bool =  formatearReservada("AND");
+				((OplogContext)_localctx).bool =  formatearReservada(" AND ");
 				}
 				break;
 			default:

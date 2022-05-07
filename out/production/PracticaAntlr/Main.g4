@@ -269,7 +269,7 @@ proc_call[Map<String, String> map] returns[String parametros]:  subpparamlist[$m
 inc returns [String incremento]: 'TO' {$incremento = formatearReservada("TO");} | 'DOWNTO' {$incremento = formatearReservada("DOWNTO");};
 expcond[Map<String,String> map] returns [String condicion] : factorcond[$map] expcondFactor[$map] {$condicion = $factorcond.condicion + $expcondFactor.condicion;};
 expcondFactor[Map<String,String> map] returns[String condicion] : {$condicion = "";} | oplog expcond[$map] {$condicion = $oplog.bool + $expcond.condicion;};
-oplog returns[String bool]: 'OR'{$bool= formatearReservada("OR");} | 'AND'{$bool = formatearReservada("AND");};
+oplog returns[String bool]: 'OR'{$bool= formatearReservada(" OR ");} | 'AND'{$bool = formatearReservada(" AND ");};
 factorcond[Map<String,String> map] returns[String condicion]:
     e1=exp[$map] opcomp e2=exp[$map] {$condicion = $e1.expresion + $opcomp.comparador + $e2.expresion;} |
     '(' expcond[$map] ')' {$condicion = "(" + $expcond.condicion + ")";} |
