@@ -4,29 +4,21 @@ grammar Main;
 
 //ANALISIS SEMANTICO PARTE OBLIGATORIA
 @header {
-    import java.util.Set;
-    import java.util.HashSet;
     import java.util.Arrays;
-    import java.util.Map;
     import java.util.HashMap;
+    import java.util.Map;
 }
 
 @members {
-
-    Set<String> constantesDeclaradas = new HashSet<>();
-    Set<String> palabrasReservadas = new HashSet<String>(Arrays.asList("PROGRAM,BEGIN,END,PROCEDURE,FUNCTION,IF,THEN,ELSE,WHILE,DO,REPEAT,UNTIL,FOR,DO,DIV,MOD,NOT,TRUE,FALSE,CONST,VAR,integer,real".split(",")));
-
-
-    public String formatear(String cadena) {
-        if (constantesDeclaradas.contains(cadena))
-            return "<SPAN CLASS=\"cte\">"+cadena+"</SPAN>";
-        if (palabrasReservadas.contains(cadena))
+    public String formatearReservada(String cadena){
             return "<SPAN CLASS=\"palres\">"+cadena+"</SPAN>";
-        return cadena;
     }
 
-    public String cteSinDeclarar(String cte) {
-        return "<SPAN CLASS=\"ctesindeclarar\">"+cte+"</SPAN>";
+    public String formatear(String cadena, Map<String,String> identificadores) {
+        if(!identificadores.containsKey(cadena)){
+            return "<SPAN CLASS=\"ctesindeclarar\">"+cadena+"</SPAN>";
+        }
+        return "<SPAN CLASS=\""+identificadores.get(cadena)+"\">"+cadena+"</SPAN>";
     }
 }
 
@@ -57,7 +49,7 @@ prg:
     '.';
 
 blq  returns [String procYFunc, String codigo, String constantes, String variables, String codigoProc, String codigoFunc]:
-    dcllist {
+    {HashMap<String, String> map = new HashMap<String, String>();}dcllist[map] {
             $procYFunc = $dcllist.procYFunc;
             $codigo = $dcllist.codigo;
             $constantes = $dcllist.constantes;
@@ -65,13 +57,13 @@ blq  returns [String procYFunc, String codigo, String constantes, String variabl
             $codigoProc = $dcllist.codigoProc;
             $codigoFunc = $dcllist.codigoFunc;
     }
-    'BEGIN' sentlist 'END'{
-        $codigo += formatear("BEGIN") + "<div style=\"margin-left:1cm\">" +
+    'BEGIN' sentlist[map] 'END'{
+        $codigo += formatearReservada("BEGIN") + "<div style=\"margin-left:1cm\">" +
                                     $sentlist.codigo +
-                                    "</div>"+ formatear("END");
+                                    "</div>"+ formatearReservada("END");
     } ;
 
-dcllist  returns [String procYFunc, String codigo, String constantes, String variables, String codigoProc, String codigoFunc] :
+dcllist [Map<String, String> map] returns [String procYFunc, String codigo, String constantes, String variables, String codigoProc, String codigoFunc] :
     {
         $procYFunc = "";
         $codigo = "";
@@ -80,7 +72,7 @@ dcllist  returns [String procYFunc, String codigo, String constantes, String var
         $codigoProc = "";
         $codigoFunc = "";
     }|
-    dcl dcllist {
+    dcl[$map] dcllist[$map] {
         $procYFunc = $dcl.procYFunc+$dcllist.procYFunc;
         $codigo = $dcl.codigo+$dcllist.codigo;
         $constantes = $dcl.constantes + $dcllist.constantes;
@@ -89,22 +81,22 @@ dcllist  returns [String procYFunc, String codigo, String constantes, String var
         $codigoFunc = $dcl.codigoFunc + $dcllist.codigoFunc;
     };
 
-sentlist  returns [String codigo]:
-    sent sentlistFactor{
+sentlist[Map<String, String>map]  returns [String codigo]:
+    sent[$map] sentlistFactor[$map]{
         $codigo = $sent.sentencia+$sentlistFactor.codigo;
     };
 
 
-sentlistFactor returns [String codigo] :
+sentlistFactor[Map<String, String> map] returns [String codigo] :
   {
     $codigo = "";
   }|
-   sentlist{
+   sentlist[$map]{
         $codigo = $sentlist.codigo;
    };
 
-dcl  returns [String procYFunc, String codigo, String constantes, String variables, String codigoProc, String codigoFunc] :
-    defcte {
+dcl [Map<String, String> map] returns [String procYFunc, String codigo, String constantes, String variables, String codigoProc, String codigoFunc] :
+    defcte[$map] {
         $procYFunc = "";
         $codigo = "";
         $constantes = $defcte.defConstantes;
@@ -112,7 +104,7 @@ dcl  returns [String procYFunc, String codigo, String constantes, String variabl
         $codigoProc = "";
         $codigoFunc = "";
     } |
-    defvar {
+    defvar[$map] {
         $procYFunc="";
         $codigo = "";
         $constantes = "";
@@ -120,7 +112,7 @@ dcl  returns [String procYFunc, String codigo, String constantes, String variabl
         $codigoProc = "";
         $codigoFunc = "";
     }|
-    defproc {
+    defproc[$map] {
         $procYFunc = $defproc.procedimiento;
         $codigo = "";
         $constantes = "";
@@ -128,7 +120,7 @@ dcl  returns [String procYFunc, String codigo, String constantes, String variabl
         $codigoProc = $defproc.codigo;
         $codigoFunc = "";
     }|
-    deffun  {
+    deffun[$map]  {
         $procYFunc = $deffun.funcion;
         $codigo = "";
         $constantes = "";
@@ -137,90 +129,103 @@ dcl  returns [String procYFunc, String codigo, String constantes, String variabl
         $codigoFunc = $deffun.codigo;
     };
 
-defcte returns [String defConstantes]: 'CONST' ctelist {$defConstantes = formatear("CONST")+" <br>" + $ctelist.constantes + " <br>";};
-ctelist returns [String constantes, String tipoId]:
-    IDENTIFIER '=' simpvalue ';' ctelistFactor
+defcte[Map<String, String> map] returns [String defConstantes]: 'CONST' ctelist[$map] {$defConstantes = formatearReservada("CONST")+" <br>" + $ctelist.constantes + " <br>";};
+ctelist[Map<String, String> map] returns [String constantes, String tipoId]:
+    IDENTIFIER '=' simpvalue ';' ctelistFactor[$map]
         {
-            // if (constantesDeclaradas.contains($IDENTIFIER.text)||variables||...) // esto debería dar un error de oye ya hay una constante declarada
-            $constantes = $IDENTIFIER.text + " = " + cteSinDeclarar($simpvalue.constante) + ";" + $ctelistFactor.constantes;
-            constantesDeclaradas.add($IDENTIFIER.text);
+           String nombre = $IDENTIFIER.text;
+           while($map.containsKey(nombre)){
+                nombre += "1";
+           }
+           $map.put(nombre, "cte");
+            $constantes = nombre + " = " + formatear($simpvalue.constante,$map) + ";" + $ctelistFactor.constantes;
         };
-ctelistFactor returns [String constantes] : {$constantes = "";}| ctelist {$constantes = "<br>" + $ctelist.constantes;};
+
+ctelistFactor[Map<String, String> map] returns [String constantes] : {$constantes = "";}| ctelist[$map] {$constantes = "<br>" + $ctelist.constantes;};
 
 simpvalue returns [String constante] :
     NUMERIC_INTEGER_CONST {$constante = $NUMERIC_INTEGER_CONST.text;} |
     NUMERIC_REAL_CONST{$constante = $NUMERIC_REAL_CONST.text;}|
     STRING_CONST{$constante = $STRING_CONST.text;};
-defvar returns [String defVariables] : 'VAR' defvarlist ';' {$defVariables = formatear("VAR")+" <br>" + $defvarlist.variables + ";<br>";};
-defvarlist returns [String variables] :
-    varlist ':' tbas  defvarlistFactor {$variables = $varlist.nombreVariables + ": " + $tbas.tipoDevuelto + $defvarlistFactor.variables;};     //Cambio para arreglar la recursividad izquierda
-defvarlistFactor returns [String variables] :
+defvar[Map<String, String> map] returns [String defVariables] : 'VAR' defvarlist[$map] ';' {$defVariables = formatearReservada("VAR")+" <br>" + $defvarlist.variables + ";<br>";};
+defvarlist[Map<String, String> map] returns [String variables] :
+    varlist[$map]':' tbas  defvarlistFactor[$map] {$variables = $varlist.nombreVariables + ": " + $tbas.tipoDevuelto + $defvarlistFactor.variables;};     //Cambio para arreglar la recursividad izquierda
+defvarlistFactor[Map<String, String> map] returns [String variables] :
     {$variables = "";} |
-    ';' defvarlist {$variables = "; " + $defvarlist.variables;};           //Factorizado
-varlist returns[String nombreVariables] :
-    IDENTIFIER  varlistFactor {
-        $nombreVariables = $IDENTIFIER.text + $varlistFactor.nombreVariables;
-    };           //Factorizado
-varlistFactor returns[String nombreVariables]:
-    {$nombreVariables = "";} |
-    ',' varlist {$nombreVariables = ", " + $varlist.nombreVariables;};
-
-defproc returns [String procedimiento, String codigo]:
-    'PROCEDURE' IDENTIFIER  formal_paramlist {
-            $procedimiento ="<LI> <a href=\"#"+$IDENTIFIER.text+"\">"+$IDENTIFIER.text+" "+$formal_paramlist.variables+";</a></LI>\n";
-
+    ';' defvarlist[$map] {$variables = "; " + $defvarlist.variables;};           //Factorizado
+varlist[Map<String, String> map] returns[String nombreVariables] :
+    IDENTIFIER  varlistFactor[$map] {
+        String nombre = $IDENTIFIER.text;
+        while($map.containsKey(nombre)){
+            nombre += "1";
         }
-    ';' blq ';'{
-        $codigo ="<a NAME= \""+ $IDENTIFIER.text +"\" >"+ formatear("PROCEDURE") + "  " + $IDENTIFIER.text + " " + $formal_paramlist.variables + ";</a> <br/>" + $blq.codigo+";<br>";
+        $map.put(nombre, "var");
+        $nombreVariables = nombre + $varlistFactor.nombreVariables;
+    };           //Factorizado
+varlistFactor[Map<String, String> map] returns[String nombreVariables]:
+    {$nombreVariables = "";} |
+    ',' varlist[$map] {$nombreVariables = ", " + $varlist.nombreVariables;};
+
+defproc[Map<String, String> map] returns [String procedimiento, String codigo]:
+    'PROCEDURE' IDENTIFIER  formal_paramlist ';' blq ';'{
+        String nombre = $IDENTIFIER.text;
+        while($map.containsKey(nombre)){
+            nombre += "1";
+        }
+        $map.put(nombre, "procFunc");
+        $procedimiento ="<LI> <a href=\"#"+nombre+"\">"+nombre+" "+$formal_paramlist.variables+";</a></LI>\n";
+        $codigo ="<a NAME= \""+ nombre +"\" >"+ formatearReservada("PROCEDURE") + "  " + nombre + " " + $formal_paramlist.variables + ";</a> <br/>" + $blq.codigo+";<br>";
     };
 
-deffun returns[String funcion, String codigo]:
-    'FUNCTION' IDENTIFIER   formal_paramlist {
-            $funcion ="<LI><a href=\"#"+$IDENTIFIER.text+"\">"+$IDENTIFIER.text+" "+$formal_paramlist.variables+"</a></LI>\n";
+deffun[Map<String, String> map] returns[String funcion, String codigo]:
+    'FUNCTION' IDENTIFIER   formal_paramlist ':' tbas ';' blq ';'{
+        String nombre = $IDENTIFIER.text;
+        while($map.containsKey(nombre)){
+            nombre += "1";
         }
-    ':' tbas ';' blq ';'{
-        $codigo = "<a NAME=\""+$IDENTIFIER.text+"\">"+ formatear("FUNCTION") + " " + $IDENTIFIER.text + " "+$formal_paramlist.variables+":"+$tbas.tipoDevuelto+ ";<br>"
-                    +$blq.codigo+";";
+        $map.put(nombre, "procFunc");
+        $funcion ="<LI> <a href=\"#"+nombre+"\">"+nombre+" "+$formal_paramlist.variables+";</a></LI>\n";
+        $codigo ="<a NAME= \""+ nombre +"\" >"+ formatearReservada("FUNCTION") + "  " + nombre + " " + $formal_paramlist.variables + ";</a> <br/>" + $blq.codigo+";<br>";
     };
 formal_paramlist returns[String variables] : '(' formal_param ')' {$variables = "("+$formal_param.variables+")";}| {$variables = "";} ; //Expresion ʎ
-formal_param returns[String variables] : varlist ':' tbas  formal_paramFactor{$variables = $tbas.tipoDevuelto+": "+$varlist.nombreVariables+$formal_paramFactor.variables;};
+formal_param returns[String variables] : varlist[new HashMap<String, String>()] ':' tbas  formal_paramFactor{$variables = $tbas.tipoDevuelto+": "+$varlist.nombreVariables+$formal_paramFactor.variables;};
 formal_paramFactor returns[String variables]: {$variables = "";}| ';' formal_param {$variables = "; " + $formal_param.variables ;}  ; //Factorización
-tbas returns[String tipoDevuelto] : 'integer' {$tipoDevuelto = formatear("integer");} | 'real' {$tipoDevuelto = formatear("real");};
+tbas returns[String tipoDevuelto] : 'integer' {$tipoDevuelto = formatearReservada("integer");} | 'real' {$tipoDevuelto = formatearReservada("real");};
 
-sent returns[String sentencia] :
-     IDENTIFIER sentFactor ';'{
-        $sentencia = "<div>" + formatear($IDENTIFIER.text) + " " + $sentFactor.sentencia + ";</div>";
+sent[Map<String,String> map] returns[String sentencia] :
+     IDENTIFIER sentFactor[$map] ';'{
+        $sentencia = "<div>" + formatear($IDENTIFIER.text,$map) + " " + $sentFactor.sentencia + ";</div>";
      } |
-     'IF' expcond 'THEN' blq 'ELSE' blq {
-        $sentencia = "<div> "+formatear("IF")+" " + $expcond.condicion + " "+formatear("THEN")+" </div> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div> <div> "+formatear("ELSE")+" </div> <div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
+     'IF' expcond[$map] 'THEN' blq 'ELSE' blq {
+        $sentencia = "<div> "+formatearReservada("IF")+" " + $expcond.condicion + " "+formatearReservada("THEN")+" </div> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div> <div> "+formatearReservada("ELSE")+" </div> <div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
      } |
-     'WHILE' expcond 'DO' blq{
-        $sentencia = "<div> "+formatear("WHILE")+" " + $expcond.condicion + " "+formatear("DO")+" <br> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div></div>";
+     'WHILE' expcond[$map] 'DO' blq{
+        $sentencia = "<div> "+formatearReservada("WHILE")+" " + $expcond.condicion + " "+formatearReservada("DO")+" <br> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div></div>";
      } |
-     'REPEAT' blq 'UNTIL' expcond ';' {
-        $sentencia = "<div> "+formatear("REPEAT")+" </div> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div> "+formatear("UNTIL")+" " + $expcond.condicion + ";";
+     'REPEAT' blq 'UNTIL' expcond[$map] ';' {
+        $sentencia = "<div> "+formatearReservada("REPEAT")+" </div> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div> "+formatearReservada("UNTIL")+" " + $expcond.condicion + ";";
      }|
-     'FOR' IDENTIFIER ':=' exp inc exp 'DO' blq {
-        $sentencia = "<div> "+formatear("FOR")+" " + $IDENTIFIER.text + " := " + $exp.expresion + $inc.incremento + $exp.expresion + formatear("DO") +" </div> <div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
+     'FOR' IDENTIFIER ':=' exp[$map] inc exp[$map] 'DO' blq {
+        $sentencia = "<div> "+formatearReservada("FOR")+" " + $IDENTIFIER.text + " := " + $exp.expresion + $inc.incremento + $exp.expresion + formatearReservada("DO") +" </div> <div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
      };
 
-sentFactor returns[String sentencia]:
-    proc_call {
+sentFactor[Map<String, String> map] returns[String sentencia]:
+    proc_call[$map] {
         $sentencia = $proc_call.parametros;
     } |
-    asig{
+    asig[$map]{
         $sentencia = $asig.asignacion;
     }; //Factorización
 
-asig returns[String asignacion] : ':=' exp {
+asig [Map<String, String> map] returns[String asignacion] : ':=' exp[$map] {
     $asignacion = " := "+$exp.expresion;
     };
 
-exp returns[String expresion] : factor expFactor {$expresion = $factor.variable+$expFactor.operacion;};  //Cambio para arreglar la recursividad izquierda
+exp [Map<String, String> map] returns[String expresion] : factor[$map] expFactor[$map] {$expresion = $factor.variable+$expFactor.operacion;};  //Cambio para arreglar la recursividad izquierda
 
-expFactor returns[String operacion] :
+expFactor[Map<String,String> map] returns[String operacion] :
     {$operacion = "";}|
-    op exp{
+    op exp[$map]{
         $operacion = " " + $op.simbolo + " " + $exp.expresion;
     }; //Factorizacion
 
@@ -228,49 +233,49 @@ op returns[String simbolo]:
     '+' {$simbolo = "+";} |
     '-' {$simbolo = "-";}|
     '*' {$simbolo = "*";} |
-    'DIV' {$simbolo = formatear("DIV");} |
-    'MOD' {$simbolo = formatear("MOD");};
+    'DIV' {$simbolo = formatearReservada("DIV");} |
+    'MOD' {$simbolo = formatearReservada("MOD");};
 
-factor returns[String variable] :
+factor[Map<String,String> map] returns[String variable] :
     simpvalue{
-        $variable = cteSinDeclarar($simpvalue.constante);
+        $variable = formatear($simpvalue.constante,$map);
     } |
-    '(' exp ')'{
+    '(' exp[$map] ')'{
         $variable = "("+$exp.expresion+")";
     } |
-    IDENTIFIER subpparamlist{
-        $variable = formatear($IDENTIFIER.text) +" " + $subpparamlist.parametros;
+    IDENTIFIER subpparamlist[$map]{
+        $variable = formatear($IDENTIFIER.text,$map) +" " + $subpparamlist.parametros;
     };
-subpparamlist returns[String parametros]:
+subpparamlist[Map<String,String> map] returns[String parametros]:
     {$parametros="";} |
-    '(' explist ')' {$parametros = "("+$explist.expresiones+")";} ; //Expresion ʎ
+    '(' explist[$map] ')' {$parametros = "("+$explist.expresiones+")";} ; //Expresion ʎ
 
-explist returns[String expresiones]:
-    exp explistFactor {
+explist[Map<String, String> map] returns[String expresiones]:
+    exp[$map] explistFactor[$map] {
         $expresiones = $exp.expresion + $explistFactor.expresiones;
     } ; //Cambio para arreglar la factorización
 
-explistFactor returns[String expresiones]:
+explistFactor[Map<String,String> map] returns[String expresiones]:
     {$expresiones="";} |
-     ',' explist {$expresiones = ", "+$explist.expresiones;}; //Factorización
+     ',' explist[$map] {$expresiones = ", "+$explist.expresiones;}; //Factorización
 
-proc_call returns[String parametros]:  subpparamlist {$parametros = $subpparamlist.parametros;} ;
+proc_call[Map<String, String> map] returns[String parametros]:  subpparamlist[$map] {$parametros = $subpparamlist.parametros;} ;
 
 
 
 //ANALISIS SINTACTICO PARTE OPCIONAL
 
 //Las añadidas a sent estan en la de arriba
-inc returns [String incremento]: 'TO' {$incremento = formatear("TO");} | 'DOWNTO' {$incremento = formatear("DOWNTO");};
-expcond returns [String condicion] : factorcond expcondFactor {$condicion = $factorcond.condicion + $expcondFactor.condicion;};
-expcondFactor returns[String condicion] : {$condicion = "";} | oplog expcond {$condicion = $oplog.bool + $expcond.condicion;};
-oplog returns[String bool]: 'OR'{$bool= formatear("OR");} | 'AND'{$bool = formatear("AND");};
-factorcond returns[String condicion]:
-    e1=exp opcomp e2=exp {$condicion = $e1.expresion + $opcomp.comparador + $e2.expresion;} |
-    '(' expcond ')' {$condicion = "(" + $expcond.condicion + ")";} |
-    'NOT' factorcond  {$condicion="NOT " + $factorcond.condicion;}|
-    'TRUE' {$condicion="TRUE";} |
-    'FALSE' {$condicion="FALSE";};
+inc returns [String incremento]: 'TO' {$incremento = formatearReservada("TO");} | 'DOWNTO' {$incremento = formatearReservada("DOWNTO");};
+expcond[Map<String,String> map] returns [String condicion] : factorcond[$map] expcondFactor[$map] {$condicion = $factorcond.condicion + $expcondFactor.condicion;};
+expcondFactor[Map<String,String> map] returns[String condicion] : {$condicion = "";} | oplog expcond[$map] {$condicion = $oplog.bool + $expcond.condicion;};
+oplog returns[String bool]: 'OR'{$bool= formatearReservada("OR");} | 'AND'{$bool = formatearReservada("AND");};
+factorcond[Map<String,String> map] returns[String condicion]:
+    e1=exp[$map] opcomp e2=exp[$map] {$condicion = $e1.expresion + $opcomp.comparador + $e2.expresion;} |
+    '(' expcond[$map] ')' {$condicion = "(" + $expcond.condicion + ")";} |
+    'NOT' factorcond[$map]  {$condicion=formatearReservada("NOT")+ " " + $factorcond.condicion;}|
+    'TRUE' {$condicion=formatearReservada("TRUE");} |
+    'FALSE' {$condicion=formatearReservada("FALSE");};
 opcomp returns[String comparador] :
     '<' {$comparador = " < ";} |
     '>' {$comparador = " > ";} |

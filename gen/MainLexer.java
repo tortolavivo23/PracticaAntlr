@@ -1,10 +1,8 @@
-// Generated from /home/heqro/IdeaProjects/PracticaAntlr/src/Main.g4 by ANTLR 4.10.1
+// Generated from /home/paco/IdeaProjects/ProgComp/Codeforces/PracticaAntlr/src/Main.g4 by ANTLR 4.10.1
 
-    import java.util.Set;
-    import java.util.HashSet;
     import java.util.Arrays;
-    import java.util.Map;
     import java.util.HashMap;
+    import java.util.Map;
 
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
@@ -108,21 +106,15 @@ public class MainLexer extends Lexer {
 	}
 
 
-
-	    Set<String> constantesDeclaradas = new HashSet<>();
-	    Set<String> palabrasReservadas = new HashSet<String>(Arrays.asList("PROGRAM,BEGIN,END,PROCEDURE,FUNCTION,IF,THEN,ELSE,WHILE,DO,REPEAT,UNTIL,FOR,DO,DIV,MOD,NOT,TRUE,FALSE,CONST,VAR,integer,real".split(",")));
-
-
-	    public String formatear(String cadena) {
-	        if (constantesDeclaradas.contains(cadena))
-	            return "<SPAN CLASS=\"cte\">"+cadena+"</SPAN>";
-	        if (palabrasReservadas.contains(cadena))
+	    public String formatearReservada(String cadena){
 	            return "<SPAN CLASS=\"palres\">"+cadena+"</SPAN>";
-	        return cadena;
 	    }
 
-	    public String cteSinDeclarar(String cte) {
-	        return "<SPAN CLASS=\"ctesindeclarar\">"+cte+"</SPAN>";
+	    public String formatear(String cadena, Map<String,String> identificadores) {
+	        if(!identificadores.containsKey(cadena)){
+	            return "<SPAN CLASS=\"ctesindeclarar\">"+cadena+"</SPAN>";
+	        }
+	        return "<SPAN CLASS=\""+identificadores.get(cadena)+"\">"+cadena+"</SPAN>";
 	    }
 
 

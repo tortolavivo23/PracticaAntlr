@@ -1,0 +1,44 @@
+PROGRAM Hello;
+VAR
+Nota, Nota2: integer;
+CONST
+nombreRepe = 7;
+unaConstante = 3;
+unaConstante = "Hola";
+unaConstante = 3;
+unaConstante = "Hola";
+unaConstante = 3;
+
+
+PROCEDURE nombreRepe(numero: integer; numeroReal: real; cont: integer);
+VAR
+numero: integer;
+numeroReal : real;
+BEGIN
+    numero := numeroReal * (numero + 2);
+    nombreRepe := nombreRepe + 1 ;
+    WHILE (cont < "3") DO BEGIN
+        nombreRepe(numero, numeroReal, cont + 1);
+    END
+END;
+
+PROCEDURE funcionAuxiliar2(numero: integer; numeroReal: real; cont: integer);
+BEGIN
+    numero := numeroReal * (numero + 2);
+    WHILE (cont < unaConstante) DO BEGIN
+        funcionAuxiliar(numero, numeroReal, cont + 1);
+    END
+END;
+
+BEGIN
+    Nota := 1;
+    REPEAT
+      BEGIN
+          Nota := Nota + 1;
+          writeln("Nota aumentada!");
+      END
+    UNTIL (Nota = unaConstante);
+    writeln("La nota es", funcionAuxiliar(Nota, 3.05E12)); { Cálculo de la nota }
+    variable := 4 + 5 DIV 3;
+    writeln(dosConstantes);
+END.
