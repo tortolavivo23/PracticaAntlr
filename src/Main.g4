@@ -190,11 +190,11 @@ deffun[Map<String, String> map] returns[String funcion, String codigo]:
 formal_paramlist returns[String variables] : '(' formal_param ')' {$variables = "("+$formal_param.variables+")";}| {$variables = "";} ; //Expresion ʎ
 formal_param returns[String variables] : varlist[new HashMap<String, String>()] ':' tbas  formal_paramFactor{$variables = $tbas.tipoDevuelto+": "+$varlist.nombreVariables+$formal_paramFactor.variables;};
 formal_paramFactor returns[String variables]: {$variables = "";}| ';' formal_param {$variables = "; " + $formal_param.variables ;}  ; //Factorización
-tbas returns[String tipoDevuelto] : 'integer' {$tipoDevuelto = formatear("integer");} | 'real' {$tipoDevuelto = formatear("real");};
+tbas returns[String tipoDevuelto] : 'integer' {$tipoDevuelto = formatearReservada("integer");} | 'real' {$tipoDevuelto = formatearReservada("real");};
 
-sent returns[String sentencia] :
-     IDENTIFIER sentFactor ';'{
-        $sentencia = "<div>" + formatear($IDENTIFIER.text) + " " + $sentFactor.sentencia + ";</div>";
+sent[Map<String,String> map] returns[String sentencia] :
+     IDENTIFIER sentFactor[$map] ';'{
+        $sentencia = "<div>" + formatear($IDENTIFIER.text,$map) + " " + $sentFactor.sentencia + ";</div>";
      } |
      'IF' expcond[$map] 'THEN' blq 'ELSE' blq {
         $sentencia = "<div> "+formatearReservada("IF")+" " + $expcond.condicion + " "+formatearReservada("THEN")+" </div> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div> <div> "+formatearReservada("ELSE")+" </div> <div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
@@ -217,15 +217,15 @@ sentFactor[Map<String, String> map] returns[String sentencia]:
         $sentencia = $asig.asignacion;
     }; //Factorización
 
-asig returns[String asignacion] : ':=' exp {
+asig [Map<String, String> map] returns[String asignacion] : ':=' exp[$map] {
     $asignacion = " := "+$exp.expresion;
     };
 
 exp [Map<String, String> map] returns[String expresion] : factor[$map] expFactor[$map] {$expresion = $factor.variable+$expFactor.operacion;};  //Cambio para arreglar la recursividad izquierda
 
-expFactor returns[String operacion] :
+expFactor[Map<String,String> map] returns[String operacion] :
     {$operacion = "";}|
-    op exp{
+    op exp[$map]{
         $operacion = " " + $op.simbolo + " " + $exp.expresion;
     }; //Factorizacion
 
@@ -233,31 +233,31 @@ op returns[String simbolo]:
     '+' {$simbolo = "+";} |
     '-' {$simbolo = "-";}|
     '*' {$simbolo = "*";} |
-    'DIV' {$simbolo = formatear("DIV");} |
-    'MOD' {$simbolo = formatear("MOD");};
+    'DIV' {$simbolo = formatearReservada("DIV");} |
+    'MOD' {$simbolo = formatearReservada("MOD");};
 
-factor returns[String variable] :
+factor[Map<String,String> map] returns[String variable] :
     simpvalue{
         $variable = formatear($simpvalue.constante,$map);
     } |
-    '(' exp ')'{
+    '(' exp[$map] ')'{
         $variable = "("+$exp.expresion+")";
     } |
-    IDENTIFIER subpparamlist{
-        $variable = formatear($IDENTIFIER.text) +" " + $subpparamlist.parametros;
+    IDENTIFIER subpparamlist[$map]{
+        $variable = formatear($IDENTIFIER.text,$map) +" " + $subpparamlist.parametros;
     };
-subpparamlist returns[String parametros]:
+subpparamlist[Map<String,String> map] returns[String parametros]:
     {$parametros="";} |
-    '(' explist ')' {$parametros = "("+$explist.expresiones+")";} ; //Expresion ʎ
+    '(' explist[$map] ')' {$parametros = "("+$explist.expresiones+")";} ; //Expresion ʎ
 
 explist[Map<String, String> map] returns[String expresiones]:
     exp[$map] explistFactor[$map] {
         $expresiones = $exp.expresion + $explistFactor.expresiones;
     } ; //Cambio para arreglar la factorización
 
-explistFactor returns[String expresiones]:
+explistFactor[Map<String,String> map] returns[String expresiones]:
     {$expresiones="";} |
-     ',' explist {$expresiones = ", "+$explist.expresiones;}; //Factorización
+     ',' explist[$map] {$expresiones = ", "+$explist.expresiones;}; //Factorización
 
 proc_call[Map<String, String> map] returns[String parametros]:  subpparamlist[$map] {$parametros = $subpparamlist.parametros;} ;
 
