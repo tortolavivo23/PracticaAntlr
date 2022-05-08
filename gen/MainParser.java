@@ -716,6 +716,7 @@ public class MainParser extends Parser {
 		public String constantes;
 		public String tipoId;
 		public Token IDENTIFIER;
+		public SimpvalueContext simpvalue;
 		public CtelistFactorContext ctelistFactor;
 		public TerminalNode IDENTIFIER() { return getToken(MainParser.IDENTIFIER, 0); }
 		public SimpvalueContext simpvalue() {
@@ -757,7 +758,7 @@ public class MainParser extends Parser {
 			setState(129);
 			match(T__6);
 			setState(130);
-			simpvalue();
+			((CtelistContext)_localctx).simpvalue = simpvalue();
 			setState(131);
 			match(T__1);
 			setState(132);
@@ -769,8 +770,8 @@ public class MainParser extends Parser {
 			                nombre += "1";
 			                claveNombre += "1";
 			           }
-			           _localctx.map.put(claveNombre, "cte");
-			           ((CtelistContext)_localctx).constantes =  "<a NAME=\""+claveNombre+"\">"+nombre+ "</a> = " + formatear(claveNombre, nombre, _localctx.map) + ";" + ((CtelistContext)_localctx).ctelistFactor.constantes;
+			           ((CtelistContext)_localctx).constantes =  "<a NAME=\""+claveNombre+"\">"+nombre+ "</a> = " + formatear(((CtelistContext)_localctx).simpvalue.constante, ((CtelistContext)_localctx).simpvalue.constante, _localctx.map) + ";" + ((CtelistContext)_localctx).ctelistFactor.constantes;
+			           _localctx.map.put(claveNombre, "cte"); // añadimos al mapa después de la declaración para que se pinte correctamente en instrucciones sucesivas
 			        
 			}
 		}

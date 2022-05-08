@@ -145,8 +145,8 @@ ctelist[Map<String, String> map, String nombreBloque] returns [String constantes
                 nombre += "1";
                 claveNombre += "1";
            }
-           $map.put(claveNombre, "cte");
-           $constantes = "<a NAME=\""+claveNombre+"\">"+nombre+ "</a> = " + formatear(claveNombre, nombre, $map) + ";" + $ctelistFactor.constantes;
+           $constantes = "<a NAME=\""+claveNombre+"\">"+nombre+ "</a> = " + formatear($simpvalue.constante, $simpvalue.constante, $map) + ";" + $ctelistFactor.constantes;
+           $map.put(claveNombre, "cte"); // añadimos al mapa después de la declaración para que se pinte correctamente en instrucciones sucesivas
         };
 
 ctelistFactor[Map<String, String> map, String nombreBloque] returns [String constantes] : {$constantes = "";}| ctelist[$map,$nombreBloque] {$constantes = "<br>" + $ctelist.constantes;};

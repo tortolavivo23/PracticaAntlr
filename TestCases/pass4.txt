@@ -2,6 +2,7 @@ PROGRAM Hello;
 VAR
 Nota, Nota2: integer;
 CONST
+numero = 3;
 unaConstante = 3;
 dosConstantes = "Hola";
 
@@ -27,7 +28,7 @@ BEGIN
     Nota := 1;
     REPEAT
       BEGIN
-          Nota := Nota + unaConstante;
+          Nota := Nota + unaConstante + numero;
           writeln("Nota aumentada!");
       END
     UNTIL (Nota = unaConstante);
