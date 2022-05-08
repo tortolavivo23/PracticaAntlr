@@ -190,7 +190,7 @@ deffun[Map<String, String> map] returns[String funcion, String codigo]:
         $codigo ="<a NAME= \""+ nombre +"\" >"+ formatearReservada("FUNCTION") + "  " + nombre + " " + $formal_paramlist.variables + ";</a> <br/>" + $blq.codigo+";<br>";
     };
 formal_paramlist returns[String variables] : '(' formal_param ')' {$variables = "("+$formal_param.variables+")";}| {$variables = "";} ; //Expresion ʎ
-formal_param returns[String variables] : varlist[new HashMap<String, String>()] ':' tbas  formal_paramFactor{$variables = $tbas.tipoDevuelto+": "+$varlist.nombreVariables+$formal_paramFactor.variables;};
+formal_param returns[String variables] : varlist[new HashMap<String, String>()] ':' tbas  formal_paramFactor{$variables = $varlist.nombreVariables+": "+$tbas.tipoDevuelto+$formal_paramFactor.variables;};
 formal_paramFactor returns[String variables]: {$variables = "";}| ';' formal_param {$variables = "; " + $formal_param.variables ;}  ; //Factorización
 tbas returns[String tipoDevuelto] : 'integer' {$tipoDevuelto = formatearReservada("integer");} | 'real' {$tipoDevuelto = formatearReservada("real");};
 

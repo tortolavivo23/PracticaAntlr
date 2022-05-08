@@ -1484,7 +1484,7 @@ public class MainParser extends Parser {
 			((Formal_paramContext)_localctx).tbas = tbas();
 			setState(207);
 			((Formal_paramContext)_localctx).formal_paramFactor = formal_paramFactor();
-			((Formal_paramContext)_localctx).variables =  ((Formal_paramContext)_localctx).tbas.tipoDevuelto+": "+((Formal_paramContext)_localctx).varlist.nombreVariables+((Formal_paramContext)_localctx).formal_paramFactor.variables;
+			((Formal_paramContext)_localctx).variables =  ((Formal_paramContext)_localctx).varlist.nombreVariables+": "+((Formal_paramContext)_localctx).tbas.tipoDevuelto+((Formal_paramContext)_localctx).formal_paramFactor.variables;
 			}
 		}
 		catch (RecognitionException re) {
@@ -2044,7 +2044,7 @@ public class MainParser extends Parser {
 				setState(279);
 				((ExpFactorContext)_localctx).exp = exp(_localctx.map);
 
-				        ((ExpFactorContext)_localctx).operacion =  " " + ((ExpFactorContext)_localctx).op.simbolo + ((ExpFactorContext)_localctx).exp.expresion;
+				        ((ExpFactorContext)_localctx).operacion =  " " + ((ExpFactorContext)_localctx).op.simbolo + " " + ((ExpFactorContext)_localctx).exp.expresion;
 				    
 				}
 				break;
