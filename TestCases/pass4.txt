@@ -13,11 +13,11 @@ BEGIN
     END
 END;
 
-PROCEDURE funcionAuxiliar2(numero: integer; numeroReal: real; cont: integer);
+PROCEDURE funcionAuxiliar2(numero: integer; Nota: real; cont: integer);
 BEGIN
     numero := numeroReal * (numero + 2);
     WHILE (cont < unaConstante) DO BEGIN
-        funcionAuxiliar(numero, numeroReal, cont + 1);
+        funcionAuxiliar(numero, Nota, cont + 1);
     END
 END;
 
@@ -25,7 +25,7 @@ BEGIN
     Nota := 1;
     REPEAT
       BEGIN
-          Nota := Nota + 1;
+          Nota := Nota + unaConstante;
           writeln("Nota aumentada!");
       END
     UNTIL (Nota = unaConstante);

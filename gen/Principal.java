@@ -1,4 +1,6 @@
 import java.io.*;
+import java.util.HashMap;
+
 import org.antlr.v4.runtime.*;
 
 public class Principal {
@@ -33,6 +35,9 @@ public class Principal {
             System.out.println(".procFunc {" +
                     "color:  #986592;" +
                     "}");
+            System.out.println(".moverse {" +
+                    "color:  #996600;" +
+                    "}");
             System.out.println("</style>");
             System.out.println("</head>");
 
@@ -52,8 +57,11 @@ NumbersParser anasint = new NumbersParser(tokens, new sintesis());
 
 
             anasint.prg();
+            System.out.println("<div class=\"moverse\"><a href=\"#inicioPrograma\">Al principio de la página</a></div>");
+            System.out.println("<div class=\"moverse\"><a href=\"#mainPrograma\">Al principio del programa principal</a></div>");
             System.out.println("</body>");
             System.out.println("</html>");
+
         } catch (org.antlr.v4.runtime.RecognitionException e) {
 //Fallo al reconocer la entrada
             System.err.println("REC " + e.getMessage());

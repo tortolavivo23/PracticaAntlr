@@ -114,7 +114,7 @@ public class MainLexer extends Lexer {
 	        if(!identificadores.containsKey(cadena)){
 	            return "<SPAN CLASS=\"ctesindeclarar\">"+cadena+"</SPAN>";
 	        }
-	        return "<SPAN CLASS=\""+identificadores.get(cadena)+"\">"+cadena+"</SPAN>";
+	        return "<SPAN CLASS=\""+identificadores.get(cadena)+"\"> <a href=\"#"+cadena+"\">"+cadena+"</a></SPAN>";
 	    }
 
 
