@@ -22,9 +22,13 @@ PROGRAM AAA ;
         (* Declaraciones de CCC *)     (* ... constantes, variables funciones y procedimientos ... *)
              PROCEDURE EEE(* parámetros EEE *);
                 (* Declaraciones de EEE *)         (* ... constantes, variables funciones y procedimientos ... *)
-               BEGIN         (* Sentencias de EEE *)
-                   writeln ("no");
-               END;
+                PROCEDURE FFF(r: real);
+                BEGIN
+                    writeln(r);
+                END;
+             BEGIN         (* Sentencias de EEE *)
+                writeln ("no");
+             END;
 
 VAR i : integer;
 BEGIN
