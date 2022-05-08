@@ -11,6 +11,13 @@ public class Principal {
             System.out.println("<head>");
             System.out.println("<title>"+args[0]+"</title>");
             System.out.println("<style>");
+            System.out.println("a {" +
+                    "color: inherit;" +
+                    "text-decoration: none;" +
+                    "}");
+            System.out.println("a:hover {" +
+                    "background-color: lightgreen;" +
+                    "}");
             System.out.println(".cte {" +
                     "color: blue;" +
                     "}");
