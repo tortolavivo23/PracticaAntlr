@@ -1309,7 +1309,7 @@ public class MainParser extends Parser {
 			setState(180);
 			((DefprocContext)_localctx).IDENTIFIER = match(IDENTIFIER);
 
-			        String claveNombre = _localctx.nombreBloque + (((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null);
+			        String claveNombre = _localctx.nombreBloque + "::" + (((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null);
 			        String nombre = (((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null);
 			        while(_localctx.map.containsKey(claveNombre)){
 			            claveNombre += "1";
@@ -1317,7 +1317,7 @@ public class MainParser extends Parser {
 			        }
 			        _localctx.map.put(claveNombre, "procFunc");
 			        mapConParams.put(claveNombre, "procFunc");
-			        String nombreBloqueInterno = _localctx.nombreBloque + "_" + (((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null);
+			        String nombreBloqueInterno = _localctx.nombreBloque + "::" + (((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null);
 			    
 			setState(182);
 			((DefprocContext)_localctx).formal_paramlist = formal_paramlist(mapConParams, nombreBloqueInterno);
@@ -1328,9 +1328,9 @@ public class MainParser extends Parser {
 			setState(185);
 			match(T__1);
 
-			        ((DefprocContext)_localctx).procedimiento = "<LI> <a href=\"#"+claveNombre+"\">"+nombre+" "+((DefprocContext)_localctx).formal_paramlist.variables+";</a></LI>\n";
+			        ((DefprocContext)_localctx).procedimiento = "<LI> <a href=\"#"+claveNombre+"\">"+claveNombre.substring(7)+" "+((DefprocContext)_localctx).formal_paramlist.variables+";</a></LI>\n";
 			        _localctx.procedimiento += ((DefprocContext)_localctx).blq.procYFunc;
-			        ((DefprocContext)_localctx).codigo =  "<a NAME= \""+ claveNombre +"\" >"+ formatearReservada("PROCEDURE") + "  " + nombre + " " + ((DefprocContext)_localctx).formal_paramlist.variables + ";</a> <br/>";
+			        ((DefprocContext)_localctx).codigo =  "<a NAME= \""+ claveNombre +"\" >"+ formatearReservada("PROCEDURE") + "  " + claveNombre.substring(7) + " " + ((DefprocContext)_localctx).formal_paramlist.variables + ";</a> <br/>";
 			        // Propagamos hacia arriba posibles códigos de procedimientos y funciones que estuviesen anidados
 			        _localctx.codigo += "<div style=\"margin-left:1cm\">" + ((DefprocContext)_localctx).blq.codigoFunc + ((DefprocContext)_localctx).blq.codigoProc + "</div>";
 			        _localctx.codigo += ((DefprocContext)_localctx).blq.constantes + ((DefprocContext)_localctx).blq.variables + ((DefprocContext)_localctx).blq.codigo + ";<br>";
@@ -1405,7 +1405,7 @@ public class MainParser extends Parser {
 			setState(190);
 			((DeffunContext)_localctx).IDENTIFIER = match(IDENTIFIER);
 
-			        String claveNombre = _localctx.nombreBloque + (((DeffunContext)_localctx).IDENTIFIER!=null?((DeffunContext)_localctx).IDENTIFIER.getText():null);
+			        String claveNombre = _localctx.nombreBloque + "::" + (((DeffunContext)_localctx).IDENTIFIER!=null?((DeffunContext)_localctx).IDENTIFIER.getText():null);
 			        String nombre = (((DeffunContext)_localctx).IDENTIFIER!=null?((DeffunContext)_localctx).IDENTIFIER.getText():null);
 			        while(_localctx.map.containsKey(claveNombre)){
 			            claveNombre += "1";
@@ -1413,7 +1413,7 @@ public class MainParser extends Parser {
 			        }
 			        _localctx.map.put(claveNombre, "procFunc");
 			        mapConParams.put(claveNombre, "procFunc");
-			        String nombreBloqueInterno = _localctx.nombreBloque + "_" + (((DeffunContext)_localctx).IDENTIFIER!=null?((DeffunContext)_localctx).IDENTIFIER.getText():null);
+			        String nombreBloqueInterno = _localctx.nombreBloque + "::" + (((DeffunContext)_localctx).IDENTIFIER!=null?((DeffunContext)_localctx).IDENTIFIER.getText():null);
 			    
 			setState(192);
 			((DeffunContext)_localctx).formal_paramlist = formal_paramlist(mapConParams, nombreBloqueInterno);
@@ -1428,9 +1428,9 @@ public class MainParser extends Parser {
 			setState(197);
 			match(T__1);
 
-			        ((DeffunContext)_localctx).funcion =  "<LI> <a href=\"#"+claveNombre+"\">"+nombre+" "+((DeffunContext)_localctx).formal_paramlist.variables+";</a></LI>\n";
+			        ((DeffunContext)_localctx).funcion =  "<LI> <a href=\"#"+claveNombre+"\">"+claveNombre.substring(7)+" "+((DeffunContext)_localctx).formal_paramlist.variables+";</a></LI>\n";
 			        _localctx.funcion += ((DeffunContext)_localctx).blq.procYFunc;
-			        ((DeffunContext)_localctx).codigo =  "<a NAME= \""+ claveNombre +"\" >"+ formatearReservada("FUNCTION") + "  " + nombre + " " + ((DeffunContext)_localctx).formal_paramlist.variables + ";</a> <br/><br>";
+			        ((DeffunContext)_localctx).codigo =  "<a NAME= \""+ claveNombre +"\" >"+ formatearReservada("FUNCTION") + "  " + claveNombre.substring(7) + " " + ((DeffunContext)_localctx).formal_paramlist.variables + ";</a> <br/><br>";
 			        _localctx.codigo += "<div style=\"margin-left:1cm\">" + ((DeffunContext)_localctx).blq.codigoFunc + ((DeffunContext)_localctx).blq.codigoProc + "</div>";
 			        _localctx.codigo += ((DeffunContext)_localctx).blq.constantes + ((DeffunContext)_localctx).blq.variables + ((DeffunContext)_localctx).blq.codigo + ";<br>";
 			        _localctx.codigo += "<div class=\"moverse\"><a href=\"#inicioPrograma\">Al principio de la página</a></div>";

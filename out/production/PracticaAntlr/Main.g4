@@ -192,7 +192,7 @@ defproc[Map<String, String> map, String nombreBloque] returns [String procedimie
     }
     'PROCEDURE' IDENTIFIER
     {
-        String claveNombre = $nombreBloque + $IDENTIFIER.text;
+        String claveNombre = $nombreBloque + "::" + $IDENTIFIER.text;
         String nombre = $IDENTIFIER.text;
         while($map.containsKey(claveNombre)){
             claveNombre += "1";
@@ -200,11 +200,11 @@ defproc[Map<String, String> map, String nombreBloque] returns [String procedimie
         }
         $map.put(claveNombre, "procFunc");
         mapConParams.put(claveNombre, "procFunc");
-        String nombreBloqueInterno = $nombreBloque + "_" + $IDENTIFIER.text;
+        String nombreBloqueInterno = $nombreBloque + "::" + $IDENTIFIER.text;
     } formal_paramlist [mapConParams, nombreBloqueInterno] ';' blq [mapConParams, nombreBloqueInterno] ';'{
-        $procedimiento ="<LI> <a href=\"#"+claveNombre+"\">"+nombre+" "+$formal_paramlist.variables+";</a></LI>\n";
+        $procedimiento ="<LI> <a href=\"#"+claveNombre+"\">"+claveNombre.substring(7)+" "+$formal_paramlist.variables+";</a></LI>\n";
         $procedimiento += $blq.procYFunc;
-        $codigo = "<a NAME= \""+ claveNombre +"\" >"+ formatearReservada("PROCEDURE") + "  " + nombre + " " + $formal_paramlist.variables + ";</a> <br/>";
+        $codigo = "<a NAME= \""+ claveNombre +"\" >"+ formatearReservada("PROCEDURE") + "  " + claveNombre.substring(7) + " " + $formal_paramlist.variables + ";</a> <br/>";
         // Propagamos hacia arriba posibles códigos de procedimientos y funciones que estuviesen anidados
         $codigo += "<div style=\"margin-left:1cm\">" + $blq.codigoFunc + $blq.codigoProc + "</div>";
         $codigo += $blq.constantes + $blq.variables + $blq.codigo + ";<br>";
@@ -219,7 +219,7 @@ deffun[Map<String, String> map, String nombreBloque] returns[String funcion, Str
     }
     'FUNCTION' IDENTIFIER
     {
-        String claveNombre = $nombreBloque + $IDENTIFIER.text;
+        String claveNombre = $nombreBloque + "::" + $IDENTIFIER.text;
         String nombre = $IDENTIFIER.text;
         while($map.containsKey(claveNombre)){
             claveNombre += "1";
@@ -227,12 +227,12 @@ deffun[Map<String, String> map, String nombreBloque] returns[String funcion, Str
         }
         $map.put(claveNombre, "procFunc");
         mapConParams.put(claveNombre, "procFunc");
-        String nombreBloqueInterno = $nombreBloque + "_" + $IDENTIFIER.text;
+        String nombreBloqueInterno = $nombreBloque + "::" + $IDENTIFIER.text;
     } formal_paramlist [mapConParams, nombreBloqueInterno] ':' tbas ';' blq[mapConParams, nombreBloqueInterno] ';'
     {
-        $funcion = "<LI> <a href=\"#"+claveNombre+"\">"+nombre+" "+$formal_paramlist.variables+";</a></LI>\n";
+        $funcion = "<LI> <a href=\"#"+claveNombre+"\">"+claveNombre.substring(7)+" "+$formal_paramlist.variables+";</a></LI>\n";
         $funcion += $blq.procYFunc;
-        $codigo = "<a NAME= \""+ claveNombre +"\" >"+ formatearReservada("FUNCTION") + "  " + nombre + " " + $formal_paramlist.variables + ";</a> <br/><br>";
+        $codigo = "<a NAME= \""+ claveNombre +"\" >"+ formatearReservada("FUNCTION") + "  " + claveNombre.substring(7) + " " + $formal_paramlist.variables + ";</a> <br/><br>";
         $codigo += "<div style=\"margin-left:1cm\">" + $blq.codigoFunc + $blq.codigoProc + "</div>";
         $codigo += $blq.constantes + $blq.variables + $blq.codigo + ";<br>";
         $codigo += "<div class=\"moverse\"><a href=\"#inicioPrograma\">Al principio de la página</a></div>";
