@@ -200,6 +200,8 @@ public class MainParser extends Parser {
 			            System.out.println(((PrgContext)_localctx).blq.variables);
 			                // Mostrar el código principal
 			            System.out.println(((PrgContext)_localctx).blq.codigo + ".");
+			            System.out.println("<div class=\"moverse\"><a href=\"#inicioPrograma\">Al principio de la página</a></div>");
+			            System.out.println("<div class=\"moverse\"><a href=\"#inicioMain\">Al principio del programa principal</a></div>");
 			        
 			setState(83);
 			match(T__2);
@@ -1327,7 +1329,13 @@ public class MainParser extends Parser {
 			match(T__1);
 
 			        ((DefprocContext)_localctx).procedimiento = "<LI> <a href=\"#"+claveNombre+"\">"+nombre+" "+((DefprocContext)_localctx).formal_paramlist.variables+";</a></LI>\n";
-			        ((DefprocContext)_localctx).codigo = "<a NAME= \""+ claveNombre +"\" >"+ formatearReservada("PROCEDURE") + "  " + nombre + " " + ((DefprocContext)_localctx).formal_paramlist.variables + ";</a> <br/>"+ ((DefprocContext)_localctx).blq.constantes + ((DefprocContext)_localctx).blq.variables + ((DefprocContext)_localctx).blq.codigo+";<br>";
+			        _localctx.procedimiento += ((DefprocContext)_localctx).blq.procYFunc;
+			        ((DefprocContext)_localctx).codigo =  "<a NAME= \""+ claveNombre +"\" >"+ formatearReservada("PROCEDURE") + "  " + nombre + " " + ((DefprocContext)_localctx).formal_paramlist.variables + ";</a> <br/>";
+			        // Propagamos hacia arriba posibles códigos de procedimientos y funciones que estuviesen anidados
+			        _localctx.codigo += "<div style=\"margin-left:1cm\">" + ((DefprocContext)_localctx).blq.codigoFunc + ((DefprocContext)_localctx).blq.codigoProc + "</div>";
+			        _localctx.codigo += ((DefprocContext)_localctx).blq.constantes + ((DefprocContext)_localctx).blq.variables + ((DefprocContext)_localctx).blq.codigo + ";<br>";
+			        _localctx.codigo += "<div class=\"moverse\"><a href=\"#inicioPrograma\">Al principio de la página</a></div>";
+			        _localctx.codigo += "<div class=\"moverse\"><a href=\"#"+claveNombre+"\">Al principio del procedimiento "+nombre+"</a></div><br>";
 			    
 			}
 		}
@@ -1421,7 +1429,12 @@ public class MainParser extends Parser {
 			match(T__1);
 
 			        ((DeffunContext)_localctx).funcion =  "<LI> <a href=\"#"+claveNombre+"\">"+nombre+" "+((DeffunContext)_localctx).formal_paramlist.variables+";</a></LI>\n";
-			        ((DeffunContext)_localctx).codigo =  "<a NAME= \""+ claveNombre +"\" >"+ formatearReservada("FUNCTION") + "  " + nombre + " " + ((DeffunContext)_localctx).formal_paramlist.variables + ";</a> <br/>" + ((DeffunContext)_localctx).blq.constantes + ((DeffunContext)_localctx).blq.variables + ((DeffunContext)_localctx).blq.codigo+";<br>";
+			        _localctx.funcion += ((DeffunContext)_localctx).blq.procYFunc;
+			        ((DeffunContext)_localctx).codigo =  "<a NAME= \""+ claveNombre +"\" >"+ formatearReservada("FUNCTION") + "  " + nombre + " " + ((DeffunContext)_localctx).formal_paramlist.variables + ";</a> <br/><br>";
+			        _localctx.codigo += "<div style=\"margin-left:1cm\">" + ((DeffunContext)_localctx).blq.codigoFunc + ((DeffunContext)_localctx).blq.codigoProc + "</div>";
+			        _localctx.codigo += ((DeffunContext)_localctx).blq.constantes + ((DeffunContext)_localctx).blq.variables + ((DeffunContext)_localctx).blq.codigo + ";<br>";
+			        _localctx.codigo += "<div class=\"moverse\"><a href=\"#inicioPrograma\">Al principio de la página</a></div>";
+			        _localctx.codigo += "<div class=\"moverse\"><a href=\"#"+claveNombre+"\">Al principio de la función "+nombre+"</a></div><br>";
 			    
 			}
 		}

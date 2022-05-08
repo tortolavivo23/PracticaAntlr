@@ -47,6 +47,8 @@ prg:
             System.out.println($blq.variables);
                 // Mostrar el código principal
             System.out.println($blq.codigo + ".");
+            System.out.println("<div class=\"moverse\"><a href=\"#inicioPrograma\">Al principio de la página</a></div>");
+            System.out.println("<div class=\"moverse\"><a href=\"#inicioMain\">Al principio del programa principal</a></div>");
         }
     '.';
 
@@ -201,7 +203,13 @@ defproc[Map<String, String> map, String nombreBloque] returns [String procedimie
         String nombreBloqueInterno = $nombreBloque + "_" + $IDENTIFIER.text;
     } formal_paramlist [mapConParams, nombreBloqueInterno] ';' blq [mapConParams, nombreBloqueInterno] ';'{
         $procedimiento ="<LI> <a href=\"#"+claveNombre+"\">"+nombre+" "+$formal_paramlist.variables+";</a></LI>\n";
-        $codigo ="<a NAME= \""+ claveNombre +"\" >"+ formatearReservada("PROCEDURE") + "  " + nombre + " " + $formal_paramlist.variables + ";</a> <br/>"+ $blq.constantes + $blq.variables + $blq.codigo+";<br>";
+        $procedimiento += $blq.procYFunc;
+        $codigo = "<a NAME= \""+ claveNombre +"\" >"+ formatearReservada("PROCEDURE") + "  " + nombre + " " + $formal_paramlist.variables + ";</a> <br/>";
+        // Propagamos hacia arriba posibles códigos de procedimientos y funciones que estuviesen anidados
+        $codigo += "<div style=\"margin-left:1cm\">" + $blq.codigoFunc + $blq.codigoProc + "</div>";
+        $codigo += $blq.constantes + $blq.variables + $blq.codigo + ";<br>";
+        $codigo += "<div class=\"moverse\"><a href=\"#inicioPrograma\">Al principio de la página</a></div>";
+        $codigo += "<div class=\"moverse\"><a href=\"#"+claveNombre+"\">Al principio del procedimiento "+nombre+"</a></div><br>";
     };
 
 deffun[Map<String, String> map, String nombreBloque] returns[String funcion, String codigo]:
@@ -223,7 +231,12 @@ deffun[Map<String, String> map, String nombreBloque] returns[String funcion, Str
     } formal_paramlist [mapConParams, nombreBloqueInterno] ':' tbas ';' blq[mapConParams, nombreBloqueInterno] ';'
     {
         $funcion = "<LI> <a href=\"#"+claveNombre+"\">"+nombre+" "+$formal_paramlist.variables+";</a></LI>\n";
-        $codigo = "<a NAME= \""+ claveNombre +"\" >"+ formatearReservada("FUNCTION") + "  " + nombre + " " + $formal_paramlist.variables + ";</a> <br/>" + $blq.constantes + $blq.variables + $blq.codigo+";<br>";
+        $funcion += $blq.procYFunc;
+        $codigo = "<a NAME= \""+ claveNombre +"\" >"+ formatearReservada("FUNCTION") + "  " + nombre + " " + $formal_paramlist.variables + ";</a> <br/><br>";
+        $codigo += "<div style=\"margin-left:1cm\">" + $blq.codigoFunc + $blq.codigoProc + "</div>";
+        $codigo += $blq.constantes + $blq.variables + $blq.codigo + ";<br>";
+        $codigo += "<div class=\"moverse\"><a href=\"#inicioPrograma\">Al principio de la página</a></div>";
+        $codigo += "<div class=\"moverse\"><a href=\"#"+claveNombre+"\">Al principio de la función "+nombre+"</a></div><br>";
     };
 formal_paramlist [Map<String,String> map, String nombreBloque] returns[String variables] :
     '(' formal_param[map, nombreBloque] ')' {$variables = "("+$formal_param.variables+")";} |

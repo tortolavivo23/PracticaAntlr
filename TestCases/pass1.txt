@@ -19,13 +19,13 @@ PROGRAM AAA ;
             END
     END;
     FUNCTION CCC (a, b : real) : real ;
-         (* Declaraciones de CCC *)     (* ... constantes, variables funciones y procedimientos ... *)
-              PROCEDURE EEE (* parámetros EEE *) ;
-                       (* Declaraciones de EEE *)         (* ... constantes, variables funciones y procedimientos ... *)
-                       BEGIN         (* Sentencias de EEE *)
-                           writeln ("no");
+        (* Declaraciones de CCC *)     (* ... constantes, variables funciones y procedimientos ... *)
+             PROCEDURE EEE(* parámetros EEE *);
+                (* Declaraciones de EEE *)         (* ... constantes, variables funciones y procedimientos ... *)
+               BEGIN         (* Sentencias de EEE *)
+                   writeln ("no");
+               END;
 
-                       END;
 VAR i : integer;
 BEGIN
     paco := "batman" ;
