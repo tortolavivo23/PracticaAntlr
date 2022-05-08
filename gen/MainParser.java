@@ -2042,7 +2042,7 @@ public class MainParser extends Parser {
 				setState(279);
 				((ExpFactorContext)_localctx).exp = exp(_localctx.map);
 
-				        ((ExpFactorContext)_localctx).operacion =  " " + ((ExpFactorContext)_localctx).op.simbolo + " " + ((ExpFactorContext)_localctx).exp.expresion;
+				        ((ExpFactorContext)_localctx).operacion =  " " + ((ExpFactorContext)_localctx).op.simbolo + ((ExpFactorContext)_localctx).exp.expresion;
 				    
 				}
 				break;

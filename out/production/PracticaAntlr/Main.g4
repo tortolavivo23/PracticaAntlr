@@ -227,7 +227,7 @@ exp [Map<String, String> map] returns[String expresion] : factor[$map] expFactor
 expFactor[Map<String,String> map] returns[String operacion] :
     {$operacion = "";}|
     op exp[$map]{
-        $operacion = " " + $op.simbolo + " " + $exp.expresion;
+        $operacion = " " + $op.simbolo + $exp.expresion;
     }; //Factorizacion
 
 op returns[String simbolo]:
