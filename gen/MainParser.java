@@ -174,7 +174,7 @@ public class MainParser extends Parser {
 			setState(77);
 			((PrgContext)_localctx).IDENTIFIER = match(IDENTIFIER);
 
-			            System.out.println("<H1> Programa: "+(((PrgContext)_localctx).IDENTIFIER!=null?((PrgContext)_localctx).IDENTIFIER.getText():null)+" </H1>");
+			            System.out.println("<a NAME=\"inicioPrograma\"><H1> Programa: "+(((PrgContext)_localctx).IDENTIFIER!=null?((PrgContext)_localctx).IDENTIFIER.getText():null)+"</H1></a>");
 			        
 			setState(79);
 			match(T__1);
@@ -192,12 +192,14 @@ public class MainParser extends Parser {
 			            System.out.println(((PrgContext)_localctx).blq.codigoFunc);
 
 			            // Declaraciones y sentencias del programa principal
-			            System.out.println("<HR/> \n <H2> Programa principal </H2>");
+			            System.out.println("<a NAME=\"mainPrograma\"><HR/> \n <H2> Programa principal </H2></a>");
 			                // Mostramos primero constantes y variables
 			            System.out.println(((PrgContext)_localctx).blq.constantes);
 			            System.out.println(((PrgContext)_localctx).blq.variables);
 			                // Mostrar el código principal
 			            System.out.println(((PrgContext)_localctx).blq.codigo + ".");
+			            System.out.println("<div><a href=\"#inicioPrograma\">Al principio de la página</a></div>");
+			            System.out.println("<div><a href=\"#mainPrograma\">Al principio del programa principal</a></div>");
 			        
 			setState(83);
 			match(T__2);

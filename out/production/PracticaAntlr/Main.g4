@@ -25,7 +25,7 @@ grammar Main;
 
 prg:
     'PROGRAM' IDENTIFIER {
-            System.out.println("<H1> Programa: "+$IDENTIFIER.text+" </H1>");
+            System.out.println("<a NAME=\"inicioPrograma\"><H1> Programa: "+$IDENTIFIER.text+"</H1></a>");
         }
     ';' {
             System.out.println("<UL>");
@@ -39,12 +39,14 @@ prg:
             System.out.println($blq.codigoFunc);
 
             // Declaraciones y sentencias del programa principal
-            System.out.println("<HR/> \n <H2> Programa principal </H2>");
+            System.out.println("<a NAME=\"mainPrograma\"><HR/> \n <H2> Programa principal </H2></a>");
                 // Mostramos primero constantes y variables
             System.out.println($blq.constantes);
             System.out.println($blq.variables);
                 // Mostrar el código principal
             System.out.println($blq.codigo + ".");
+            System.out.println("<div><a href=\"#inicioPrograma\">Al principio de la página</a></div>");
+            System.out.println("<div><a href=\"#mainPrograma\">Al principio del programa principal</a></div>");
         }
     '.';
 
