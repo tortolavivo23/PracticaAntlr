@@ -58,7 +58,7 @@ NumbersParser anasint = new NumbersParser(tokens, new sintesis());
 
             anasint.prg();
             System.out.println("<div class=\"moverse\"><a href=\"#inicioPrograma\">Al principio de la página</a></div>");
-            System.out.println("<div class=\"moverse\"><a href=\"#mainPrograma\">Al principio del programa principal</a></div>");
+            System.out.println("<div class=\"moverse\"><a href=\"#inicioMain\">Al principio del programa principal</a></div>");
             System.out.println("</body>");
             System.out.println("</html>");
 

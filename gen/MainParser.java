@@ -125,11 +125,11 @@ public class MainParser extends Parser {
 	            return "<SPAN CLASS=\"palres\">"+cadena+"</SPAN>";
 	    }
 
-	    public String formatear(String cadena, Map<String,String> identificadores) {
-	        if(!identificadores.containsKey(cadena)){
-	            return "<SPAN CLASS=\"ctesindeclarar\">"+cadena+"</SPAN>";
+	    public String formatear(String cadenaUnica, String cadenaBloque, Map<String,String> identificadores) {
+	        if(!identificadores.containsKey(cadenaUnica)){
+	            return "<SPAN CLASS=\"ctesindeclarar\">"+cadenaBloque+"</SPAN>";
 	        }
-	        return "<SPAN CLASS=\""+identificadores.get(cadena)+"\"> <a href=\"#"+cadena+"\">"+cadena+"</a></SPAN>";
+	        return "<SPAN CLASS=\""+identificadores.get(cadenaUnica)+"\"> <a href=\"#"+cadenaUnica+"\">"+cadenaBloque+"</a></SPAN>";
 	    }
 
 	public MainParser(TokenStream input) {
@@ -181,9 +181,10 @@ public class MainParser extends Parser {
 
 			            System.out.println("<UL>");
 			            HashMap<String,String> map = new HashMap<String,String>();
+			            String nombreBloque = "0main"; // aprovechamos que no se pueden declarar variables que empiecen por un número
 			        
 			setState(81);
-			((PrgContext)_localctx).blq = blq(map);
+			((PrgContext)_localctx).blq = blq(map, nombreBloque);
 
 			            // Lista de cabeceras de procedimientos y funciones
 			            System.out.println(((PrgContext)_localctx).blq.procYFunc+"</UL>\n<HR/>");
@@ -193,7 +194,7 @@ public class MainParser extends Parser {
 			            System.out.println(((PrgContext)_localctx).blq.codigoFunc);
 
 			            // Declaraciones y sentencias del programa principal
-			            System.out.println("<a NAME=\"mainPrograma\"><HR/> \n <H2> Programa principal </H2></a>");
+			            System.out.println("<a NAME=\"inicioMain\"><HR/> \n <H2> Programa principal </H2></a>");
 			                // Mostramos primero constantes y variables
 			            System.out.println(((PrgContext)_localctx).blq.constantes);
 			            System.out.println(((PrgContext)_localctx).blq.variables);
@@ -217,6 +218,7 @@ public class MainParser extends Parser {
 
 	public static class BlqContext extends ParserRuleContext {
 		public Map<String,String> map;
+		public String nombreBloque;
 		public String procYFunc;
 		public String codigo;
 		public String constantes;
@@ -232,9 +234,10 @@ public class MainParser extends Parser {
 			return getRuleContext(SentlistContext.class,0);
 		}
 		public BlqContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public BlqContext(ParserRuleContext parent, int invokingState, Map<String,String> map) {
+		public BlqContext(ParserRuleContext parent, int invokingState, Map<String,String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_blq; }
 		@Override
@@ -252,8 +255,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final BlqContext blq(Map<String,String> map) throws RecognitionException {
-		BlqContext _localctx = new BlqContext(_ctx, getState(), map);
+	public final BlqContext blq(Map<String,String> map,String nombreBloque) throws RecognitionException {
+		BlqContext _localctx = new BlqContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 2, RULE_blq);
 		try {
 			enterOuterAlt(_localctx, 1);
@@ -263,7 +266,7 @@ public class MainParser extends Parser {
 			        dcllistMap.putAll(_localctx.map);
 			    
 			setState(86);
-			((BlqContext)_localctx).dcllist = dcllist(dcllistMap);
+			((BlqContext)_localctx).dcllist = dcllist(dcllistMap, nombreBloque);
 
 			            ((BlqContext)_localctx).procYFunc =  ((BlqContext)_localctx).dcllist.procYFunc;
 			            ((BlqContext)_localctx).codigo =  ((BlqContext)_localctx).dcllist.codigo;
@@ -275,7 +278,7 @@ public class MainParser extends Parser {
 			setState(88);
 			match(T__3);
 			setState(89);
-			((BlqContext)_localctx).sentlist = sentlist(dcllistMap);
+			((BlqContext)_localctx).sentlist = sentlist(dcllistMap, nombreBloque);
 			setState(90);
 			match(T__4);
 
@@ -298,6 +301,7 @@ public class MainParser extends Parser {
 
 	public static class DcllistContext extends ParserRuleContext {
 		public Map<String, String> map;
+		public String nombreBloque;
 		public String procYFunc;
 		public String codigo;
 		public String constantes;
@@ -313,9 +317,10 @@ public class MainParser extends Parser {
 			return getRuleContext(DcllistContext.class,0);
 		}
 		public DcllistContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public DcllistContext(ParserRuleContext parent, int invokingState, Map<String, String> map) {
+		public DcllistContext(ParserRuleContext parent, int invokingState, Map<String, String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_dcllist; }
 		@Override
@@ -333,8 +338,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final DcllistContext dcllist(Map<String, String> map) throws RecognitionException {
-		DcllistContext _localctx = new DcllistContext(_ctx, getState(), map);
+	public final DcllistContext dcllist(Map<String, String> map,String nombreBloque) throws RecognitionException {
+		DcllistContext _localctx = new DcllistContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 4, RULE_dcllist);
 		try {
 			setState(98);
@@ -360,9 +365,9 @@ public class MainParser extends Parser {
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(94);
-				((DcllistContext)_localctx).dcl = dcl(_localctx.map);
+				((DcllistContext)_localctx).dcl = dcl(_localctx.map, _localctx.nombreBloque);
 				setState(95);
-				((DcllistContext)_localctx).dcllist = dcllist(_localctx.map);
+				((DcllistContext)_localctx).dcllist = dcllist(_localctx.map, _localctx.nombreBloque);
 
 				        ((DcllistContext)_localctx).procYFunc =  ((DcllistContext)_localctx).dcl.procYFunc+((DcllistContext)_localctx).dcllist.procYFunc;
 				        ((DcllistContext)_localctx).codigo =  ((DcllistContext)_localctx).dcl.codigo+((DcllistContext)_localctx).dcllist.codigo;
@@ -390,6 +395,7 @@ public class MainParser extends Parser {
 
 	public static class SentlistContext extends ParserRuleContext {
 		public Map<String, String> map;
+		public String nombreBloque;
 		public String codigo;
 		public SentContext sent;
 		public SentlistFactorContext sentlistFactor;
@@ -400,9 +406,10 @@ public class MainParser extends Parser {
 			return getRuleContext(SentlistFactorContext.class,0);
 		}
 		public SentlistContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public SentlistContext(ParserRuleContext parent, int invokingState, Map<String, String> map) {
+		public SentlistContext(ParserRuleContext parent, int invokingState, Map<String, String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_sentlist; }
 		@Override
@@ -420,16 +427,16 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final SentlistContext sentlist(Map<String, String> map) throws RecognitionException {
-		SentlistContext _localctx = new SentlistContext(_ctx, getState(), map);
+	public final SentlistContext sentlist(Map<String, String> map,String nombreBloque) throws RecognitionException {
+		SentlistContext _localctx = new SentlistContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 6, RULE_sentlist);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(100);
-			((SentlistContext)_localctx).sent = sent(_localctx.map);
+			((SentlistContext)_localctx).sent = sent(_localctx.map, _localctx.nombreBloque);
 			setState(101);
-			((SentlistContext)_localctx).sentlistFactor = sentlistFactor(_localctx.map);
+			((SentlistContext)_localctx).sentlistFactor = sentlistFactor(_localctx.map, _localctx.nombreBloque);
 
 			        ((SentlistContext)_localctx).codigo =  ((SentlistContext)_localctx).sent.sentencia+((SentlistContext)_localctx).sentlistFactor.codigo;
 			    
@@ -448,15 +455,17 @@ public class MainParser extends Parser {
 
 	public static class SentlistFactorContext extends ParserRuleContext {
 		public Map<String, String> map;
+		public String nombreBloque;
 		public String codigo;
 		public SentlistContext sentlist;
 		public SentlistContext sentlist() {
 			return getRuleContext(SentlistContext.class,0);
 		}
 		public SentlistFactorContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public SentlistFactorContext(ParserRuleContext parent, int invokingState, Map<String, String> map) {
+		public SentlistFactorContext(ParserRuleContext parent, int invokingState, Map<String, String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_sentlistFactor; }
 		@Override
@@ -474,8 +483,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final SentlistFactorContext sentlistFactor(Map<String, String> map) throws RecognitionException {
-		SentlistFactorContext _localctx = new SentlistFactorContext(_ctx, getState(), map);
+	public final SentlistFactorContext sentlistFactor(Map<String, String> map,String nombreBloque) throws RecognitionException {
+		SentlistFactorContext _localctx = new SentlistFactorContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 8, RULE_sentlistFactor);
 		try {
 			setState(108);
@@ -497,7 +506,7 @@ public class MainParser extends Parser {
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(105);
-				((SentlistFactorContext)_localctx).sentlist = sentlist(_localctx.map);
+				((SentlistFactorContext)_localctx).sentlist = sentlist(_localctx.map, _localctx.nombreBloque);
 
 				        ((SentlistFactorContext)_localctx).codigo =  ((SentlistFactorContext)_localctx).sentlist.codigo;
 				   
@@ -520,6 +529,7 @@ public class MainParser extends Parser {
 
 	public static class DclContext extends ParserRuleContext {
 		public Map<String, String> map;
+		public String nombreBloque;
 		public String procYFunc;
 		public String codigo;
 		public String constantes;
@@ -543,9 +553,10 @@ public class MainParser extends Parser {
 			return getRuleContext(DeffunContext.class,0);
 		}
 		public DclContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public DclContext(ParserRuleContext parent, int invokingState, Map<String, String> map) {
+		public DclContext(ParserRuleContext parent, int invokingState, Map<String, String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_dcl; }
 		@Override
@@ -563,8 +574,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final DclContext dcl(Map<String, String> map) throws RecognitionException {
-		DclContext _localctx = new DclContext(_ctx, getState(), map);
+	public final DclContext dcl(Map<String, String> map,String nombreBloque) throws RecognitionException {
+		DclContext _localctx = new DclContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 10, RULE_dcl);
 		try {
 			setState(122);
@@ -574,7 +585,7 @@ public class MainParser extends Parser {
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(110);
-				((DclContext)_localctx).defcte = defcte(_localctx.map);
+				((DclContext)_localctx).defcte = defcte(_localctx.map, _localctx.nombreBloque);
 
 				        ((DclContext)_localctx).procYFunc =  "";
 				        ((DclContext)_localctx).codigo =  "";
@@ -589,7 +600,7 @@ public class MainParser extends Parser {
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(113);
-				((DclContext)_localctx).defvar = defvar(_localctx.map);
+				((DclContext)_localctx).defvar = defvar(_localctx.map, _localctx.nombreBloque);
 
 				        ((DclContext)_localctx).procYFunc = "";
 				        ((DclContext)_localctx).codigo =  "";
@@ -604,7 +615,7 @@ public class MainParser extends Parser {
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(116);
-				((DclContext)_localctx).defproc = defproc(_localctx.map);
+				((DclContext)_localctx).defproc = defproc(_localctx.map, _localctx.nombreBloque);
 
 				        ((DclContext)_localctx).procYFunc =  ((DclContext)_localctx).defproc.procedimiento;
 				        ((DclContext)_localctx).codigo =  "";
@@ -619,7 +630,7 @@ public class MainParser extends Parser {
 				enterOuterAlt(_localctx, 4);
 				{
 				setState(119);
-				((DclContext)_localctx).deffun = deffun(_localctx.map);
+				((DclContext)_localctx).deffun = deffun(_localctx.map, _localctx.nombreBloque);
 
 				        ((DclContext)_localctx).procYFunc =  ((DclContext)_localctx).deffun.funcion;
 				        ((DclContext)_localctx).codigo =  "";
@@ -647,15 +658,17 @@ public class MainParser extends Parser {
 
 	public static class DefcteContext extends ParserRuleContext {
 		public Map<String, String> map;
+		public String nombreBloque;
 		public String defConstantes;
 		public CtelistContext ctelist;
 		public CtelistContext ctelist() {
 			return getRuleContext(CtelistContext.class,0);
 		}
 		public DefcteContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public DefcteContext(ParserRuleContext parent, int invokingState, Map<String, String> map) {
+		public DefcteContext(ParserRuleContext parent, int invokingState, Map<String, String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_defcte; }
 		@Override
@@ -673,8 +686,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final DefcteContext defcte(Map<String, String> map) throws RecognitionException {
-		DefcteContext _localctx = new DefcteContext(_ctx, getState(), map);
+	public final DefcteContext defcte(Map<String, String> map,String nombreBloque) throws RecognitionException {
+		DefcteContext _localctx = new DefcteContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 12, RULE_defcte);
 		try {
 			enterOuterAlt(_localctx, 1);
@@ -682,7 +695,7 @@ public class MainParser extends Parser {
 			setState(124);
 			match(T__5);
 			setState(125);
-			((DefcteContext)_localctx).ctelist = ctelist(_localctx.map);
+			((DefcteContext)_localctx).ctelist = ctelist(_localctx.map, _localctx.nombreBloque);
 			((DefcteContext)_localctx).defConstantes =  formatearReservada("CONST")+" <br>" + ((DefcteContext)_localctx).ctelist.constantes + " <br>";
 			}
 		}
@@ -699,10 +712,10 @@ public class MainParser extends Parser {
 
 	public static class CtelistContext extends ParserRuleContext {
 		public Map<String, String> map;
+		public String nombreBloque;
 		public String constantes;
 		public String tipoId;
 		public Token IDENTIFIER;
-		public SimpvalueContext simpvalue;
 		public CtelistFactorContext ctelistFactor;
 		public TerminalNode IDENTIFIER() { return getToken(MainParser.IDENTIFIER, 0); }
 		public SimpvalueContext simpvalue() {
@@ -712,9 +725,10 @@ public class MainParser extends Parser {
 			return getRuleContext(CtelistFactorContext.class,0);
 		}
 		public CtelistContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public CtelistContext(ParserRuleContext parent, int invokingState, Map<String, String> map) {
+		public CtelistContext(ParserRuleContext parent, int invokingState, Map<String, String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_ctelist; }
 		@Override
@@ -732,8 +746,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final CtelistContext ctelist(Map<String, String> map) throws RecognitionException {
-		CtelistContext _localctx = new CtelistContext(_ctx, getState(), map);
+	public final CtelistContext ctelist(Map<String, String> map,String nombreBloque) throws RecognitionException {
+		CtelistContext _localctx = new CtelistContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 14, RULE_ctelist);
 		try {
 			enterOuterAlt(_localctx, 1);
@@ -743,18 +757,20 @@ public class MainParser extends Parser {
 			setState(129);
 			match(T__6);
 			setState(130);
-			((CtelistContext)_localctx).simpvalue = simpvalue();
+			simpvalue();
 			setState(131);
 			match(T__1);
 			setState(132);
-			((CtelistContext)_localctx).ctelistFactor = ctelistFactor(_localctx.map);
+			((CtelistContext)_localctx).ctelistFactor = ctelistFactor(_localctx.map, _localctx.nombreBloque);
 
+			           String claveNombre = _localctx.nombreBloque + (((CtelistContext)_localctx).IDENTIFIER!=null?((CtelistContext)_localctx).IDENTIFIER.getText():null);
 			           String nombre = (((CtelistContext)_localctx).IDENTIFIER!=null?((CtelistContext)_localctx).IDENTIFIER.getText():null);
 			           while(_localctx.map.containsKey(nombre)){
 			                nombre += "1";
+			                claveNombre += "1";
 			           }
-			           _localctx.map.put(nombre, "cte");
-			           ((CtelistContext)_localctx).constantes =  "<a NAME=\""+nombre+"\">"+nombre+ "</a> = " + formatear(((CtelistContext)_localctx).simpvalue.constante,_localctx.map) + ";" + ((CtelistContext)_localctx).ctelistFactor.constantes;
+			           _localctx.map.put(claveNombre, "cte");
+			           ((CtelistContext)_localctx).constantes =  "<a NAME=\""+claveNombre+"\">"+nombre+ "</a> = " + formatear(claveNombre, nombre, _localctx.map) + ";" + ((CtelistContext)_localctx).ctelistFactor.constantes;
 			        
 			}
 		}
@@ -771,15 +787,17 @@ public class MainParser extends Parser {
 
 	public static class CtelistFactorContext extends ParserRuleContext {
 		public Map<String, String> map;
+		public String nombreBloque;
 		public String constantes;
 		public CtelistContext ctelist;
 		public CtelistContext ctelist() {
 			return getRuleContext(CtelistContext.class,0);
 		}
 		public CtelistFactorContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public CtelistFactorContext(ParserRuleContext parent, int invokingState, Map<String, String> map) {
+		public CtelistFactorContext(ParserRuleContext parent, int invokingState, Map<String, String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_ctelistFactor; }
 		@Override
@@ -797,8 +815,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final CtelistFactorContext ctelistFactor(Map<String, String> map) throws RecognitionException {
-		CtelistFactorContext _localctx = new CtelistFactorContext(_ctx, getState(), map);
+	public final CtelistFactorContext ctelistFactor(Map<String, String> map,String nombreBloque) throws RecognitionException {
+		CtelistFactorContext _localctx = new CtelistFactorContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 16, RULE_ctelistFactor);
 		try {
 			setState(139);
@@ -818,7 +836,7 @@ public class MainParser extends Parser {
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(136);
-				((CtelistFactorContext)_localctx).ctelist = ctelist(_localctx.map);
+				((CtelistFactorContext)_localctx).ctelist = ctelist(_localctx.map,_localctx.nombreBloque);
 				((CtelistFactorContext)_localctx).constantes =  "<br>" + ((CtelistFactorContext)_localctx).ctelist.constantes;
 				}
 				break;
@@ -912,15 +930,17 @@ public class MainParser extends Parser {
 
 	public static class DefvarContext extends ParserRuleContext {
 		public Map<String, String> map;
+		public String nombreBloque;
 		public String defVariables;
 		public DefvarlistContext defvarlist;
 		public DefvarlistContext defvarlist() {
 			return getRuleContext(DefvarlistContext.class,0);
 		}
 		public DefvarContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public DefvarContext(ParserRuleContext parent, int invokingState, Map<String, String> map) {
+		public DefvarContext(ParserRuleContext parent, int invokingState, Map<String, String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_defvar; }
 		@Override
@@ -938,8 +958,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final DefvarContext defvar(Map<String, String> map) throws RecognitionException {
-		DefvarContext _localctx = new DefvarContext(_ctx, getState(), map);
+	public final DefvarContext defvar(Map<String, String> map,String nombreBloque) throws RecognitionException {
+		DefvarContext _localctx = new DefvarContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 20, RULE_defvar);
 		try {
 			enterOuterAlt(_localctx, 1);
@@ -947,10 +967,12 @@ public class MainParser extends Parser {
 			setState(149);
 			match(T__7);
 			setState(150);
-			((DefvarContext)_localctx).defvarlist = defvarlist(_localctx.map);
+			((DefvarContext)_localctx).defvarlist = defvarlist(_localctx.map, _localctx.nombreBloque);
 			setState(151);
 			match(T__1);
-			((DefvarContext)_localctx).defVariables =  formatearReservada("VAR")+" <br>" + ((DefvarContext)_localctx).defvarlist.variables + ";<br>";
+
+			    ((DefvarContext)_localctx).defVariables =  formatearReservada("VAR")+" <br>" + ((DefvarContext)_localctx).defvarlist.variables + ";<br>";
+
 			}
 		}
 		catch (RecognitionException re) {
@@ -966,6 +988,7 @@ public class MainParser extends Parser {
 
 	public static class DefvarlistContext extends ParserRuleContext {
 		public Map<String, String> map;
+		public String nombreBloque;
 		public String variables;
 		public VarlistContext varlist;
 		public TbasContext tbas;
@@ -980,9 +1003,10 @@ public class MainParser extends Parser {
 			return getRuleContext(DefvarlistFactorContext.class,0);
 		}
 		public DefvarlistContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public DefvarlistContext(ParserRuleContext parent, int invokingState, Map<String, String> map) {
+		public DefvarlistContext(ParserRuleContext parent, int invokingState, Map<String, String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_defvarlist; }
 		@Override
@@ -1000,21 +1024,23 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final DefvarlistContext defvarlist(Map<String, String> map) throws RecognitionException {
-		DefvarlistContext _localctx = new DefvarlistContext(_ctx, getState(), map);
+	public final DefvarlistContext defvarlist(Map<String, String> map,String nombreBloque) throws RecognitionException {
+		DefvarlistContext _localctx = new DefvarlistContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 22, RULE_defvarlist);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(154);
-			((DefvarlistContext)_localctx).varlist = varlist(_localctx.map);
+			((DefvarlistContext)_localctx).varlist = varlist(_localctx.map, _localctx.nombreBloque);
 			setState(155);
 			match(T__8);
 			setState(156);
 			((DefvarlistContext)_localctx).tbas = tbas();
 			setState(157);
-			((DefvarlistContext)_localctx).defvarlistFactor = defvarlistFactor(_localctx.map);
-			((DefvarlistContext)_localctx).variables =  "<a NAME=\""+((DefvarlistContext)_localctx).varlist.nombreVariables+"\">"+ ((DefvarlistContext)_localctx).varlist.nombreVariables + "</a>: " + ((DefvarlistContext)_localctx).tbas.tipoDevuelto + ((DefvarlistContext)_localctx).defvarlistFactor.variables;
+			((DefvarlistContext)_localctx).defvarlistFactor = defvarlistFactor(_localctx.map, _localctx.nombreBloque);
+
+			        ((DefvarlistContext)_localctx).variables =  ((DefvarlistContext)_localctx).varlist.nombreVariables + ": " + ((DefvarlistContext)_localctx).tbas.tipoDevuelto + ((DefvarlistContext)_localctx).defvarlistFactor.variables;
+			    
 			}
 		}
 		catch (RecognitionException re) {
@@ -1030,15 +1056,17 @@ public class MainParser extends Parser {
 
 	public static class DefvarlistFactorContext extends ParserRuleContext {
 		public Map<String, String> map;
+		public String nombreBloque;
 		public String variables;
 		public DefvarlistContext defvarlist;
 		public DefvarlistContext defvarlist() {
 			return getRuleContext(DefvarlistContext.class,0);
 		}
 		public DefvarlistFactorContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public DefvarlistFactorContext(ParserRuleContext parent, int invokingState, Map<String, String> map) {
+		public DefvarlistFactorContext(ParserRuleContext parent, int invokingState, Map<String, String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_defvarlistFactor; }
 		@Override
@@ -1056,8 +1084,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final DefvarlistFactorContext defvarlistFactor(Map<String, String> map) throws RecognitionException {
-		DefvarlistFactorContext _localctx = new DefvarlistFactorContext(_ctx, getState(), map);
+	public final DefvarlistFactorContext defvarlistFactor(Map<String, String> map,String nombreBloque) throws RecognitionException {
+		DefvarlistFactorContext _localctx = new DefvarlistFactorContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 24, RULE_defvarlistFactor);
 		try {
 			setState(165);
@@ -1075,7 +1103,7 @@ public class MainParser extends Parser {
 				setState(161);
 				match(T__1);
 				setState(162);
-				((DefvarlistFactorContext)_localctx).defvarlist = defvarlist(_localctx.map);
+				((DefvarlistFactorContext)_localctx).defvarlist = defvarlist(_localctx.map, _localctx.nombreBloque);
 				((DefvarlistFactorContext)_localctx).variables =  "; " + ((DefvarlistFactorContext)_localctx).defvarlist.variables;
 				}
 				break;
@@ -1094,6 +1122,7 @@ public class MainParser extends Parser {
 
 	public static class VarlistContext extends ParserRuleContext {
 		public Map<String, String> map;
+		public String nombreBloque;
 		public String nombreVariables;
 		public Token IDENTIFIER;
 		public VarlistFactorContext varlistFactor;
@@ -1102,9 +1131,10 @@ public class MainParser extends Parser {
 			return getRuleContext(VarlistFactorContext.class,0);
 		}
 		public VarlistContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public VarlistContext(ParserRuleContext parent, int invokingState, Map<String, String> map) {
+		public VarlistContext(ParserRuleContext parent, int invokingState, Map<String, String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_varlist; }
 		@Override
@@ -1122,8 +1152,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final VarlistContext varlist(Map<String, String> map) throws RecognitionException {
-		VarlistContext _localctx = new VarlistContext(_ctx, getState(), map);
+	public final VarlistContext varlist(Map<String, String> map,String nombreBloque) throws RecognitionException {
+		VarlistContext _localctx = new VarlistContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 26, RULE_varlist);
 		try {
 			enterOuterAlt(_localctx, 1);
@@ -1131,14 +1161,17 @@ public class MainParser extends Parser {
 			setState(167);
 			((VarlistContext)_localctx).IDENTIFIER = match(IDENTIFIER);
 			setState(168);
-			((VarlistContext)_localctx).varlistFactor = varlistFactor(_localctx.map);
+			((VarlistContext)_localctx).varlistFactor = varlistFactor(_localctx.map, _localctx.nombreBloque);
 
 			        String nombre = (((VarlistContext)_localctx).IDENTIFIER!=null?((VarlistContext)_localctx).IDENTIFIER.getText():null);
-			        while(_localctx.map.containsKey(nombre)){
+			        String claveNombre = _localctx.nombreBloque + (((VarlistContext)_localctx).IDENTIFIER!=null?((VarlistContext)_localctx).IDENTIFIER.getText():null);
+			        while(_localctx.map.containsKey(claveNombre)){
 			            nombre += "1";
+			            claveNombre += "1";
 			        }
-			        _localctx.map.put(nombre, "var");
-			        ((VarlistContext)_localctx).nombreVariables =  nombre + ((VarlistContext)_localctx).varlistFactor.nombreVariables;
+			        _localctx.map.put(claveNombre, "var");
+			        //System.err.println("Declaracion de variable: " + claveNombre);
+			        ((VarlistContext)_localctx).nombreVariables =  "<a NAME=\""+claveNombre+"\">" + nombre + "</a>" + ((VarlistContext)_localctx).varlistFactor.nombreVariables;
 			    
 			}
 		}
@@ -1155,15 +1188,17 @@ public class MainParser extends Parser {
 
 	public static class VarlistFactorContext extends ParserRuleContext {
 		public Map<String, String> map;
+		public String nombreBloque;
 		public String nombreVariables;
 		public VarlistContext varlist;
 		public VarlistContext varlist() {
 			return getRuleContext(VarlistContext.class,0);
 		}
 		public VarlistFactorContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public VarlistFactorContext(ParserRuleContext parent, int invokingState, Map<String, String> map) {
+		public VarlistFactorContext(ParserRuleContext parent, int invokingState, Map<String, String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_varlistFactor; }
 		@Override
@@ -1181,8 +1216,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final VarlistFactorContext varlistFactor(Map<String, String> map) throws RecognitionException {
-		VarlistFactorContext _localctx = new VarlistFactorContext(_ctx, getState(), map);
+	public final VarlistFactorContext varlistFactor(Map<String, String> map,String nombreBloque) throws RecognitionException {
+		VarlistFactorContext _localctx = new VarlistFactorContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 28, RULE_varlistFactor);
 		try {
 			setState(176);
@@ -1200,7 +1235,7 @@ public class MainParser extends Parser {
 				setState(172);
 				match(T__9);
 				setState(173);
-				((VarlistFactorContext)_localctx).varlist = varlist(_localctx.map);
+				((VarlistFactorContext)_localctx).varlist = varlist(_localctx.map, _localctx.nombreBloque);
 				((VarlistFactorContext)_localctx).nombreVariables =  ", " + ((VarlistFactorContext)_localctx).varlist.nombreVariables;
 				}
 				break;
@@ -1221,6 +1256,7 @@ public class MainParser extends Parser {
 
 	public static class DefprocContext extends ParserRuleContext {
 		public Map<String, String> map;
+		public String nombreBloque;
 		public String procedimiento;
 		public String codigo;
 		public Token IDENTIFIER;
@@ -1234,9 +1270,10 @@ public class MainParser extends Parser {
 			return getRuleContext(BlqContext.class,0);
 		}
 		public DefprocContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public DefprocContext(ParserRuleContext parent, int invokingState, Map<String, String> map) {
+		public DefprocContext(ParserRuleContext parent, int invokingState, Map<String, String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_defproc; }
 		@Override
@@ -1254,8 +1291,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final DefprocContext defproc(Map<String, String> map) throws RecognitionException {
-		DefprocContext _localctx = new DefprocContext(_ctx, getState(), map);
+	public final DefprocContext defproc(Map<String, String> map,String nombreBloque) throws RecognitionException {
+		DefprocContext _localctx = new DefprocContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 30, RULE_defproc);
 		try {
 			enterOuterAlt(_localctx, 1);
@@ -1268,23 +1305,28 @@ public class MainParser extends Parser {
 			match(T__10);
 			setState(180);
 			((DefprocContext)_localctx).IDENTIFIER = match(IDENTIFIER);
-			mapConParams.put((((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null), "procFunc");
+
+			        String claveNombre = _localctx.nombreBloque + (((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null);
+			        String nombre = (((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null);
+			        while(_localctx.map.containsKey(claveNombre)){
+			            claveNombre += "1";
+			            nombre += "1";
+			        }
+			        _localctx.map.put(claveNombre, "procFunc");
+			        mapConParams.put(claveNombre, "procFunc");
+			        String nombreBloqueInterno = _localctx.nombreBloque + "_" + (((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null);
+			    
 			setState(182);
-			((DefprocContext)_localctx).formal_paramlist = formal_paramlist(mapConParams);
+			((DefprocContext)_localctx).formal_paramlist = formal_paramlist(mapConParams, nombreBloqueInterno);
 			setState(183);
 			match(T__1);
 			setState(184);
-			((DefprocContext)_localctx).blq = blq(mapConParams);
+			((DefprocContext)_localctx).blq = blq(mapConParams, nombreBloqueInterno);
 			setState(185);
 			match(T__1);
 
-			        String nombre = (((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null);
-			        while(_localctx.map.containsKey(nombre)){
-			            nombre += "1";
-			        }
-			        _localctx.map.put(nombre, "procFunc");
-			        ((DefprocContext)_localctx).procedimiento = "<LI> <a href=\"#"+nombre+"\">"+nombre+" "+((DefprocContext)_localctx).formal_paramlist.variables+";</a></LI>\n";
-			        ((DefprocContext)_localctx).codigo = "<a NAME= \""+ nombre +"\" >"+ formatearReservada("PROCEDURE") + "  " + nombre + " " + ((DefprocContext)_localctx).formal_paramlist.variables + ";</a> <br/>" + ((DefprocContext)_localctx).blq.codigo+";<br>";
+			        ((DefprocContext)_localctx).procedimiento = "<LI> <a href=\"#"+claveNombre+"\">"+nombre+" "+((DefprocContext)_localctx).formal_paramlist.variables+";</a></LI>\n";
+			        ((DefprocContext)_localctx).codigo = "<a NAME= \""+ claveNombre +"\" >"+ formatearReservada("PROCEDURE") + "  " + nombre + " " + ((DefprocContext)_localctx).formal_paramlist.variables + ";</a> <br/>"+ ((DefprocContext)_localctx).blq.constantes + ((DefprocContext)_localctx).blq.variables + ((DefprocContext)_localctx).blq.codigo+";<br>";
 			    
 			}
 		}
@@ -1301,6 +1343,7 @@ public class MainParser extends Parser {
 
 	public static class DeffunContext extends ParserRuleContext {
 		public Map<String, String> map;
+		public String nombreBloque;
 		public String funcion;
 		public String codigo;
 		public Token IDENTIFIER;
@@ -1317,9 +1360,10 @@ public class MainParser extends Parser {
 			return getRuleContext(BlqContext.class,0);
 		}
 		public DeffunContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public DeffunContext(ParserRuleContext parent, int invokingState, Map<String, String> map) {
+		public DeffunContext(ParserRuleContext parent, int invokingState, Map<String, String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_deffun; }
 		@Override
@@ -1337,8 +1381,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final DeffunContext deffun(Map<String, String> map) throws RecognitionException {
-		DeffunContext _localctx = new DeffunContext(_ctx, getState(), map);
+	public final DeffunContext deffun(Map<String, String> map,String nombreBloque) throws RecognitionException {
+		DeffunContext _localctx = new DeffunContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 32, RULE_deffun);
 		try {
 			enterOuterAlt(_localctx, 1);
@@ -1351,9 +1395,19 @@ public class MainParser extends Parser {
 			match(T__11);
 			setState(190);
 			((DeffunContext)_localctx).IDENTIFIER = match(IDENTIFIER);
-			mapConParams.put((((DeffunContext)_localctx).IDENTIFIER!=null?((DeffunContext)_localctx).IDENTIFIER.getText():null), "procFunc");
+
+			        String claveNombre = _localctx.nombreBloque + (((DeffunContext)_localctx).IDENTIFIER!=null?((DeffunContext)_localctx).IDENTIFIER.getText():null);
+			        String nombre = (((DeffunContext)_localctx).IDENTIFIER!=null?((DeffunContext)_localctx).IDENTIFIER.getText():null);
+			        while(_localctx.map.containsKey(claveNombre)){
+			            claveNombre += "1";
+			            nombre += "1";
+			        }
+			        _localctx.map.put(claveNombre, "procFunc");
+			        mapConParams.put(claveNombre, "procFunc");
+			        String nombreBloqueInterno = _localctx.nombreBloque + "_" + (((DeffunContext)_localctx).IDENTIFIER!=null?((DeffunContext)_localctx).IDENTIFIER.getText():null);
+			    
 			setState(192);
-			((DeffunContext)_localctx).formal_paramlist = formal_paramlist(mapConParams);
+			((DeffunContext)_localctx).formal_paramlist = formal_paramlist(mapConParams, nombreBloqueInterno);
 			setState(193);
 			match(T__8);
 			setState(194);
@@ -1361,17 +1415,12 @@ public class MainParser extends Parser {
 			setState(195);
 			match(T__1);
 			setState(196);
-			((DeffunContext)_localctx).blq = blq(mapConParams);
+			((DeffunContext)_localctx).blq = blq(mapConParams, nombreBloqueInterno);
 			setState(197);
 			match(T__1);
 
-			        String nombre = (((DeffunContext)_localctx).IDENTIFIER!=null?((DeffunContext)_localctx).IDENTIFIER.getText():null);
-			        while(_localctx.map.containsKey(nombre)){
-			            nombre += "1";
-			        }
-			        _localctx.map.put(nombre, "procFunc");
-			        ((DeffunContext)_localctx).funcion = "<LI> <a href=\"#"+nombre+"\">"+nombre+" "+((DeffunContext)_localctx).formal_paramlist.variables+";</a></LI>\n";
-			        ((DeffunContext)_localctx).codigo = "<a NAME= \""+ nombre +"\" >"+ formatearReservada("FUNCTION") + "  " + nombre + " " + ((DeffunContext)_localctx).formal_paramlist.variables + ";</a> <br/>" + ((DeffunContext)_localctx).blq.codigo+";<br>";
+			        ((DeffunContext)_localctx).funcion =  "<LI> <a href=\"#"+claveNombre+"\">"+nombre+" "+((DeffunContext)_localctx).formal_paramlist.variables+";</a></LI>\n";
+			        ((DeffunContext)_localctx).codigo =  "<a NAME= \""+ claveNombre +"\" >"+ formatearReservada("FUNCTION") + "  " + nombre + " " + ((DeffunContext)_localctx).formal_paramlist.variables + ";</a> <br/>" + ((DeffunContext)_localctx).blq.constantes + ((DeffunContext)_localctx).blq.variables + ((DeffunContext)_localctx).blq.codigo+";<br>";
 			    
 			}
 		}
@@ -1388,15 +1437,17 @@ public class MainParser extends Parser {
 
 	public static class Formal_paramlistContext extends ParserRuleContext {
 		public Map<String,String> map;
+		public String nombreBloque;
 		public String variables;
 		public Formal_paramContext formal_param;
 		public Formal_paramContext formal_param() {
 			return getRuleContext(Formal_paramContext.class,0);
 		}
 		public Formal_paramlistContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public Formal_paramlistContext(ParserRuleContext parent, int invokingState, Map<String,String> map) {
+		public Formal_paramlistContext(ParserRuleContext parent, int invokingState, Map<String,String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_formal_paramlist; }
 		@Override
@@ -1414,8 +1465,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final Formal_paramlistContext formal_paramlist(Map<String,String> map) throws RecognitionException {
-		Formal_paramlistContext _localctx = new Formal_paramlistContext(_ctx, getState(), map);
+	public final Formal_paramlistContext formal_paramlist(Map<String,String> map,String nombreBloque) throws RecognitionException {
+		Formal_paramlistContext _localctx = new Formal_paramlistContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 34, RULE_formal_paramlist);
 		try {
 			setState(206);
@@ -1427,7 +1478,7 @@ public class MainParser extends Parser {
 				setState(200);
 				match(T__12);
 				setState(201);
-				((Formal_paramlistContext)_localctx).formal_param = formal_param(map);
+				((Formal_paramlistContext)_localctx).formal_param = formal_param(map, nombreBloque);
 				setState(202);
 				match(T__13);
 				((Formal_paramlistContext)_localctx).variables =  "("+((Formal_paramlistContext)_localctx).formal_param.variables+")";
@@ -1457,6 +1508,7 @@ public class MainParser extends Parser {
 
 	public static class Formal_paramContext extends ParserRuleContext {
 		public Map<String,String> map;
+		public String nombreBloque;
 		public String variables;
 		public VarlistContext varlist;
 		public TbasContext tbas;
@@ -1471,9 +1523,10 @@ public class MainParser extends Parser {
 			return getRuleContext(Formal_paramFactorContext.class,0);
 		}
 		public Formal_paramContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public Formal_paramContext(ParserRuleContext parent, int invokingState, Map<String,String> map) {
+		public Formal_paramContext(ParserRuleContext parent, int invokingState, Map<String,String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_formal_param; }
 		@Override
@@ -1491,22 +1544,22 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final Formal_paramContext formal_param(Map<String,String> map) throws RecognitionException {
-		Formal_paramContext _localctx = new Formal_paramContext(_ctx, getState(), map);
+	public final Formal_paramContext formal_param(Map<String,String> map,String nombreBloque) throws RecognitionException {
+		Formal_paramContext _localctx = new Formal_paramContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 36, RULE_formal_param);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(208);
-			((Formal_paramContext)_localctx).varlist = varlist(new HashMap<String, String>());
+			((Formal_paramContext)_localctx).varlist = varlist(map, nombreBloque);
 			setState(209);
 			match(T__8);
 			setState(210);
 			((Formal_paramContext)_localctx).tbas = tbas();
 			setState(211);
-			((Formal_paramContext)_localctx).formal_paramFactor = formal_paramFactor(map);
+			((Formal_paramContext)_localctx).formal_paramFactor = formal_paramFactor(map, nombreBloque);
 
-			        map.put(((Formal_paramContext)_localctx).varlist.nombreVariables, "var");
+			        //map.put(((Formal_paramContext)_localctx).varlist.nombreVariables, "var");
 			        ((Formal_paramContext)_localctx).variables =  ((Formal_paramContext)_localctx).varlist.nombreVariables+": "+((Formal_paramContext)_localctx).tbas.tipoDevuelto+((Formal_paramContext)_localctx).formal_paramFactor.variables;
 			    
 			}
@@ -1524,15 +1577,17 @@ public class MainParser extends Parser {
 
 	public static class Formal_paramFactorContext extends ParserRuleContext {
 		public Map<String,String> map;
+		public String nombreBloque;
 		public String variables;
 		public Formal_paramContext formal_param;
 		public Formal_paramContext formal_param() {
 			return getRuleContext(Formal_paramContext.class,0);
 		}
 		public Formal_paramFactorContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public Formal_paramFactorContext(ParserRuleContext parent, int invokingState, Map<String,String> map) {
+		public Formal_paramFactorContext(ParserRuleContext parent, int invokingState, Map<String,String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_formal_paramFactor; }
 		@Override
@@ -1550,8 +1605,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final Formal_paramFactorContext formal_paramFactor(Map<String,String> map) throws RecognitionException {
-		Formal_paramFactorContext _localctx = new Formal_paramFactorContext(_ctx, getState(), map);
+	public final Formal_paramFactorContext formal_paramFactor(Map<String,String> map,String nombreBloque) throws RecognitionException {
+		Formal_paramFactorContext _localctx = new Formal_paramFactorContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 38, RULE_formal_paramFactor);
 		try {
 			setState(219);
@@ -1569,7 +1624,7 @@ public class MainParser extends Parser {
 				setState(215);
 				match(T__1);
 				setState(216);
-				((Formal_paramFactorContext)_localctx).formal_param = formal_param(map);
+				((Formal_paramFactorContext)_localctx).formal_param = formal_param(map, nombreBloque);
 				((Formal_paramFactorContext)_localctx).variables =  "; " + ((Formal_paramFactorContext)_localctx).formal_param.variables ;
 				}
 				break;
@@ -1649,6 +1704,7 @@ public class MainParser extends Parser {
 
 	public static class SentContext extends ParserRuleContext {
 		public Map<String,String> map;
+		public String nombreBloque;
 		public String sentencia;
 		public Token IDENTIFIER;
 		public SentFactorContext sentFactor;
@@ -1681,9 +1737,10 @@ public class MainParser extends Parser {
 			return getRuleContext(IncContext.class,0);
 		}
 		public SentContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public SentContext(ParserRuleContext parent, int invokingState, Map<String,String> map) {
+		public SentContext(ParserRuleContext parent, int invokingState, Map<String,String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_sent; }
 		@Override
@@ -1701,8 +1758,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final SentContext sent(Map<String,String> map) throws RecognitionException {
-		SentContext _localctx = new SentContext(_ctx, getState(), map);
+	public final SentContext sent(Map<String,String> map,String nombreBloque) throws RecognitionException {
+		SentContext _localctx = new SentContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 42, RULE_sent);
 		try {
 			setState(268);
@@ -1714,11 +1771,11 @@ public class MainParser extends Parser {
 				setState(227);
 				((SentContext)_localctx).IDENTIFIER = match(IDENTIFIER);
 				setState(228);
-				((SentContext)_localctx).sentFactor = sentFactor(_localctx.map, (((SentContext)_localctx).IDENTIFIER!=null?((SentContext)_localctx).IDENTIFIER.getText():null));
+				((SentContext)_localctx).sentFactor = sentFactor(_localctx.map, _localctx.nombreBloque, (((SentContext)_localctx).IDENTIFIER!=null?((SentContext)_localctx).IDENTIFIER.getText():null));
 				setState(229);
 				match(T__1);
 
-				        ((SentContext)_localctx).sentencia =  "<div>" + formatear((((SentContext)_localctx).IDENTIFIER!=null?((SentContext)_localctx).IDENTIFIER.getText():null),_localctx.map) + ((SentContext)_localctx).sentFactor.sentencia + ";</div>";
+				        ((SentContext)_localctx).sentencia =  "<div>" + formatear(_localctx.nombreBloque+(((SentContext)_localctx).IDENTIFIER!=null?((SentContext)_localctx).IDENTIFIER.getText():null), (((SentContext)_localctx).IDENTIFIER!=null?((SentContext)_localctx).IDENTIFIER.getText():null),_localctx.map) + ((SentContext)_localctx).sentFactor.sentencia + ";</div>";
 				     
 				}
 				break;
@@ -1728,7 +1785,7 @@ public class MainParser extends Parser {
 				setState(232);
 				match(T__16);
 				setState(233);
-				((SentContext)_localctx).expcond = expcond(_localctx.map);
+				((SentContext)_localctx).expcond = expcond(_localctx.map,_localctx.nombreBloque);
 				setState(234);
 				match(T__17);
 
@@ -1736,7 +1793,7 @@ public class MainParser extends Parser {
 				        mapB1.putAll(_localctx.map);
 				     
 				setState(236);
-				((SentContext)_localctx).b1 = blq(mapB1);
+				((SentContext)_localctx).b1 = blq(mapB1, _localctx.nombreBloque);
 				setState(237);
 				match(T__18);
 
@@ -1744,7 +1801,7 @@ public class MainParser extends Parser {
 				        mapB2.putAll(_localctx.map);
 				    
 				setState(239);
-				((SentContext)_localctx).b2 = blq(mapB2);
+				((SentContext)_localctx).b2 = blq(mapB2, _localctx.nombreBloque);
 
 				        ((SentContext)_localctx).sentencia =  "<div> "+formatearReservada("IF")+" " + ((SentContext)_localctx).expcond.condicion + " "+formatearReservada("THEN")+" </div> <div style=\"margin-left:1cm\">" + ((SentContext)_localctx).b1.codigo + "</div> <div> "+formatearReservada("ELSE")+" </div> <div style=\"margin-left:1cm\"> " + ((SentContext)_localctx).b2.codigo + "</div>";
 				     
@@ -1756,7 +1813,7 @@ public class MainParser extends Parser {
 				setState(242);
 				match(T__19);
 				setState(243);
-				((SentContext)_localctx).expcond = expcond(_localctx.map);
+				((SentContext)_localctx).expcond = expcond(_localctx.map, _localctx.nombreBloque);
 				setState(244);
 				match(T__20);
 
@@ -1764,7 +1821,7 @@ public class MainParser extends Parser {
 				        mapBlq.putAll(_localctx.map);
 				     
 				setState(246);
-				((SentContext)_localctx).blq = blq(mapBlq);
+				((SentContext)_localctx).blq = blq(mapBlq, _localctx.nombreBloque);
 
 				        ((SentContext)_localctx).sentencia =  "<div> "+formatearReservada("WHILE")+" " + ((SentContext)_localctx).expcond.condicion + " "+formatearReservada("DO")+" <br> <div style=\"margin-left:1cm\">" + ((SentContext)_localctx).blq.codigo + "</div></div>";
 				     
@@ -1780,11 +1837,11 @@ public class MainParser extends Parser {
 				        mapBlq.putAll(_localctx.map);
 				     
 				setState(251);
-				((SentContext)_localctx).blq = blq(mapBlq);
+				((SentContext)_localctx).blq = blq(mapBlq, _localctx.nombreBloque);
 				setState(252);
 				match(T__22);
 				setState(253);
-				((SentContext)_localctx).expcond = expcond(_localctx.map);
+				((SentContext)_localctx).expcond = expcond(_localctx.map,_localctx.nombreBloque);
 				setState(254);
 				match(T__1);
 
@@ -1802,11 +1859,11 @@ public class MainParser extends Parser {
 				setState(259);
 				match(T__24);
 				setState(260);
-				((SentContext)_localctx).exp = exp(_localctx.map);
+				((SentContext)_localctx).exp = exp(_localctx.map, _localctx.nombreBloque);
 				setState(261);
 				((SentContext)_localctx).inc = inc();
 				setState(262);
-				((SentContext)_localctx).exp = exp(_localctx.map);
+				((SentContext)_localctx).exp = exp(_localctx.map, _localctx.nombreBloque);
 				setState(263);
 				match(T__20);
 
@@ -1814,7 +1871,7 @@ public class MainParser extends Parser {
 				        mapBlq.putAll(_localctx.map);
 				     
 				setState(265);
-				((SentContext)_localctx).blq = blq(mapBlq);
+				((SentContext)_localctx).blq = blq(mapBlq, _localctx.nombreBloque);
 
 				        ((SentContext)_localctx).sentencia =  "<div> "+formatearReservada("FOR")+" " + (((SentContext)_localctx).IDENTIFIER!=null?((SentContext)_localctx).IDENTIFIER.getText():null) + " := " + ((SentContext)_localctx).exp.expresion + ((SentContext)_localctx).inc.incremento + ((SentContext)_localctx).exp.expresion + formatearReservada(" DO ") +" </div> <div style=\"margin-left:1cm\"> " + ((SentContext)_localctx).blq.codigo + "</div>";
 				     
@@ -1837,6 +1894,7 @@ public class MainParser extends Parser {
 
 	public static class SentFactorContext extends ParserRuleContext {
 		public Map<String, String> map;
+		public String nombreBloque;
 		public String proc_o_asignacion;
 		public String sentencia;
 		public Proc_callContext proc_call;
@@ -1848,9 +1906,10 @@ public class MainParser extends Parser {
 			return getRuleContext(AsigContext.class,0);
 		}
 		public SentFactorContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public SentFactorContext(ParserRuleContext parent, int invokingState, Map<String, String> map, String proc_o_asignacion) {
+		public SentFactorContext(ParserRuleContext parent, int invokingState, Map<String, String> map, String nombreBloque, String proc_o_asignacion) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 			this.proc_o_asignacion = proc_o_asignacion;
 		}
 		@Override public int getRuleIndex() { return RULE_sentFactor; }
@@ -1869,8 +1928,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final SentFactorContext sentFactor(Map<String, String> map,String proc_o_asignacion) throws RecognitionException {
-		SentFactorContext _localctx = new SentFactorContext(_ctx, getState(), map, proc_o_asignacion);
+	public final SentFactorContext sentFactor(Map<String, String> map,String nombreBloque,String proc_o_asignacion) throws RecognitionException {
+		SentFactorContext _localctx = new SentFactorContext(_ctx, getState(), map, nombreBloque, proc_o_asignacion);
 		enterRule(_localctx, 44, RULE_sentFactor);
 		try {
 			setState(276);
@@ -1881,10 +1940,10 @@ public class MainParser extends Parser {
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(270);
-				((SentFactorContext)_localctx).proc_call = proc_call(_localctx.map);
+				((SentFactorContext)_localctx).proc_call = proc_call(_localctx.map, _localctx.nombreBloque);
 
 				        ((SentFactorContext)_localctx).sentencia =  ((SentFactorContext)_localctx).proc_call.parametros;
-				        _localctx.map.put(proc_o_asignacion,"procFunc");
+				        _localctx.map.put(nombreBloque+proc_o_asignacion,"procFunc");
 				    
 				}
 				break;
@@ -1892,7 +1951,7 @@ public class MainParser extends Parser {
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(273);
-				((SentFactorContext)_localctx).asig = asig(_localctx.map);
+				((SentFactorContext)_localctx).asig = asig(_localctx.map, _localctx.nombreBloque);
 
 				        ((SentFactorContext)_localctx).sentencia =  ((SentFactorContext)_localctx).asig.asignacion;
 				    
@@ -1915,15 +1974,17 @@ public class MainParser extends Parser {
 
 	public static class AsigContext extends ParserRuleContext {
 		public Map<String, String> map;
+		public String nombreBloque;
 		public String asignacion;
 		public ExpContext exp;
 		public ExpContext exp() {
 			return getRuleContext(ExpContext.class,0);
 		}
 		public AsigContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public AsigContext(ParserRuleContext parent, int invokingState, Map<String, String> map) {
+		public AsigContext(ParserRuleContext parent, int invokingState, Map<String, String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_asig; }
 		@Override
@@ -1941,8 +2002,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final AsigContext asig(Map<String, String> map) throws RecognitionException {
-		AsigContext _localctx = new AsigContext(_ctx, getState(), map);
+	public final AsigContext asig(Map<String, String> map,String nombreBloque) throws RecognitionException {
+		AsigContext _localctx = new AsigContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 46, RULE_asig);
 		try {
 			enterOuterAlt(_localctx, 1);
@@ -1950,7 +2011,7 @@ public class MainParser extends Parser {
 			setState(278);
 			match(T__24);
 			setState(279);
-			((AsigContext)_localctx).exp = exp(_localctx.map);
+			((AsigContext)_localctx).exp = exp(_localctx.map, _localctx.nombreBloque);
 
 			    ((AsigContext)_localctx).asignacion =  " := "+((AsigContext)_localctx).exp.expresion;
 			    
@@ -1969,6 +2030,7 @@ public class MainParser extends Parser {
 
 	public static class ExpContext extends ParserRuleContext {
 		public Map<String, String> map;
+		public String nombreBloque;
 		public String expresion;
 		public FactorContext factor;
 		public ExpFactorContext expFactor;
@@ -1979,9 +2041,10 @@ public class MainParser extends Parser {
 			return getRuleContext(ExpFactorContext.class,0);
 		}
 		public ExpContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public ExpContext(ParserRuleContext parent, int invokingState, Map<String, String> map) {
+		public ExpContext(ParserRuleContext parent, int invokingState, Map<String, String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_exp; }
 		@Override
@@ -1999,17 +2062,19 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final ExpContext exp(Map<String, String> map) throws RecognitionException {
-		ExpContext _localctx = new ExpContext(_ctx, getState(), map);
+	public final ExpContext exp(Map<String, String> map,String nombreBloque) throws RecognitionException {
+		ExpContext _localctx = new ExpContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 48, RULE_exp);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(282);
-			((ExpContext)_localctx).factor = factor(_localctx.map);
+			((ExpContext)_localctx).factor = factor(_localctx.map, _localctx.nombreBloque);
 			setState(283);
-			((ExpContext)_localctx).expFactor = expFactor(_localctx.map);
-			((ExpContext)_localctx).expresion =  ((ExpContext)_localctx).factor.variable+((ExpContext)_localctx).expFactor.operacion;
+			((ExpContext)_localctx).expFactor = expFactor(_localctx.map, _localctx.nombreBloque);
+
+			        ((ExpContext)_localctx).expresion =  ((ExpContext)_localctx).factor.variable+((ExpContext)_localctx).expFactor.operacion;
+			    
 			}
 		}
 		catch (RecognitionException re) {
@@ -2025,6 +2090,7 @@ public class MainParser extends Parser {
 
 	public static class ExpFactorContext extends ParserRuleContext {
 		public Map<String,String> map;
+		public String nombreBloque;
 		public String operacion;
 		public OpContext op;
 		public ExpContext exp;
@@ -2035,9 +2101,10 @@ public class MainParser extends Parser {
 			return getRuleContext(ExpContext.class,0);
 		}
 		public ExpFactorContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public ExpFactorContext(ParserRuleContext parent, int invokingState, Map<String,String> map) {
+		public ExpFactorContext(ParserRuleContext parent, int invokingState, Map<String,String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_expFactor; }
 		@Override
@@ -2055,8 +2122,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final ExpFactorContext expFactor(Map<String,String> map) throws RecognitionException {
-		ExpFactorContext _localctx = new ExpFactorContext(_ctx, getState(), map);
+	public final ExpFactorContext expFactor(Map<String,String> map,String nombreBloque) throws RecognitionException {
+		ExpFactorContext _localctx = new ExpFactorContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 50, RULE_expFactor);
 		try {
 			setState(291);
@@ -2091,7 +2158,7 @@ public class MainParser extends Parser {
 				setState(287);
 				((ExpFactorContext)_localctx).op = op();
 				setState(288);
-				((ExpFactorContext)_localctx).exp = exp(_localctx.map);
+				((ExpFactorContext)_localctx).exp = exp(_localctx.map, _localctx.nombreBloque);
 
 				        ((ExpFactorContext)_localctx).operacion =  " " + ((ExpFactorContext)_localctx).op.simbolo + " " + ((ExpFactorContext)_localctx).exp.expresion;
 				    
@@ -2197,6 +2264,7 @@ public class MainParser extends Parser {
 
 	public static class FactorContext extends ParserRuleContext {
 		public Map<String,String> map;
+		public String nombreBloque;
 		public String variable;
 		public SimpvalueContext simpvalue;
 		public ExpContext exp;
@@ -2213,9 +2281,10 @@ public class MainParser extends Parser {
 			return getRuleContext(SubpparamlistContext.class,0);
 		}
 		public FactorContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public FactorContext(ParserRuleContext parent, int invokingState, Map<String,String> map) {
+		public FactorContext(ParserRuleContext parent, int invokingState, Map<String,String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_factor; }
 		@Override
@@ -2233,8 +2302,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final FactorContext factor(Map<String,String> map) throws RecognitionException {
-		FactorContext _localctx = new FactorContext(_ctx, getState(), map);
+	public final FactorContext factor(Map<String,String> map,String nombreBloque) throws RecognitionException {
+		FactorContext _localctx = new FactorContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 54, RULE_factor);
 		try {
 			setState(317);
@@ -2248,7 +2317,7 @@ public class MainParser extends Parser {
 				setState(305);
 				((FactorContext)_localctx).simpvalue = simpvalue();
 
-				        ((FactorContext)_localctx).variable =  formatear(((FactorContext)_localctx).simpvalue.constante,_localctx.map);
+				        ((FactorContext)_localctx).variable =  formatear(_localctx.nombreBloque+((FactorContext)_localctx).simpvalue.constante, ((FactorContext)_localctx).simpvalue.constante,_localctx.map);
 				    
 				}
 				break;
@@ -2258,7 +2327,7 @@ public class MainParser extends Parser {
 				setState(308);
 				match(T__12);
 				setState(309);
-				((FactorContext)_localctx).exp = exp(_localctx.map);
+				((FactorContext)_localctx).exp = exp(_localctx.map, _localctx.nombreBloque);
 				setState(310);
 				match(T__13);
 
@@ -2272,9 +2341,9 @@ public class MainParser extends Parser {
 				setState(313);
 				((FactorContext)_localctx).IDENTIFIER = match(IDENTIFIER);
 				setState(314);
-				((FactorContext)_localctx).subpparamlist = subpparamlist(_localctx.map);
+				((FactorContext)_localctx).subpparamlist = subpparamlist(_localctx.map, _localctx.nombreBloque);
 
-				        ((FactorContext)_localctx).variable =  formatear((((FactorContext)_localctx).IDENTIFIER!=null?((FactorContext)_localctx).IDENTIFIER.getText():null),_localctx.map) +" " + ((FactorContext)_localctx).subpparamlist.parametros;
+				        ((FactorContext)_localctx).variable =  formatear(_localctx.nombreBloque+(((FactorContext)_localctx).IDENTIFIER!=null?((FactorContext)_localctx).IDENTIFIER.getText():null),(((FactorContext)_localctx).IDENTIFIER!=null?((FactorContext)_localctx).IDENTIFIER.getText():null),_localctx.map) +" " + ((FactorContext)_localctx).subpparamlist.parametros;
 				    
 				}
 				break;
@@ -2295,15 +2364,17 @@ public class MainParser extends Parser {
 
 	public static class SubpparamlistContext extends ParserRuleContext {
 		public Map<String,String> map;
+		public String nombreBloque;
 		public String parametros;
 		public ExplistContext explist;
 		public ExplistContext explist() {
 			return getRuleContext(ExplistContext.class,0);
 		}
 		public SubpparamlistContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public SubpparamlistContext(ParserRuleContext parent, int invokingState, Map<String,String> map) {
+		public SubpparamlistContext(ParserRuleContext parent, int invokingState, Map<String,String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_subpparamlist; }
 		@Override
@@ -2321,8 +2392,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final SubpparamlistContext subpparamlist(Map<String,String> map) throws RecognitionException {
-		SubpparamlistContext _localctx = new SubpparamlistContext(_ctx, getState(), map);
+	public final SubpparamlistContext subpparamlist(Map<String,String> map,String nombreBloque) throws RecognitionException {
+		SubpparamlistContext _localctx = new SubpparamlistContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 56, RULE_subpparamlist);
 		try {
 			setState(325);
@@ -2358,7 +2429,7 @@ public class MainParser extends Parser {
 				setState(320);
 				match(T__12);
 				setState(321);
-				((SubpparamlistContext)_localctx).explist = explist(_localctx.map);
+				((SubpparamlistContext)_localctx).explist = explist(_localctx.map, _localctx.nombreBloque);
 				setState(322);
 				match(T__13);
 				((SubpparamlistContext)_localctx).parametros =  "("+((SubpparamlistContext)_localctx).explist.expresiones+")";
@@ -2381,6 +2452,7 @@ public class MainParser extends Parser {
 
 	public static class ExplistContext extends ParserRuleContext {
 		public Map<String, String> map;
+		public String nombreBloque;
 		public String expresiones;
 		public ExpContext exp;
 		public ExplistFactorContext explistFactor;
@@ -2391,9 +2463,10 @@ public class MainParser extends Parser {
 			return getRuleContext(ExplistFactorContext.class,0);
 		}
 		public ExplistContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public ExplistContext(ParserRuleContext parent, int invokingState, Map<String, String> map) {
+		public ExplistContext(ParserRuleContext parent, int invokingState, Map<String, String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_explist; }
 		@Override
@@ -2411,16 +2484,16 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final ExplistContext explist(Map<String, String> map) throws RecognitionException {
-		ExplistContext _localctx = new ExplistContext(_ctx, getState(), map);
+	public final ExplistContext explist(Map<String, String> map,String nombreBloque) throws RecognitionException {
+		ExplistContext _localctx = new ExplistContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 58, RULE_explist);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(327);
-			((ExplistContext)_localctx).exp = exp(_localctx.map);
+			((ExplistContext)_localctx).exp = exp(_localctx.map, _localctx.nombreBloque);
 			setState(328);
-			((ExplistContext)_localctx).explistFactor = explistFactor(_localctx.map);
+			((ExplistContext)_localctx).explistFactor = explistFactor(_localctx.map,_localctx.nombreBloque);
 
 			        ((ExplistContext)_localctx).expresiones =  ((ExplistContext)_localctx).exp.expresion + ((ExplistContext)_localctx).explistFactor.expresiones;
 			    
@@ -2439,15 +2512,17 @@ public class MainParser extends Parser {
 
 	public static class ExplistFactorContext extends ParserRuleContext {
 		public Map<String,String> map;
+		public String nombreBloque;
 		public String expresiones;
 		public ExplistContext explist;
 		public ExplistContext explist() {
 			return getRuleContext(ExplistContext.class,0);
 		}
 		public ExplistFactorContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public ExplistFactorContext(ParserRuleContext parent, int invokingState, Map<String,String> map) {
+		public ExplistFactorContext(ParserRuleContext parent, int invokingState, Map<String,String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_explistFactor; }
 		@Override
@@ -2465,8 +2540,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final ExplistFactorContext explistFactor(Map<String,String> map) throws RecognitionException {
-		ExplistFactorContext _localctx = new ExplistFactorContext(_ctx, getState(), map);
+	public final ExplistFactorContext explistFactor(Map<String,String> map,String nombreBloque) throws RecognitionException {
+		ExplistFactorContext _localctx = new ExplistFactorContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 60, RULE_explistFactor);
 		try {
 			setState(336);
@@ -2484,7 +2559,7 @@ public class MainParser extends Parser {
 				setState(332);
 				match(T__9);
 				setState(333);
-				((ExplistFactorContext)_localctx).explist = explist(_localctx.map);
+				((ExplistFactorContext)_localctx).explist = explist(_localctx.map,_localctx.nombreBloque);
 				((ExplistFactorContext)_localctx).expresiones =  ", "+((ExplistFactorContext)_localctx).explist.expresiones;
 				}
 				break;
@@ -2505,15 +2580,17 @@ public class MainParser extends Parser {
 
 	public static class Proc_callContext extends ParserRuleContext {
 		public Map<String, String> map;
+		public String nombreBloque;
 		public String parametros;
 		public SubpparamlistContext subpparamlist;
 		public SubpparamlistContext subpparamlist() {
 			return getRuleContext(SubpparamlistContext.class,0);
 		}
 		public Proc_callContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public Proc_callContext(ParserRuleContext parent, int invokingState, Map<String, String> map) {
+		public Proc_callContext(ParserRuleContext parent, int invokingState, Map<String, String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_proc_call; }
 		@Override
@@ -2531,14 +2608,14 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final Proc_callContext proc_call(Map<String, String> map) throws RecognitionException {
-		Proc_callContext _localctx = new Proc_callContext(_ctx, getState(), map);
+	public final Proc_callContext proc_call(Map<String, String> map,String nombreBloque) throws RecognitionException {
+		Proc_callContext _localctx = new Proc_callContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 62, RULE_proc_call);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(338);
-			((Proc_callContext)_localctx).subpparamlist = subpparamlist(_localctx.map);
+			((Proc_callContext)_localctx).subpparamlist = subpparamlist(_localctx.map,_localctx.nombreBloque);
 			((Proc_callContext)_localctx).parametros =  ((Proc_callContext)_localctx).subpparamlist.parametros;
 			}
 		}
@@ -2614,6 +2691,7 @@ public class MainParser extends Parser {
 
 	public static class ExpcondContext extends ParserRuleContext {
 		public Map<String,String> map;
+		public String nombreBloque;
 		public String condicion;
 		public FactorcondContext factorcond;
 		public ExpcondFactorContext expcondFactor;
@@ -2624,9 +2702,10 @@ public class MainParser extends Parser {
 			return getRuleContext(ExpcondFactorContext.class,0);
 		}
 		public ExpcondContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public ExpcondContext(ParserRuleContext parent, int invokingState, Map<String,String> map) {
+		public ExpcondContext(ParserRuleContext parent, int invokingState, Map<String,String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_expcond; }
 		@Override
@@ -2644,16 +2723,16 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final ExpcondContext expcond(Map<String,String> map) throws RecognitionException {
-		ExpcondContext _localctx = new ExpcondContext(_ctx, getState(), map);
+	public final ExpcondContext expcond(Map<String,String> map,String nombreBloque) throws RecognitionException {
+		ExpcondContext _localctx = new ExpcondContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 66, RULE_expcond);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(347);
-			((ExpcondContext)_localctx).factorcond = factorcond(_localctx.map);
+			((ExpcondContext)_localctx).factorcond = factorcond(_localctx.map, _localctx.nombreBloque);
 			setState(348);
-			((ExpcondContext)_localctx).expcondFactor = expcondFactor(_localctx.map);
+			((ExpcondContext)_localctx).expcondFactor = expcondFactor(_localctx.map, _localctx.nombreBloque);
 			((ExpcondContext)_localctx).condicion =  ((ExpcondContext)_localctx).factorcond.condicion + ((ExpcondContext)_localctx).expcondFactor.condicion;
 			}
 		}
@@ -2670,6 +2749,7 @@ public class MainParser extends Parser {
 
 	public static class ExpcondFactorContext extends ParserRuleContext {
 		public Map<String,String> map;
+		public String nombreBloque;
 		public String condicion;
 		public OplogContext oplog;
 		public ExpcondContext expcond;
@@ -2680,9 +2760,10 @@ public class MainParser extends Parser {
 			return getRuleContext(ExpcondContext.class,0);
 		}
 		public ExpcondFactorContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public ExpcondFactorContext(ParserRuleContext parent, int invokingState, Map<String,String> map) {
+		public ExpcondFactorContext(ParserRuleContext parent, int invokingState, Map<String,String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_expcondFactor; }
 		@Override
@@ -2700,8 +2781,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final ExpcondFactorContext expcondFactor(Map<String,String> map) throws RecognitionException {
-		ExpcondFactorContext _localctx = new ExpcondFactorContext(_ctx, getState(), map);
+	public final ExpcondFactorContext expcondFactor(Map<String,String> map,String nombreBloque) throws RecognitionException {
+		ExpcondFactorContext _localctx = new ExpcondFactorContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 68, RULE_expcondFactor);
 		try {
 			setState(356);
@@ -2723,7 +2804,7 @@ public class MainParser extends Parser {
 				setState(352);
 				((ExpcondFactorContext)_localctx).oplog = oplog();
 				setState(353);
-				((ExpcondFactorContext)_localctx).expcond = expcond(_localctx.map);
+				((ExpcondFactorContext)_localctx).expcond = expcond(_localctx.map, _localctx.nombreBloque);
 				((ExpcondFactorContext)_localctx).condicion =  ((ExpcondFactorContext)_localctx).oplog.bool + ((ExpcondFactorContext)_localctx).expcond.condicion;
 				}
 				break;
@@ -2803,6 +2884,7 @@ public class MainParser extends Parser {
 
 	public static class FactorcondContext extends ParserRuleContext {
 		public Map<String,String> map;
+		public String nombreBloque;
 		public String condicion;
 		public ExpContext e1;
 		public OpcompContext opcomp;
@@ -2825,9 +2907,10 @@ public class MainParser extends Parser {
 			return getRuleContext(FactorcondContext.class,0);
 		}
 		public FactorcondContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public FactorcondContext(ParserRuleContext parent, int invokingState, Map<String,String> map) {
+		public FactorcondContext(ParserRuleContext parent, int invokingState, Map<String,String> map, String nombreBloque) {
 			super(parent, invokingState);
 			this.map = map;
+			this.nombreBloque = nombreBloque;
 		}
 		@Override public int getRuleIndex() { return RULE_factorcond; }
 		@Override
@@ -2845,8 +2928,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final FactorcondContext factorcond(Map<String,String> map) throws RecognitionException {
-		FactorcondContext _localctx = new FactorcondContext(_ctx, getState(), map);
+	public final FactorcondContext factorcond(Map<String,String> map,String nombreBloque) throws RecognitionException {
+		FactorcondContext _localctx = new FactorcondContext(_ctx, getState(), map, nombreBloque);
 		enterRule(_localctx, 72, RULE_factorcond);
 		try {
 			setState(382);
@@ -2856,11 +2939,11 @@ public class MainParser extends Parser {
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(364);
-				((FactorcondContext)_localctx).e1 = exp(_localctx.map);
+				((FactorcondContext)_localctx).e1 = exp(_localctx.map, _localctx.nombreBloque);
 				setState(365);
 				((FactorcondContext)_localctx).opcomp = opcomp();
 				setState(366);
-				((FactorcondContext)_localctx).e2 = exp(_localctx.map);
+				((FactorcondContext)_localctx).e2 = exp(_localctx.map, _localctx.nombreBloque);
 				((FactorcondContext)_localctx).condicion =  ((FactorcondContext)_localctx).e1.expresion + ((FactorcondContext)_localctx).opcomp.comparador + ((FactorcondContext)_localctx).e2.expresion;
 				}
 				break;
@@ -2870,7 +2953,7 @@ public class MainParser extends Parser {
 				setState(369);
 				match(T__12);
 				setState(370);
-				((FactorcondContext)_localctx).expcond = expcond(_localctx.map);
+				((FactorcondContext)_localctx).expcond = expcond(_localctx.map, _localctx.nombreBloque);
 				setState(371);
 				match(T__13);
 				((FactorcondContext)_localctx).condicion =  "(" + ((FactorcondContext)_localctx).expcond.condicion + ")";
@@ -2882,7 +2965,7 @@ public class MainParser extends Parser {
 				setState(374);
 				match(T__34);
 				setState(375);
-				((FactorcondContext)_localctx).factorcond = factorcond(_localctx.map);
+				((FactorcondContext)_localctx).factorcond = factorcond(_localctx.map, _localctx.nombreBloque);
 				((FactorcondContext)_localctx).condicion = formatearReservada("NOT")+ " " + ((FactorcondContext)_localctx).factorcond.condicion;
 				}
 				break;

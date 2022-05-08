@@ -110,11 +110,11 @@ public class MainLexer extends Lexer {
 	            return "<SPAN CLASS=\"palres\">"+cadena+"</SPAN>";
 	    }
 
-	    public String formatear(String cadena, Map<String,String> identificadores) {
-	        if(!identificadores.containsKey(cadena)){
-	            return "<SPAN CLASS=\"ctesindeclarar\">"+cadena+"</SPAN>";
+	    public String formatear(String cadenaUnica, String cadenaBloque, Map<String,String> identificadores) {
+	        if(!identificadores.containsKey(cadenaUnica)){
+	            return "<SPAN CLASS=\"ctesindeclarar\">"+cadenaBloque+"</SPAN>";
 	        }
-	        return "<SPAN CLASS=\""+identificadores.get(cadena)+"\"> <a href=\"#"+cadena+"\">"+cadena+"</a></SPAN>";
+	        return "<SPAN CLASS=\""+identificadores.get(cadenaUnica)+"\"> <a href=\"#"+cadenaUnica+"\">"+cadenaBloque+"</a></SPAN>";
 	    }
 
 

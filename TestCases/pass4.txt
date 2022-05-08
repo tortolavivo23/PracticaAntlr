@@ -6,6 +6,8 @@ unaConstante = 3;
 dosConstantes = "Hola";
 
 PROCEDURE funcionAuxiliar(numero: integer; numeroReal: real; cont: integer);
+VAR
+numero: integer;
 BEGIN
     numero := numeroReal * (numero + 2);
     WHILE (cont < "3") DO BEGIN

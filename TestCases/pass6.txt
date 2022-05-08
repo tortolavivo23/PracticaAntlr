@@ -1,0 +1,6 @@
+PROGRAM Hello;
+VAR
+Nota, Nota2: integer;
+BEGIN
+    Nota := 1;
+END.
