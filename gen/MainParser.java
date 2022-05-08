@@ -1685,11 +1685,11 @@ public class MainParser extends Parser {
 				setState(223);
 				((SentContext)_localctx).IDENTIFIER = match(IDENTIFIER);
 				setState(224);
-				((SentContext)_localctx).sentFactor = sentFactor(_localctx.map);
+				((SentContext)_localctx).sentFactor = sentFactor(_localctx.map, (((SentContext)_localctx).IDENTIFIER!=null?((SentContext)_localctx).IDENTIFIER.getText():null));
 				setState(225);
 				match(T__1);
 
-				        ((SentContext)_localctx).sentencia =  "<div>" + formatear((((SentContext)_localctx).IDENTIFIER!=null?((SentContext)_localctx).IDENTIFIER.getText():null),_localctx.map) + " " + ((SentContext)_localctx).sentFactor.sentencia + ";</div>";
+				        ((SentContext)_localctx).sentencia =  "<div>" + formatear((((SentContext)_localctx).IDENTIFIER!=null?((SentContext)_localctx).IDENTIFIER.getText():null),_localctx.map) + ((SentContext)_localctx).sentFactor.sentencia + ";</div>";
 				     
 				}
 				break;
@@ -1788,6 +1788,7 @@ public class MainParser extends Parser {
 
 	public static class SentFactorContext extends ParserRuleContext {
 		public Map<String, String> map;
+		public String proc_o_asignacion;
 		public String sentencia;
 		public Proc_callContext proc_call;
 		public AsigContext asig;
@@ -1798,9 +1799,10 @@ public class MainParser extends Parser {
 			return getRuleContext(AsigContext.class,0);
 		}
 		public SentFactorContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public SentFactorContext(ParserRuleContext parent, int invokingState, Map<String, String> map) {
+		public SentFactorContext(ParserRuleContext parent, int invokingState, Map<String, String> map, String proc_o_asignacion) {
 			super(parent, invokingState);
 			this.map = map;
+			this.proc_o_asignacion = proc_o_asignacion;
 		}
 		@Override public int getRuleIndex() { return RULE_sentFactor; }
 		@Override
@@ -1818,8 +1820,8 @@ public class MainParser extends Parser {
 		}
 	}
 
-	public final SentFactorContext sentFactor(Map<String, String> map) throws RecognitionException {
-		SentFactorContext _localctx = new SentFactorContext(_ctx, getState(), map);
+	public final SentFactorContext sentFactor(Map<String, String> map,String proc_o_asignacion) throws RecognitionException {
+		SentFactorContext _localctx = new SentFactorContext(_ctx, getState(), map, proc_o_asignacion);
 		enterRule(_localctx, 44, RULE_sentFactor);
 		try {
 			setState(267);
@@ -1833,6 +1835,7 @@ public class MainParser extends Parser {
 				((SentFactorContext)_localctx).proc_call = proc_call(_localctx.map);
 
 				        ((SentFactorContext)_localctx).sentencia =  ((SentFactorContext)_localctx).proc_call.parametros;
+				        _localctx.map.put(proc_o_asignacion,"procFunc");
 				    
 				}
 				break;
@@ -2041,7 +2044,7 @@ public class MainParser extends Parser {
 				setState(279);
 				((ExpFactorContext)_localctx).exp = exp(_localctx.map);
 
-				        ((ExpFactorContext)_localctx).operacion =  " " + ((ExpFactorContext)_localctx).op.simbolo + " " + ((ExpFactorContext)_localctx).exp.expresion;
+				        ((ExpFactorContext)_localctx).operacion =  " " + ((ExpFactorContext)_localctx).op.simbolo + ((ExpFactorContext)_localctx).exp.expresion;
 				    
 				}
 				break;

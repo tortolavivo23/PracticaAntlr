@@ -195,8 +195,8 @@ formal_paramFactor returns[String variables]: {$variables = "";}| ';' formal_par
 tbas returns[String tipoDevuelto] : 'integer' {$tipoDevuelto = formatearReservada("integer");} | 'real' {$tipoDevuelto = formatearReservada("real");};
 
 sent[Map<String,String> map] returns[String sentencia] :
-     IDENTIFIER sentFactor[$map] ';'{
-        $sentencia = "<div>" + formatear($IDENTIFIER.text,$map) + " " + $sentFactor.sentencia + ";</div>";
+     IDENTIFIER sentFactor[$map, $IDENTIFIER.text] ';'{
+        $sentencia = "<div>" + formatear($IDENTIFIER.text,$map) + $sentFactor.sentencia + ";</div>";
      } |
      'IF' expcond[$map] 'THEN' blq 'ELSE' blq {
         $sentencia = "<div> "+formatearReservada("IF")+" " + $expcond.condicion + " "+formatearReservada("THEN")+" </div> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div> <div> "+formatearReservada("ELSE")+" </div> <div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
@@ -211,9 +211,10 @@ sent[Map<String,String> map] returns[String sentencia] :
         $sentencia = "<div> "+formatearReservada("FOR")+" " + $IDENTIFIER.text + " := " + $exp.expresion + $inc.incremento + $exp.expresion + formatearReservada("DO") +" </div> <div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
      };
 
-sentFactor[Map<String, String> map] returns[String sentencia]:
+sentFactor[Map<String, String> map, String proc_o_asignacion] returns[String sentencia]:
     proc_call[$map] {
         $sentencia = $proc_call.parametros;
+        $map.put(proc_o_asignacion,"procFunc");
     } |
     asig[$map]{
         $sentencia = $asig.asignacion;
