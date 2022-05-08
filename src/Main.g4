@@ -18,7 +18,7 @@ grammar Main;
         if(!identificadores.containsKey(cadena)){
             return "<SPAN CLASS=\"ctesindeclarar\">"+cadena+"</SPAN>";
         }
-        return "<SPAN CLASS=\""+identificadores.get(cadena)+"\">"+cadena+"</SPAN>";
+        return "<SPAN CLASS=\""+identificadores.get(cadena)+"\"> <a href=\"#"+cadena+"\">"+cadena+"</a></SPAN>";
     }
 }
 
@@ -140,7 +140,7 @@ ctelist[Map<String, String> map] returns [String constantes, String tipoId]:
                 nombre += "1";
            }
            $map.put(nombre, "cte");
-            $constantes = nombre + " = " + formatear($simpvalue.constante,$map) + ";" + $ctelistFactor.constantes;
+           $constantes = "<a NAME=\""+nombre+"\">"+nombre+ "</a> = " + formatear($simpvalue.constante,$map) + ";" + $ctelistFactor.constantes;
         };
 
 ctelistFactor[Map<String, String> map] returns [String constantes] : {$constantes = "";}| ctelist[$map] {$constantes = "<br>" + $ctelist.constantes;};
@@ -151,7 +151,7 @@ simpvalue returns [String constante] :
     STRING_CONST{$constante = $STRING_CONST.text;};
 defvar[Map<String, String> map] returns [String defVariables] : 'VAR' defvarlist[$map] ';' {$defVariables = formatearReservada("VAR")+" <br>" + $defvarlist.variables + ";<br>";};
 defvarlist[Map<String, String> map] returns [String variables] :
-    varlist[$map]':' tbas  defvarlistFactor[$map] {$variables = $varlist.nombreVariables + ": " + $tbas.tipoDevuelto + $defvarlistFactor.variables;};     //Cambio para arreglar la recursividad izquierda
+    varlist[$map]':' tbas  defvarlistFactor[$map] {$variables = "<a NAME=\""+$varlist.nombreVariables+"\">"+ $varlist.nombreVariables + "</a>: " + $tbas.tipoDevuelto + $defvarlistFactor.variables;};     //Cambio para arreglar la recursividad izquierda
 defvarlistFactor[Map<String, String> map] returns [String variables] :
     {$variables = "";} |
     ';' defvarlist[$map] {$variables = "; " + $defvarlist.variables;};           //Factorizado
@@ -198,8 +198,8 @@ sent[Map<String,String> map] returns[String sentencia] :
      IDENTIFIER sentFactor[$map, $IDENTIFIER.text] ';'{
         $sentencia = "<div>" + formatear($IDENTIFIER.text,$map) + $sentFactor.sentencia + ";</div>";
      } |
-     'IF' expcond[$map] 'THEN' blq 'ELSE' blq {
-        $sentencia = "<div> "+formatearReservada("IF")+" " + $expcond.condicion + " "+formatearReservada("THEN")+" </div> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div> <div> "+formatearReservada("ELSE")+" </div> <div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
+     'IF' expcond[$map] 'THEN' b1=blq 'ELSE' b2=blq {
+        $sentencia = "<div> "+formatearReservada("IF")+" " + $expcond.condicion + " "+formatearReservada("THEN")+" </div> <div style=\"margin-left:1cm\">" + $b1.codigo + "</div> <div> "+formatearReservada("ELSE")+" </div> <div style=\"margin-left:1cm\"> " + $b2.codigo + "</div>";
      } |
      'WHILE' expcond[$map] 'DO' blq{
         $sentencia = "<div> "+formatearReservada("WHILE")+" " + $expcond.condicion + " "+formatearReservada("DO")+" <br> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div></div>";
