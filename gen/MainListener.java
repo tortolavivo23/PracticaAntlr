@@ -1,4 +1,4 @@
-// Generated from /home/heqro/IdeaProjects/PracticaAntlr/src/Main.g4 by ANTLR 4.10.1
+// Generated from C:/Users/hr.iglesias.2018/IdeaProjects/PracticaAntlr/src\Main.g4 by ANTLR 4.9.1
 
     import java.util.Arrays;
     import java.util.HashMap;

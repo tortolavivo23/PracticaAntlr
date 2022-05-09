@@ -23,22 +23,22 @@ PROGRAM AAA ;
              PROCEDURE EEE(* parámetros EEE *);
                 (* Declaraciones de EEE *)         (* ... constantes, variables funciones y procedimientos ... *)
                 PROCEDURE FFF(r: real);
-                BEGIN
-                    writeln(r);
+                    BEGIN
+                        writeln(r);
+                    END;
+                BEGIN         (* Sentencias de EEE *)
+                    writeln ("no");
                 END;
-             BEGIN         (* Sentencias de EEE *)
-                writeln ("no");
-             END;
 
-VAR i : integer;
-BEGIN
-    paco := "batman" ;
-    WHILE (paco = batman) DO
+        VAR i : integer;
         BEGIN
-            happy ("infinity");
-        END
+            paco := "batman" ;
+            WHILE (paco = batman) DO
+                BEGIN
+                    happy ("infinity");
+                END
+        END;
 
-END;
 BEGIN
     variable := 3 ;
 END.

@@ -43,8 +43,8 @@ prg:
             // Declaraciones y sentencias del programa principal
             System.out.println("<a NAME=\"inicioMain\"><HR/> \n <H2> Programa principal </H2></a>");
                 // Mostramos primero constantes y variables
-            System.out.println($blq.constantes);
-            System.out.println($blq.variables);
+            //System.out.println($blq.constantes);
+            //System.out.println($blq.variables);
                 // Mostrar el código principal
             System.out.println($blq.codigo + ".");
             System.out.println("<div class=\"moverse\"><a href=\"#inicioPrograma\">Al principio de la página</a></div>");
@@ -66,6 +66,7 @@ blq [Map<String,String> map, String nombreBloque] returns [String procYFunc, Str
             $codigoFunc = $dcllist.codigoFunc;
     }
     'BEGIN' sentlist[dcllistMap, nombreBloque] 'END'{
+        $codigo += $dcllist.variables + $dcllist.constantes;
         $codigo += formatearReservada("BEGIN") + "<div style=\"margin-left:1cm\">" +
                                     $sentlist.codigo +
                                     "</div>"+ formatearReservada("END");
@@ -141,12 +142,13 @@ defcte[Map<String, String> map, String nombreBloque] returns [String defConstant
 ctelist[Map<String, String> map, String nombreBloque] returns [String constantes, String tipoId]:
     IDENTIFIER '=' simpvalue ';' ctelistFactor[$map, $nombreBloque]
         {
-           String claveNombre = $nombreBloque + $IDENTIFIER.text;
+           String claveNombre = $nombreBloque + "::" + $IDENTIFIER.text;
            String nombre = $IDENTIFIER.text;
            while($map.containsKey(nombre)){
                 nombre += "1";
                 claveNombre += "1";
            }
+
            $constantes = "<a NAME=\""+claveNombre+"\">"+nombre+ "</a> = " + formatear($simpvalue.constante, $simpvalue.constante, $map) + ";" + $ctelistFactor.constantes;
            $map.put(claveNombre, "cte"); // añadimos al mapa después de la declaración para que se pinte correctamente en instrucciones sucesivas
         };
@@ -171,8 +173,8 @@ defvarlistFactor[Map<String, String> map, String nombreBloque] returns [String v
     ';' defvarlist[$map, $nombreBloque] {$variables = "; " + $defvarlist.variables;};           //Factorizado
 varlist[Map<String, String> map, String nombreBloque] returns[String nombreVariables] :
     IDENTIFIER  varlistFactor[$map, $nombreBloque] {
+        String claveNombre = $nombreBloque + "::" + $IDENTIFIER.text;
         String nombre = $IDENTIFIER.text;
-        String claveNombre = $nombreBloque + $IDENTIFIER.text;
         while($map.containsKey(claveNombre)){
             nombre += "1";
             claveNombre += "1";
@@ -195,8 +197,8 @@ defproc[Map<String, String> map, String nombreBloque] returns [String procedimie
         String claveNombre = $nombreBloque + "::" + $IDENTIFIER.text;
         String nombre = $IDENTIFIER.text;
         while($map.containsKey(claveNombre)){
-            claveNombre += "1";
             nombre += "1";
+            claveNombre += "1";
         }
         $map.put(claveNombre, "procFunc");
         mapConParams.put(claveNombre, "procFunc");
@@ -207,9 +209,9 @@ defproc[Map<String, String> map, String nombreBloque] returns [String procedimie
         $codigo = "<a NAME= \""+ claveNombre +"\" >"+ formatearReservada("PROCEDURE") + "  " + claveNombre.substring(7) + " " + $formal_paramlist.variables + ";</a> <br/>";
         // Propagamos hacia arriba posibles códigos de procedimientos y funciones que estuviesen anidados
         $codigo += "<div style=\"margin-left:1cm\">" + $blq.codigoFunc + $blq.codigoProc + "</div>";
-        $codigo += $blq.constantes + $blq.variables + $blq.codigo + ";<br>";
+        $codigo += $blq.codigo + ";<br>";
         $codigo += "<div class=\"moverse\"><a href=\"#inicioPrograma\">Al principio de la página</a></div>";
-        $codigo += "<div class=\"moverse\"><a href=\"#"+claveNombre+"\">Al principio del procedimiento "+nombre+"</a></div><br>";
+        $codigo += "<div class=\"moverse\"><a href=\"#"+claveNombre+"\">Al principio del procedimiento "+claveNombre.substring(7)+"</a></div><br>";
     };
 
 deffun[Map<String, String> map, String nombreBloque] returns[String funcion, String codigo]:
@@ -222,9 +224,10 @@ deffun[Map<String, String> map, String nombreBloque] returns[String funcion, Str
         String claveNombre = $nombreBloque + "::" + $IDENTIFIER.text;
         String nombre = $IDENTIFIER.text;
         while($map.containsKey(claveNombre)){
-            claveNombre += "1";
             nombre += "1";
+            claveNombre +="1";
         }
+
         $map.put(claveNombre, "procFunc");
         mapConParams.put(claveNombre, "procFunc");
         String nombreBloqueInterno = $nombreBloque + "::" + $IDENTIFIER.text;
@@ -234,9 +237,9 @@ deffun[Map<String, String> map, String nombreBloque] returns[String funcion, Str
         $funcion += $blq.procYFunc;
         $codigo = "<a NAME= \""+ claveNombre +"\" >"+ formatearReservada("FUNCTION") + "  " + claveNombre.substring(7) + " " + $formal_paramlist.variables + ";</a> <br/><br>";
         $codigo += "<div style=\"margin-left:1cm\">" + $blq.codigoFunc + $blq.codigoProc + "</div>";
-        $codigo += $blq.constantes + $blq.variables + $blq.codigo + ";<br>";
+        $codigo += $blq.codigo + ";<br>";
         $codigo += "<div class=\"moverse\"><a href=\"#inicioPrograma\">Al principio de la página</a></div>";
-        $codigo += "<div class=\"moverse\"><a href=\"#"+claveNombre+"\">Al principio de la función "+nombre+"</a></div><br>";
+        $codigo += "<div class=\"moverse\"><a href=\"#"+claveNombre+"\">Al principio de la función "+claveNombre.substring(7)+"</a></div><br>";
     };
 formal_paramlist [Map<String,String> map, String nombreBloque] returns[String variables] :
     '(' formal_param[map, nombreBloque] ')' {$variables = "("+$formal_param.variables+")";} |
@@ -254,7 +257,7 @@ tbas returns[String tipoDevuelto] : 'integer' {$tipoDevuelto = formatearReservad
 
 sent[Map<String,String> map, String nombreBloque] returns[String sentencia] :
      IDENTIFIER sentFactor[$map, $nombreBloque, $IDENTIFIER.text] ';'{
-        $sentencia = "<div>" + formatear($nombreBloque+$IDENTIFIER.text, $IDENTIFIER.text,$map) + $sentFactor.sentencia + ";</div>";
+        $sentencia = "<div>" + formatear($nombreBloque+"::"+$IDENTIFIER.text, $IDENTIFIER.text,$map) + $sentFactor.sentencia + ";</div>";
      } |
      'IF' expcond[$map,$nombreBloque] 'THEN'
      {
@@ -292,7 +295,7 @@ sent[Map<String,String> map, String nombreBloque] returns[String sentencia] :
 sentFactor[Map<String, String> map, String nombreBloque, String proc_o_asignacion] returns[String sentencia]:
     proc_call[$map, $nombreBloque] {
         $sentencia = $proc_call.parametros;
-        $map.put(nombreBloque+proc_o_asignacion,"procFunc");
+        $map.put(nombreBloque+"::"+proc_o_asignacion,"procFunc");
     } |
     asig[$map, $nombreBloque]{
         $sentencia = $asig.asignacion;
@@ -323,13 +326,16 @@ op returns[String simbolo]:
 
 factor[Map<String,String> map, String nombreBloque] returns[String variable] :
     simpvalue{
-        $variable = formatear($nombreBloque+$simpvalue.constante, $simpvalue.constante,$map);
+        $variable = formatear($nombreBloque+"::"+$simpvalue.constante, $simpvalue.constante,$map);
     } |
     '(' exp[$map, $nombreBloque] ')'{
         $variable = "("+$exp.expresion+")";
     } |
     IDENTIFIER subpparamlist[$map, $nombreBloque]{
-        $variable = formatear($nombreBloque+$IDENTIFIER.text,$IDENTIFIER.text,$map) +" " + $subpparamlist.parametros;
+        if(!$map.containsKey($nombreBloque+"::"+$IDENTIFIER.text)){
+            $map.put($nombreBloque+"::"+$IDENTIFIER.text,"procFunc");
+        }
+        $variable = formatear($nombreBloque+"::"+$IDENTIFIER.text,$IDENTIFIER.text,$map) +" " + $subpparamlist.parametros;
     };
 subpparamlist[Map<String,String> map, String nombreBloque] returns[String parametros]:
     {$parametros="";} |

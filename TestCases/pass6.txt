@@ -1,6 +1,25 @@
 PROGRAM Hello;
 VAR
-Nota, Nota2: integer;
+Nota, Nota2, Nota: integer;
 BEGIN
+    Nota2 := 0;
     Nota := 1;
+    WHILE (Nota < 3) DO BEGIN
+        WHILE (Nota2 < 4) DO BEGIN
+            IF (Nota > 5) THEN
+            PROCEDURE aux(a: integer);
+            BEGIN
+                writeln("h");
+            END;
+            VAR
+                Nota: integer;
+            BEGIN
+                Nota := Nota + 2;
+            END
+            ELSE
+            BEGIN
+                Nota2 := Nota + 3;
+            END
+        END
+    END
 END.

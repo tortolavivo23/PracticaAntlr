@@ -10,15 +10,15 @@ unaConstante = "Hola";
 unaConstante = 3;
 
 
-PROCEDURE nombreRepe(numero: integer; numeroReal: real; cont: integer);
+PROCEDURE funcionAuxiliar(numero: integer; numeroReal: real; cont: integer);
 VAR
 numero: integer;
 numeroReal : real;
 BEGIN
     numero := numeroReal * (numero + 2);
-    nombreRepe := nombreRepe + 1 ;
+    funcionAuxiliar := funcionAuxiliar + 1 ;
     WHILE (cont < "3") DO BEGIN
-        nombreRepe(numero, numeroReal, cont + 1);
+        funcionAuxiliar(numero, numeroReal, cont + 1);
     END
 END;
 
