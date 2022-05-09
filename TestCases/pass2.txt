@@ -24,6 +24,10 @@ writeln('Introduzca el mes (entre 1 y 12)');
 readln(numMes);
 
 	WHILE ((numMes < 0) OR (numMes > 12)) DO
+        PROCEDURE FFF(r: real);
+            BEGIN
+                writeln(r);
+            END;
 		BEGIN
 			writeln('Valor erroneo, introduzca un numero de mes valido');
 			readln(numMes);

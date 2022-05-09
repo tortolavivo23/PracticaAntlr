@@ -28,13 +28,12 @@ prg:
             System.out.println("<a NAME=\"inicioPrograma\"><H1> Programa: "+$IDENTIFIER.text+"</H1></a>");
         }
     ';' {
-            System.out.println("<UL>");
             HashMap<String,String> map = new HashMap<String,String>();
             String nombreBloque = "0main"; // aprovechamos que no se pueden declarar variables que empiecen por un número
         }
     blq [map, nombreBloque] {
             // Lista de cabeceras de procedimientos y funciones
-            System.out.println($blq.procYFunc+"</UL>\n<HR/>");
+            System.out.println("<UL>"+$blq.procYFunc+"</UL>\n<HR/>");
 
             // Código de todas las funciones y procedimientos
             System.out.println($blq.codigoProc);
@@ -52,27 +51,31 @@ prg:
         }
     '.';
 
-blq [Map<String,String> map, String nombreBloque] returns [String procYFunc, String codigo, String constantes, String variables, String codigoProc, String codigoFunc]:
+blq [Map<String,String> map, String nombreBloque]
+    returns [String procYFunc, String codigo, String constantes, String variables, String codigoProc, String codigoFunc, String codigoFuncProcLocal]:
     {
         Map<String,String> dcllistMap = new HashMap<>();
         dcllistMap.putAll($map);
     }
     dcllist[dcllistMap, nombreBloque] {
-            $procYFunc = $dcllist.procYFunc;
             $codigo = $dcllist.codigo;
             $constantes = $dcllist.constantes;
             $variables = $dcllist.variables;
-            $codigoProc = $dcllist.codigoProc;
-            $codigoFunc = $dcllist.codigoFunc;
+            $codigoFuncProcLocal = $dcllist.codigoFuncProcLocal;
     }
     'BEGIN' sentlist[dcllistMap, nombreBloque] 'END'{
         $codigo += $dcllist.variables + $dcllist.constantes;
         $codigo += formatearReservada("BEGIN") + "<div style=\"margin-left:1cm\">" +
                                     $sentlist.codigo +
                                     "</div>"+ formatearReservada("END");
+        $procYFunc = $dcllist.procYFunc + $sentlist.procYFunc;
+        $codigoProc = $dcllist.codigoProc + $sentlist.codigoProc;
+        $codigoFunc = $dcllist.codigoFunc + $sentlist.codigoFunc;
+        $codigoFuncProcLocal += $sentlist.codigoFuncProcLocal;
     } ;
 
-dcllist [Map<String, String> map, String nombreBloque] returns [String procYFunc, String codigo, String constantes, String variables, String codigoProc, String codigoFunc] :
+dcllist [Map<String, String> map, String nombreBloque]
+returns [String procYFunc, String codigo, String constantes, String variables, String codigoProc, String codigoFunc, String codigoFuncProcLocal] :
     {
         $procYFunc = "";
         $codigo = "";
@@ -80,6 +83,7 @@ dcllist [Map<String, String> map, String nombreBloque] returns [String procYFunc
         $variables = "";
         $codigoProc = "";
         $codigoFunc = "";
+        $codigoFuncProcLocal = "";
     }|
     dcl[$map, $nombreBloque] dcllist[$map, $nombreBloque] {
         $procYFunc = $dcl.procYFunc+$dcllist.procYFunc;
@@ -88,23 +92,39 @@ dcllist [Map<String, String> map, String nombreBloque] returns [String procYFunc
         $variables = $dcl.variables + $dcllist.variables;
         $codigoProc = $dcl.codigoProc + $dcllist.codigoProc;
         $codigoFunc = $dcl.codigoFunc + $dcllist.codigoFunc;
+        $codigoFuncProcLocal = $dcl.codigoFuncProcLocal + $dcllist.codigoFuncProcLocal;
     };
 
-sentlist[Map<String, String>map, String nombreBloque]  returns [String codigo]:
+sentlist[Map<String, String>map, String nombreBloque]
+    returns [String codigo, String procYFunc, String codigoFunc, String codigoProc, String codigoFuncProcLocal]:
     sent[$map, $nombreBloque] sentlistFactor[$map, $nombreBloque]{
         $codigo = $sent.sentencia+$sentlistFactor.codigo;
+        $procYFunc = $sent.procYFunc + $sentlistFactor.procYFunc;
+        $codigoFunc = $sent.codigoFunc + $sentlistFactor.codigoFunc;
+        $codigoProc = $sent.codigoProc + $sentlistFactor.codigoProc;
+        $codigoFuncProcLocal = $sent.codigoFuncProcLocal + $sentlistFactor.codigoFuncProcLocal;
     };
 
 
-sentlistFactor[Map<String, String> map, String nombreBloque] returns [String codigo] :
+sentlistFactor[Map<String, String> map, String nombreBloque]
+    returns [String codigo, String procYFunc, String codigoFunc, String codigoProc, String codigoFuncProcLocal] :
   {
     $codigo = "";
+    $procYFunc = "";
+    $codigoFunc = "";
+    $codigoProc = "";
+    $codigoFuncProcLocal = "";
   }|
    sentlist[$map, $nombreBloque]{
         $codigo = $sentlist.codigo;
+        $procYFunc = $sentlist.procYFunc;
+        $codigoFunc = $sentlist.codigoFunc;
+        $codigoProc = $sentlist.codigoProc;
+        $codigoFuncProcLocal = $sentlist.codigoFuncProcLocal;
    };
 
-dcl [Map<String, String> map, String nombreBloque] returns [String procYFunc, String codigo, String constantes, String variables, String codigoProc, String codigoFunc] :
+dcl [Map<String, String> map, String nombreBloque]
+returns [String procYFunc, String codigo, String constantes, String variables, String codigoProc, String codigoFunc, String codigoFuncProcLocal] :
     defcte[$map, $nombreBloque] {
         $procYFunc = "";
         $codigo = "";
@@ -112,6 +132,7 @@ dcl [Map<String, String> map, String nombreBloque] returns [String procYFunc, St
         $variables = "";
         $codigoProc = "";
         $codigoFunc = "";
+        $codigoFuncProcLocal = "";
     } |
     defvar[$map, $nombreBloque] {
         $procYFunc="";
@@ -120,22 +141,25 @@ dcl [Map<String, String> map, String nombreBloque] returns [String procYFunc, St
         $variables = $defvar.defVariables;
         $codigoProc = "";
         $codigoFunc = "";
+        $codigoFuncProcLocal = "";
     }|
     defproc[$map, $nombreBloque] {
         $procYFunc = $defproc.procedimiento;
         $codigo = "";
         $constantes = "";
         $variables = "";
-        $codigoProc = $defproc.codigo;
-        $codigoFunc = "";
+        $codigoProc = $defproc.codigoProc + $defproc.codigo;
+        $codigoFunc = $defproc.codigoFunc;
+        $codigoFuncProcLocal = $defproc.codigoFuncProcLocal;
     }|
     deffun[$map, $nombreBloque]  {
         $procYFunc = $deffun.funcion;
         $codigo = "";
         $constantes = "";
         $variables = "";
-        $codigoProc = "";
-        $codigoFunc = $deffun.codigo;
+        $codigoProc = $deffun.codigoProc;
+        $codigoFunc = $deffun.codigoFunc + $deffun.codigo;
+        $codigoFuncProcLocal = $deffun.codigoFuncProcLocal;
     };
 
 defcte[Map<String, String> map, String nombreBloque] returns [String defConstantes]: 'CONST' ctelist[$map, $nombreBloque] {$defConstantes = formatearReservada("CONST")+" <br>" + $ctelist.constantes + " <br>";};
@@ -187,7 +211,7 @@ varlistFactor[Map<String, String> map, String nombreBloque] returns[String nombr
     {$nombreVariables = "";} |
     ',' varlist[$map, $nombreBloque] {$nombreVariables = ", " + $varlist.nombreVariables;};
 
-defproc[Map<String, String> map, String nombreBloque] returns [String procedimiento, String codigo]:
+defproc[Map<String, String> map, String nombreBloque] returns [String procedimiento, String codigo, String codigoFuncProcLocal, String codigoFunc, String codigoProc]:
     {
         Map<String,String> mapConParams = new HashMap<>();
         mapConParams.putAll($map);
@@ -202,19 +226,22 @@ defproc[Map<String, String> map, String nombreBloque] returns [String procedimie
         }
         $map.put(claveNombre, "procFunc");
         mapConParams.put(claveNombre, "procFunc");
-        String nombreBloqueInterno = $nombreBloque + "::" + $IDENTIFIER.text;
+        String nombreBloqueInterno = $nombreBloque + "::" + nombre;
     } formal_paramlist [mapConParams, nombreBloqueInterno] ';' blq [mapConParams, nombreBloqueInterno] ';'{
         $procedimiento ="<LI> <a href=\"#"+claveNombre+"\">"+claveNombre.substring(7)+" "+$formal_paramlist.variables+";</a></LI>\n";
         $procedimiento += $blq.procYFunc;
-        $codigo = "<a NAME= \""+ claveNombre +"\" >"+ formatearReservada("PROCEDURE") + "  " + claveNombre.substring(7) + " " + $formal_paramlist.variables + ";</a> <br/>";
+        $codigo = "<div><a NAME= \""+ claveNombre +"\" >"+ formatearReservada("PROCEDURE") + "  " + claveNombre.substring(7) + " " + $formal_paramlist.variables + ";</a></div>";
         // Propagamos hacia arriba posibles códigos de procedimientos y funciones que estuviesen anidados
-        $codigo += "<div style=\"margin-left:1cm\">" + $blq.codigoFunc + $blq.codigoProc + "</div>";
+        $codigo += "<div style=\"margin-left:1cm\">" + $blq.codigoFuncProcLocal + "</div>";
         $codigo += $blq.codigo + ";<br>";
+        $codigoFuncProcLocal = $codigo;
         $codigo += "<div class=\"moverse\"><a href=\"#inicioPrograma\">Al principio de la página</a></div>";
         $codigo += "<div class=\"moverse\"><a href=\"#"+claveNombre+"\">Al principio del procedimiento "+claveNombre.substring(7)+"</a></div><br>";
+        $codigoFunc = $blq.codigoFunc;
+        $codigoProc = $blq.codigoProc;
     };
 
-deffun[Map<String, String> map, String nombreBloque] returns[String funcion, String codigo]:
+deffun[Map<String, String> map, String nombreBloque] returns[String funcion, String codigo, String codigoFuncProcLocal, String codigoFunc, String codigoProc]:
     {
         Map<String,String> mapConParams = new HashMap<>();
         mapConParams.putAll($map);
@@ -230,16 +257,21 @@ deffun[Map<String, String> map, String nombreBloque] returns[String funcion, Str
 
         $map.put(claveNombre, "procFunc");
         mapConParams.put(claveNombre, "procFunc");
-        String nombreBloqueInterno = $nombreBloque + "::" + $IDENTIFIER.text;
+        String nombreBloqueInterno = $nombreBloque + "::" + nombre;
     } formal_paramlist [mapConParams, nombreBloqueInterno] ':' tbas ';' blq[mapConParams, nombreBloqueInterno] ';'
     {
-        $funcion = "<LI> <a href=\"#"+claveNombre+"\">"+claveNombre.substring(7)+" "+$formal_paramlist.variables+";</a></LI>\n";
+        $funcion = "<LI> <a href=\"#"+claveNombre+"\">"+claveNombre.substring(7)+" "+$formal_paramlist.variables+ ":"
+         + $tbas.tipoDevuelto +";</a></LI>\n";
         $funcion += $blq.procYFunc;
-        $codigo = "<a NAME= \""+ claveNombre +"\" >"+ formatearReservada("FUNCTION") + "  " + claveNombre.substring(7) + " " + $formal_paramlist.variables + ";</a> <br/><br>";
-        $codigo += "<div style=\"margin-left:1cm\">" + $blq.codigoFunc + $blq.codigoProc + "</div>";
+        $codigo = "<div><a NAME= \""+ claveNombre +"\" >"+ formatearReservada("FUNCTION") + "  " + claveNombre.substring(7) + " " + $formal_paramlist.variables + ":"
+            + $tbas.tipoDevuelto + ";</a></div>";
+        $codigo += "<div style=\"margin-left:1cm\">" + $blq.codigoFuncProcLocal + "</div>";
         $codigo += $blq.codigo + ";<br>";
+        $codigoFuncProcLocal = $codigo;
         $codigo += "<div class=\"moverse\"><a href=\"#inicioPrograma\">Al principio de la página</a></div>";
-        $codigo += "<div class=\"moverse\"><a href=\"#"+claveNombre+"\">Al principio de la función "+claveNombre.substring(7)+"</a></div><br>";
+        $codigo += "<div class=\"moverse\"><a href=\"#"+claveNombre+"\">Al principio del procedimiento "+claveNombre.substring(7)+"</a></div><br>";
+        $codigoFunc = $blq.codigoFunc;
+        $codigoProc = $blq.codigoProc;
     };
 formal_paramlist [Map<String,String> map, String nombreBloque] returns[String variables] :
     '(' formal_param[map, nombreBloque] ')' {$variables = "("+$formal_param.variables+")";} |
@@ -255,41 +287,72 @@ formal_paramFactor[Map<String,String> map, String nombreBloque] returns[String v
     ';' formal_param[map, nombreBloque] {$variables = "; " + $formal_param.variables ;}  ; //Factorización
 tbas returns[String tipoDevuelto] : 'integer' {$tipoDevuelto = formatearReservada("integer");} | 'real' {$tipoDevuelto = formatearReservada("real");};
 
-sent[Map<String,String> map, String nombreBloque] returns[String sentencia] :
+sent[Map<String,String> map, String nombreBloque]
+    returns[String sentencia, String procYFunc, String codigoProc, String codigoFunc, String codigoFuncProcLocal] :
      IDENTIFIER sentFactor[$map, $nombreBloque, $IDENTIFIER.text] ';'{
         $sentencia = "<div>" + formatear($nombreBloque+"::"+$IDENTIFIER.text, $IDENTIFIER.text,$map) + $sentFactor.sentencia + ";</div>";
+        $procYFunc = "";
+        $codigoProc = "";
+        $codigoFunc = "";
+        $codigoFuncProcLocal = "";
      } |
      'IF' expcond[$map,$nombreBloque] 'THEN'
      {
+        $sentencia = "<div>" + formatearReservada("IF ") + $expcond.condicion + formatearReservada(" THEN") + "</div>";
         Map<String,String> mapB1 = new HashMap<>();
         mapB1.putAll($map);
      }b1=blq [mapB1, $nombreBloque] 'ELSE'
      {
+        $sentencia += $b1.codigoFuncProcLocal + "<div style=\"margin-left:1cm\">" + $b1.codigo + "</div>";
+        $sentencia += "<div>" + formatearReservada("ELSE") + "</div>";
+        $procYFunc = $b1.procYFunc;
+        $codigoProc = $b1.codigoProc;
+        $codigoFunc = $b1.codigoFunc;
         Map<String,String> mapB2 = new HashMap<>();
         mapB2.putAll($map);
     } b2=blq [mapB2, $nombreBloque] {
-        $sentencia = "<div> "+formatearReservada("IF")+" " + $expcond.condicion + " "+formatearReservada("THEN")+" </div> <div style=\"margin-left:1cm\">" + $b1.codigo + "</div> <div> "+formatearReservada("ELSE")+" </div> <div style=\"margin-left:1cm\"> " + $b2.codigo + "</div>";
+        $sentencia += $b2.codigoFuncProcLocal + "<div style=\"margin-left:1cm\">" + $b2.codigo + "</div>";
+        $procYFunc += $b2.procYFunc;
+        $codigoProc += $b2.codigoProc;
+        $codigoFunc += $b2.codigoFunc;
+        $codigoFuncProcLocal = "";
      } |
      'WHILE' expcond[$map, $nombreBloque] 'DO'
      {
         Map<String,String> mapBlq = new HashMap<>();
         mapBlq.putAll($map);
+        $sentencia = "<div> "+formatearReservada("WHILE ") + $expcond.condicion + formatearReservada(" DO") + "</div>";
      } blq [mapBlq, $nombreBloque]{
-        $sentencia = "<div> "+formatearReservada("WHILE")+" " + $expcond.condicion + " "+formatearReservada("DO")+" <br> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div></div>";
+        $sentencia += $blq.codigoFuncProcLocal + "<div style=\"margin-left:1cm\">" + $blq.codigo + "</div>";
+        $procYFunc = $blq.procYFunc;
+        $codigoProc = $blq.codigoProc;
+        $codigoFunc = $blq.codigoFunc;
+        $codigoFuncProcLocal = "";
      } |
      'REPEAT'
      {
         Map<String,String> mapBlq = new HashMap<>();
         mapBlq.putAll($map);
+        $sentencia = "<div>" + formatearReservada("REPEAT") + "</div>";
      } blq [mapBlq, $nombreBloque] 'UNTIL' expcond[$map,$nombreBloque] ';' {
-        $sentencia = "<div> "+formatearReservada("REPEAT")+" </div> <div style=\"margin-left:1cm\">" + $blq.codigo + "</div> "+formatearReservada("UNTIL")+" " + $expcond.condicion + ";";
+        $sentencia += $blq.codigoFuncProcLocal + "<div style=\"margin-left:1cm\">" + $blq.codigo + "<div>";
+        $sentencia += formatearReservada("UNTIL")+" " + $expcond.condicion + ";";
+        $procYFunc = $blq.procYFunc;
+        $codigoProc = $blq.codigoProc;
+        $codigoFunc = $blq.codigoFunc;
+        $codigoFuncProcLocal = "";
      }|
      'FOR' IDENTIFIER ':=' exp[$map, $nombreBloque] inc exp[$map, $nombreBloque] 'DO'
      {
         Map<String,String> mapBlq = new HashMap<>();
         mapBlq.putAll($map);
+        $sentencia = "<div>" + formatearReservada("FOR ") + $IDENTIFIER.text + " := " + $exp.expresion + $inc.incremento + $exp.expresion + formatearReservada(" DO ") + "</div>";
      } blq [mapBlq, $nombreBloque] {
-        $sentencia = "<div> "+formatearReservada("FOR")+" " + $IDENTIFIER.text + " := " + $exp.expresion + $inc.incremento + $exp.expresion + formatearReservada(" DO ") +" </div> <div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
+        $sentencia = $blq.codigoFuncProcLocal + "<div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
+        $procYFunc = $blq.procYFunc;
+        $codigoProc = $blq.codigoProc;
+        $codigoFunc = $blq.codigoFunc;
+        $codigoFuncProcLocal = "";
      };
 
 sentFactor[Map<String, String> map, String nombreBloque, String proc_o_asignacion] returns[String sentencia]:

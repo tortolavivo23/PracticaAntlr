@@ -1,16 +1,36 @@
 PROGRAM Hello;
 VAR
 Nota, Nota2, Nota: integer;
+PROCEDURE funcionAuxiliar2(numero: integer; Nota: real; cont: integer);
+BEGIN
+    numero := numeroReal * (numero + 2);
+    WHILE (cont < unaConstante) DO BEGIN
+        funcionAuxiliar(numero, Nota, cont + 1);
+    END
+END;
 BEGIN
     Nota2 := 0;
     Nota := 1;
     WHILE (Nota < 3) DO BEGIN
-        WHILE (Nota2 < 4) DO BEGIN
+        WHILE (Nota2 < 4) DO
+        PROCEDURE aux(c: integer);
+            BEGIN
+                writeln("Soy un procedimiento");
+            END;
+        BEGIN
             IF (Nota > 5) THEN
             PROCEDURE aux(a: integer);
-            BEGIN
-                writeln("h");
-            END;
+                FUNCTION aux2(b: integer): integer;
+                    BEGIN
+                        writeln(hola);
+                    END;
+                VAR
+                    hola: real;
+                BEGIN
+                    aux2(3);
+                    writeln("h");
+                    writeln(hola);
+                END;
             VAR
                 Nota: integer;
             BEGIN
