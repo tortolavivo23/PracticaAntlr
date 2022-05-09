@@ -18,7 +18,7 @@ public class Principal {
                     "color: inherit;" +
                     "text-decoration: none;" +
                     "}");
-            System.out.println("a:hover {" +
+            System.out.println("a[href]:hover {" +
                     "background-color: lightgreen;" +
                     "}");
             System.out.println(".cte {" +
