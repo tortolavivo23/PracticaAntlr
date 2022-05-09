@@ -148,6 +148,7 @@ ctelist[Map<String, String> map, String nombreBloque] returns [String constantes
                 nombre += "1";
                 claveNombre += "1";
            }
+
            $constantes = "<a NAME=\""+claveNombre+"\">"+nombre+ "</a> = " + formatear($simpvalue.constante, $simpvalue.constante, $map) + ";" + $ctelistFactor.constantes;
            $map.put(claveNombre, "cte"); // añadimos al mapa después de la declaración para que se pinte correctamente en instrucciones sucesivas
         };
@@ -172,8 +173,8 @@ defvarlistFactor[Map<String, String> map, String nombreBloque] returns [String v
     ';' defvarlist[$map, $nombreBloque] {$variables = "; " + $defvarlist.variables;};           //Factorizado
 varlist[Map<String, String> map, String nombreBloque] returns[String nombreVariables] :
     IDENTIFIER  varlistFactor[$map, $nombreBloque] {
+        String claveNombre = $nombreBloque + "::" + $IDENTIFIER.text;
         String nombre = $IDENTIFIER.text;
-        String claveNombre = $nombreBloque + $IDENTIFIER.text;
         while($map.containsKey(claveNombre)){
             nombre += "1";
             claveNombre += "1";
@@ -196,8 +197,8 @@ defproc[Map<String, String> map, String nombreBloque] returns [String procedimie
         String claveNombre = $nombreBloque + "::" + $IDENTIFIER.text;
         String nombre = $IDENTIFIER.text;
         while($map.containsKey(claveNombre)){
-            claveNombre += "1";
             nombre += "1";
+            claveNombre += "1";
         }
         $map.put(claveNombre, "procFunc");
         mapConParams.put(claveNombre, "procFunc");
@@ -223,9 +224,10 @@ deffun[Map<String, String> map, String nombreBloque] returns[String funcion, Str
         String claveNombre = $nombreBloque + "::" + $IDENTIFIER.text;
         String nombre = $IDENTIFIER.text;
         while($map.containsKey(claveNombre)){
-            claveNombre += "1";
             nombre += "1";
+            claveNombre +="1";
         }
+
         $map.put(claveNombre, "procFunc");
         mapConParams.put(claveNombre, "procFunc");
         String nombreBloqueInterno = $nombreBloque + "::" + $IDENTIFIER.text;
@@ -255,7 +257,7 @@ tbas returns[String tipoDevuelto] : 'integer' {$tipoDevuelto = formatearReservad
 
 sent[Map<String,String> map, String nombreBloque] returns[String sentencia] :
      IDENTIFIER sentFactor[$map, $nombreBloque, $IDENTIFIER.text] ';'{
-        $sentencia = "<div>" + formatear($nombreBloque+$IDENTIFIER.text, $IDENTIFIER.text,$map) + $sentFactor.sentencia + ";</div>";
+        $sentencia = "<div>" + formatear($nombreBloque+"::"+$IDENTIFIER.text, $IDENTIFIER.text,$map) + $sentFactor.sentencia + ";</div>";
      } |
      'IF' expcond[$map,$nombreBloque] 'THEN'
      {
@@ -324,13 +326,16 @@ op returns[String simbolo]:
 
 factor[Map<String,String> map, String nombreBloque] returns[String variable] :
     simpvalue{
-        $variable = formatear($nombreBloque+$simpvalue.constante, $simpvalue.constante,$map);
+        $variable = formatear($nombreBloque+"::"+$simpvalue.constante, $simpvalue.constante,$map);
     } |
     '(' exp[$map, $nombreBloque] ')'{
         $variable = "("+$exp.expresion+")";
     } |
     IDENTIFIER subpparamlist[$map, $nombreBloque]{
-        $variable = formatear($nombreBloque+$IDENTIFIER.text,$IDENTIFIER.text,$map) +" " + $subpparamlist.parametros;
+        if(!$map.containsKey($nombreBloque+"::"+$IDENTIFIER.text)){
+            $map.put($nombreBloque+"::"+$IDENTIFIER.text,"procFunc");
+        }
+        $variable = formatear($nombreBloque+"::"+$IDENTIFIER.text,$IDENTIFIER.text,$map) +" " + $subpparamlist.parametros;
     };
 subpparamlist[Map<String,String> map, String nombreBloque] returns[String parametros]:
     {$parametros="";} |
