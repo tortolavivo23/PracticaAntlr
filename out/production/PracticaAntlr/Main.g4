@@ -20,6 +20,14 @@ grammar Main;
         }
         return "<SPAN CLASS=\""+identificadores.get(cadenaUnica)+"\"> <a href=\"#"+cadenaUnica+"\">"+cadenaBloque+"</a></SPAN>";
     }
+
+    public String generarClave(String claveInicial, Map<String,String> identificadores) {
+        while(identificadores.containsKey(claveInicial))
+            claveInicial += "1";
+        return claveInicial;
+    }
+
+
 }
 
 
@@ -33,6 +41,7 @@ prg:
         }
     blq [map, nombreBloque] {
             // Lista de cabeceras de procedimientos y funciones
+            System.out.println("<HR><H2>Funciones y procedimientos</H2>");
             System.out.println("<UL>"+$blq.procYFunc+"</UL>\n<HR/>");
 
             // Código de todas las funciones y procedimientos
@@ -46,8 +55,8 @@ prg:
             //System.out.println($blq.variables);
                 // Mostrar el código principal
             System.out.println($blq.codigo + ".");
-            System.out.println("<div class=\"moverse\"><a href=\"#inicioPrograma\">Al principio de la página</a></div>");
-            System.out.println("<div class=\"moverse\"><a href=\"#inicioMain\">Al principio del programa principal</a></div>");
+            System.out.println("<div class=\"moverse\"><a href=\"#inicioPrograma\">Comienzo de la web</a></div>");
+            System.out.println("<div class=\"moverse\"><a href=\"#inicioMain\">Comienzo del programa principal</a></div>");
         }
     '.';
 
@@ -166,13 +175,8 @@ defcte[Map<String, String> map, String nombreBloque] returns [String defConstant
 ctelist[Map<String, String> map, String nombreBloque] returns [String constantes, String tipoId]:
     IDENTIFIER '=' simpvalue ';' ctelistFactor[$map, $nombreBloque]
         {
-           String claveNombre = $nombreBloque + "::" + $IDENTIFIER.text;
-           String nombre = $IDENTIFIER.text;
-           while($map.containsKey(nombre)){
-                nombre += "1";
-                claveNombre += "1";
-           }
-
+           String claveNombre = generarClave($nombreBloque + "::" + $IDENTIFIER.text, $map);
+           String nombre = claveNombre.substring(claveNombre.lastIndexOf(":")+1);
            $constantes = "<a NAME=\""+claveNombre+"\">"+nombre+ "</a> = " + formatear($simpvalue.constante, $simpvalue.constante, $map) + ";" + $ctelistFactor.constantes;
            $map.put(claveNombre, "cte"); // añadimos al mapa después de la declaración para que se pinte correctamente en instrucciones sucesivas
         };
@@ -231,12 +235,15 @@ defproc[Map<String, String> map, String nombreBloque] returns [String procedimie
         $procedimiento ="<LI> <a href=\"#"+claveNombre+"\">"+claveNombre.substring(7)+" "+$formal_paramlist.variables+";</a></LI>\n";
         $procedimiento += $blq.procYFunc;
         $codigo = "<div><a NAME= \""+ claveNombre +"\" >"+ formatearReservada("PROCEDURE") + "  " + claveNombre.substring(7) + " " + $formal_paramlist.variables + ";</a></div>";
+        String codigoCopia = "<div>"+ formatearReservada("PROCEDURE") + "  " + claveNombre.substring(7) + " " + $formal_paramlist.variables + ";</a></div>";
         // Propagamos hacia arriba posibles códigos de procedimientos y funciones que estuviesen anidados
         $codigo += "<div style=\"margin-left:1cm\">" + $blq.codigoFuncProcLocal + "</div>";
+        codigoCopia += "<div style=\"margin-left:1cm\">" + $blq.codigoFuncProcLocal + "</div>";
         $codigo += $blq.codigo + ";<br>";
-        $codigoFuncProcLocal = $codigo;
-        $codigo += "<div class=\"moverse\"><a href=\"#inicioPrograma\">Al principio de la página</a></div>";
-        $codigo += "<div class=\"moverse\"><a href=\"#"+claveNombre+"\">Al principio del procedimiento "+claveNombre.substring(7)+"</a></div><br>";
+        codigoCopia += $blq.codigo + ";<br>";
+        $codigoFuncProcLocal = codigoCopia;
+        $codigo += "<div class=\"moverse\"><a href=\"#inicioPrograma\">Comienzo de la web</a></div>";
+        $codigo += "<div class=\"moverse\"><a href=\"#"+claveNombre+"\">Inicio del procedimiento "+claveNombre.substring(7)+"</a></div><br>";
         $codigoFunc = $blq.codigoFunc;
         $codigoProc = $blq.codigoProc;
     };
@@ -265,11 +272,15 @@ deffun[Map<String, String> map, String nombreBloque] returns[String funcion, Str
         $funcion += $blq.procYFunc;
         $codigo = "<div><a NAME= \""+ claveNombre +"\" >"+ formatearReservada("FUNCTION") + "  " + claveNombre.substring(7) + " " + $formal_paramlist.variables + ":"
             + $tbas.tipoDevuelto + ";</a></div>";
+        String codigoCopia = "<div>"+ formatearReservada("FUNCTION") + "  " + claveNombre.substring(7) + " " + $formal_paramlist.variables + ":"
+                    + $tbas.tipoDevuelto + ";</div>";
         $codigo += "<div style=\"margin-left:1cm\">" + $blq.codigoFuncProcLocal + "</div>";
+        codigoCopia += "<div style=\"margin-left:1cm\">" + $blq.codigoFuncProcLocal + "</div>";
         $codigo += $blq.codigo + ";<br>";
-        $codigoFuncProcLocal = $codigo;
-        $codigo += "<div class=\"moverse\"><a href=\"#inicioPrograma\">Al principio de la página</a></div>";
-        $codigo += "<div class=\"moverse\"><a href=\"#"+claveNombre+"\">Al principio del procedimiento "+claveNombre.substring(7)+"</a></div><br>";
+        codigoCopia += $blq.codigo + ";<br>";
+        $codigoFuncProcLocal = codigoCopia;
+        $codigo += "<div class=\"moverse\"><a href=\"#inicioPrograma\">Comienzo de la web</a></div>";
+        $codigo += "<div class=\"moverse\"><a href=\"#"+claveNombre+"\">Comienzo de la funcion "+claveNombre.substring(7)+"</a></div><br>";
         $codigoFunc = $blq.codigoFunc;
         $codigoProc = $blq.codigoProc;
     };
