@@ -1,4 +1,4 @@
-// Generated from /home/sergio/PracticaAntlr/src/Main.g4 by ANTLR 4.10.1
+// Generated from /home/heqro/IdeaProjects/PracticaAntlr/src/Main.g4 by ANTLR 4.10.1
 
     import java.util.Arrays;
     import java.util.HashMap;
@@ -113,6 +113,11 @@ public class MainLexer extends Lexer {
 	    public String formatear(String cadenaUnica, String cadenaBloque, Map<String,String> identificadores) {
 	        if(!identificadores.containsKey(cadenaUnica)){
 	            return "<SPAN CLASS=\"ctesindeclarar\">"+cadenaBloque+"</SPAN>";
+	        }
+	        if (identificadores.get(cadenaUnica).equals("funcion")) { // Caso particular: asignamos a una función un valor.
+	            int subcadenaFin = cadenaUnica.lastIndexOf(':');
+	            String subcadena = cadenaUnica.substring(0,subcadenaFin-1);
+	            return "<SPAN CLASS=\"procFunc\"> <a href=\"#"+subcadena+"\">"+cadenaBloque+"</a></SPAN>";
 	        }
 	        return "<SPAN CLASS=\""+identificadores.get(cadenaUnica)+"\"> <a href=\"#"+cadenaUnica+"\">"+cadenaBloque+"</a></SPAN>";
 	    }

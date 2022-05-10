@@ -1,4 +1,4 @@
-// Generated from /home/sergio/PracticaAntlr/src/Main.g4 by ANTLR 4.10.1
+// Generated from /home/heqro/IdeaProjects/PracticaAntlr/src/Main.g4 by ANTLR 4.10.1
 
     import java.util.Arrays;
     import java.util.HashMap;
@@ -128,6 +128,11 @@ public class MainParser extends Parser {
 	    public String formatear(String cadenaUnica, String cadenaBloque, Map<String,String> identificadores) {
 	        if(!identificadores.containsKey(cadenaUnica)){
 	            return "<SPAN CLASS=\"ctesindeclarar\">"+cadenaBloque+"</SPAN>";
+	        }
+	        if (identificadores.get(cadenaUnica).equals("funcion")) { // Caso particular: asignamos a una función un valor.
+	            int subcadenaFin = cadenaUnica.lastIndexOf(':');
+	            String subcadena = cadenaUnica.substring(0,subcadenaFin-1);
+	            return "<SPAN CLASS=\"procFunc\"> <a href=\"#"+subcadena+"\">"+cadenaBloque+"</a></SPAN>";
 	        }
 	        return "<SPAN CLASS=\""+identificadores.get(cadenaUnica)+"\"> <a href=\"#"+cadenaUnica+"\">"+cadenaBloque+"</a></SPAN>";
 	    }
@@ -1451,6 +1456,8 @@ public class MainParser extends Parser {
 			        _localctx.map.put(claveNombre, "procFunc");
 			        mapConParams.put(claveNombre, "procFunc");
 			        String nombreBloqueInterno = _localctx.nombreBloque + "::" + nombre;
+			        mapConParams.put(nombreBloqueInterno, "procFunc");
+			        mapConParams.put(nombreBloqueInterno+"::"+nombre, "funcion"); // De esta forma decimos a la función que se le puede asignar un valor (y es ella misma)
 			    
 			setState(192);
 			((DeffunContext)_localctx).formal_paramlist = formal_paramlist(mapConParams, nombreBloqueInterno);
@@ -1839,7 +1846,7 @@ public class MainParser extends Parser {
 				setState(229);
 				match(T__1);
 
-				        ((SentContext)_localctx).sentencia =  "<div>" + formatear(_localctx.nombreBloque+"::"+(((SentContext)_localctx).IDENTIFIER!=null?((SentContext)_localctx).IDENTIFIER.getText():null), (((SentContext)_localctx).IDENTIFIER!=null?((SentContext)_localctx).IDENTIFIER.getText():null),_localctx.map) + ((SentContext)_localctx).sentFactor.sentencia + ";</div>";
+				        ((SentContext)_localctx).sentencia =  "<div>" + formatear(_localctx.nombreBloque+"::"+(((SentContext)_localctx).IDENTIFIER!=null?((SentContext)_localctx).IDENTIFIER.getText():null), (((SentContext)_localctx).IDENTIFIER!=null?((SentContext)_localctx).IDENTIFIER.getText():null), _localctx.map) + ((SentContext)_localctx).sentFactor.sentencia + ";</div>";
 				        ((SentContext)_localctx).procYFunc =  "";
 				        ((SentContext)_localctx).codigoProc =  "";
 				        ((SentContext)_localctx).codigoFunc =  "";
@@ -1929,7 +1936,7 @@ public class MainParser extends Parser {
 				setState(254);
 				match(T__1);
 
-				        _localctx.sentencia += ((SentContext)_localctx).blq.codigoFuncProcLocal + "<div style=\"margin-left:1cm\">" + ((SentContext)_localctx).blq.codigo + "<div>";
+				        _localctx.sentencia += ((SentContext)_localctx).blq.codigoFuncProcLocal + "<div style=\"margin-left:1cm\">" + ((SentContext)_localctx).blq.codigo + "</div>";
 				        _localctx.sentencia += formatearReservada("UNTIL")+" " + ((SentContext)_localctx).expcond.condicion + ";";
 				        ((SentContext)_localctx).procYFunc =  ((SentContext)_localctx).blq.procYFunc;
 				        ((SentContext)_localctx).codigoProc =  ((SentContext)_localctx).blq.codigoProc;
@@ -1963,7 +1970,7 @@ public class MainParser extends Parser {
 				setState(265);
 				((SentContext)_localctx).blq = blq(mapBlq, _localctx.nombreBloque);
 
-				        ((SentContext)_localctx).sentencia =  ((SentContext)_localctx).blq.codigoFuncProcLocal + "<div style=\"margin-left:1cm\"> " + ((SentContext)_localctx).blq.codigo + "</div>";
+				        _localctx.sentencia += ((SentContext)_localctx).blq.codigoFuncProcLocal + "<div style=\"margin-left:1cm\"> " + ((SentContext)_localctx).blq.codigo + "</div>";
 				        ((SentContext)_localctx).procYFunc =  ((SentContext)_localctx).blq.procYFunc;
 				        ((SentContext)_localctx).codigoProc =  ((SentContext)_localctx).blq.codigoProc;
 				        ((SentContext)_localctx).codigoFunc =  ((SentContext)_localctx).blq.codigoFunc;

@@ -18,6 +18,11 @@ grammar Main;
         if(!identificadores.containsKey(cadenaUnica)){
             return "<SPAN CLASS=\"ctesindeclarar\">"+cadenaBloque+"</SPAN>";
         }
+        if (identificadores.get(cadenaUnica).equals("funcion")) { // Caso particular: asignamos a una función un valor.
+            int subcadenaFin = cadenaUnica.lastIndexOf(':');
+            String subcadena = cadenaUnica.substring(0,subcadenaFin-1);
+            return "<SPAN CLASS=\"procFunc\"> <a href=\"#"+subcadena+"\">"+cadenaBloque+"</a></SPAN>";
+        }
         return "<SPAN CLASS=\""+identificadores.get(cadenaUnica)+"\"> <a href=\"#"+cadenaUnica+"\">"+cadenaBloque+"</a></SPAN>";
     }
 
@@ -252,6 +257,8 @@ deffun[Map<String, String> map, String nombreBloque] returns[String funcion, Str
         $map.put(claveNombre, "procFunc");
         mapConParams.put(claveNombre, "procFunc");
         String nombreBloqueInterno = $nombreBloque + "::" + nombre;
+        mapConParams.put(nombreBloqueInterno, "procFunc");
+        mapConParams.put(nombreBloqueInterno+"::"+nombre, "funcion"); // De esta forma decimos a la función que se le puede asignar un valor (y es ella misma)
     } formal_paramlist [mapConParams, nombreBloqueInterno] ':' tbas ';' blq[mapConParams, nombreBloqueInterno] ';'
     {
         $funcion = "<LI> <a href=\"#"+claveNombre+"\">"+claveNombre.substring(7)+" "+$formal_paramlist.variables+ ":"
@@ -288,7 +295,7 @@ tbas returns[String tipoDevuelto] : 'integer' {$tipoDevuelto = formatearReservad
 sent[Map<String,String> map, String nombreBloque]
     returns[String sentencia, String procYFunc, String codigoProc, String codigoFunc, String codigoFuncProcLocal] :
      IDENTIFIER sentFactor[$map, $nombreBloque, $IDENTIFIER.text] ';'{
-        $sentencia = "<div>" + formatear($nombreBloque+"::"+$IDENTIFIER.text, $IDENTIFIER.text,$map) + $sentFactor.sentencia + ";</div>";
+        $sentencia = "<div>" + formatear($nombreBloque+"::"+$IDENTIFIER.text, $IDENTIFIER.text, $map) + $sentFactor.sentencia + ";</div>";
         $procYFunc = "";
         $codigoProc = "";
         $codigoFunc = "";
@@ -333,7 +340,7 @@ sent[Map<String,String> map, String nombreBloque]
         mapBlq.putAll($map);
         $sentencia = "<div>" + formatearReservada("REPEAT") + "</div>";
      } blq [mapBlq, $nombreBloque] 'UNTIL' expcond[$map,$nombreBloque] ';' {
-        $sentencia += $blq.codigoFuncProcLocal + "<div style=\"margin-left:1cm\">" + $blq.codigo + "<div>";
+        $sentencia += $blq.codigoFuncProcLocal + "<div style=\"margin-left:1cm\">" + $blq.codigo + "</div>";
         $sentencia += formatearReservada("UNTIL")+" " + $expcond.condicion + ";";
         $procYFunc = $blq.procYFunc;
         $codigoProc = $blq.codigoProc;
@@ -346,7 +353,7 @@ sent[Map<String,String> map, String nombreBloque]
         mapBlq.putAll($map);
         $sentencia = "<div>" + formatearReservada("FOR ") + $IDENTIFIER.text + " := " + $exp.expresion + $inc.incremento + $exp.expresion + formatearReservada(" DO ") + "</div>";
      } blq [mapBlq, $nombreBloque] {
-        $sentencia = $blq.codigoFuncProcLocal + "<div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
+        $sentencia += $blq.codigoFuncProcLocal + "<div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
         $procYFunc = $blq.procYFunc;
         $codigoProc = $blq.codigoProc;
         $codigoFunc = $blq.codigoFunc;
@@ -362,7 +369,8 @@ sentFactor[Map<String, String> map, String nombreBloque, String proc_o_asignacio
         $sentencia = $asig.asignacion;
     }; //Factorización
 
-asig [Map<String, String> map, String nombreBloque] returns[String asignacion] : ':=' exp[$map, $nombreBloque] {
+asig [Map<String, String> map, String nombreBloque] returns[String asignacion] :
+    ':=' exp[$map, $nombreBloque] {
     $asignacion = " := "+$exp.expresion;
     };
 
