@@ -1,4 +1,4 @@
-// Generated from /home/heqro/IdeaProjects/PracticaAntlr/src/Main.g4 by ANTLR 4.10.1
+// Generated from /home/sergio/PracticaAntlr/src/Main.g4 by ANTLR 4.10.1
 
     import java.util.Arrays;
     import java.util.HashMap;
@@ -116,6 +116,14 @@ public class MainLexer extends Lexer {
 	        }
 	        return "<SPAN CLASS=\""+identificadores.get(cadenaUnica)+"\"> <a href=\"#"+cadenaUnica+"\">"+cadenaBloque+"</a></SPAN>";
 	    }
+
+	    public String generarClave(String claveInicial, Map<String,String> identificadores) {
+	        while(identificadores.containsKey(claveInicial))
+	            claveInicial += "1";
+	        return claveInicial;
+	    }
+
+
 
 
 	public MainLexer(CharStream input) {

@@ -1,4 +1,4 @@
-// Generated from /home/heqro/IdeaProjects/PracticaAntlr/src/Main.g4 by ANTLR 4.10.1
+// Generated from /home/sergio/PracticaAntlr/src/Main.g4 by ANTLR 4.10.1
 
     import java.util.Arrays;
     import java.util.HashMap;
@@ -132,6 +132,14 @@ public class MainParser extends Parser {
 	        return "<SPAN CLASS=\""+identificadores.get(cadenaUnica)+"\"> <a href=\"#"+cadenaUnica+"\">"+cadenaBloque+"</a></SPAN>";
 	    }
 
+	    public String generarClave(String claveInicial, Map<String,String> identificadores) {
+	        while(identificadores.containsKey(claveInicial))
+	            claveInicial += "1";
+	        return claveInicial;
+	    }
+
+
+
 	public MainParser(TokenStream input) {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
@@ -186,6 +194,7 @@ public class MainParser extends Parser {
 			((PrgContext)_localctx).blq = blq(map, nombreBloque);
 
 			            // Lista de cabeceras de procedimientos y funciones
+			            System.out.println("<HR><H2>Funciones y procedimientos</H2>");
 			            System.out.println("<UL>"+((PrgContext)_localctx).blq.procYFunc+"</UL>\n<HR/>");
 
 			            // Código de todas las funciones y procedimientos
@@ -199,8 +208,8 @@ public class MainParser extends Parser {
 			            //System.out.println(((PrgContext)_localctx).blq.variables);
 			                // Mostrar el código principal
 			            System.out.println(((PrgContext)_localctx).blq.codigo + ".");
-			            System.out.println("<div class=\"moverse\"><a href=\"#inicioPrograma\">Al principio de la página</a></div>");
-			            System.out.println("<div class=\"moverse\"><a href=\"#inicioMain\">Al principio del programa principal</a></div>");
+			            System.out.println("<div class=\"moverse\"><a href=\"#inicioPrograma\">Comienzo de la web</a></div>");
+			            System.out.println("<div class=\"moverse\"><a href=\"#inicioMain\">Comienzo del programa principal</a></div>");
 			        
 			setState(83);
 			match(T__2);
@@ -797,13 +806,8 @@ public class MainParser extends Parser {
 			setState(132);
 			((CtelistContext)_localctx).ctelistFactor = ctelistFactor(_localctx.map, _localctx.nombreBloque);
 
-			           String claveNombre = _localctx.nombreBloque + "::" + (((CtelistContext)_localctx).IDENTIFIER!=null?((CtelistContext)_localctx).IDENTIFIER.getText():null);
-			           String nombre = (((CtelistContext)_localctx).IDENTIFIER!=null?((CtelistContext)_localctx).IDENTIFIER.getText():null);
-			           while(_localctx.map.containsKey(nombre)){
-			                nombre += "1";
-			                claveNombre += "1";
-			           }
-
+			           String claveNombre = generarClave(_localctx.nombreBloque + "::" + (((CtelistContext)_localctx).IDENTIFIER!=null?((CtelistContext)_localctx).IDENTIFIER.getText():null), _localctx.map);
+			           String nombre = claveNombre.substring(claveNombre.lastIndexOf(":")+1);
 			           ((CtelistContext)_localctx).constantes =  "<a NAME=\""+claveNombre+"\">"+nombre+ "</a> = " + formatear(((CtelistContext)_localctx).simpvalue.constante, ((CtelistContext)_localctx).simpvalue.constante, _localctx.map) + ";" + ((CtelistContext)_localctx).ctelistFactor.constantes;
 			           _localctx.map.put(claveNombre, "cte"); // añadimos al mapa después de la declaración para que se pinte correctamente en instrucciones sucesivas
 			        
@@ -1198,14 +1202,9 @@ public class MainParser extends Parser {
 			setState(168);
 			((VarlistContext)_localctx).varlistFactor = varlistFactor(_localctx.map, _localctx.nombreBloque);
 
-			        String claveNombre = _localctx.nombreBloque + "::" + (((VarlistContext)_localctx).IDENTIFIER!=null?((VarlistContext)_localctx).IDENTIFIER.getText():null);
-			        String nombre = (((VarlistContext)_localctx).IDENTIFIER!=null?((VarlistContext)_localctx).IDENTIFIER.getText():null);
-			        while(_localctx.map.containsKey(claveNombre)){
-			            nombre += "1";
-			            claveNombre += "1";
-			        }
+			        String claveNombre = generarClave(_localctx.nombreBloque + "::" + (((VarlistContext)_localctx).IDENTIFIER!=null?((VarlistContext)_localctx).IDENTIFIER.getText():null), _localctx.map);
+			        String nombre = claveNombre.substring(claveNombre.lastIndexOf(":")+1);
 			        _localctx.map.put(claveNombre, "var");
-			        //System.err.println("Declaracion de variable: " + claveNombre);
 			        ((VarlistContext)_localctx).nombreVariables =  "<a NAME=\""+claveNombre+"\">" + nombre + "</a>" + ((VarlistContext)_localctx).varlistFactor.nombreVariables;
 			    
 			}
@@ -1344,12 +1343,9 @@ public class MainParser extends Parser {
 			setState(180);
 			((DefprocContext)_localctx).IDENTIFIER = match(IDENTIFIER);
 
-			        String claveNombre = _localctx.nombreBloque + "::" + (((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null);
-			        String nombre = (((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null);
-			        while(_localctx.map.containsKey(claveNombre)){
-			            nombre += "1";
-			            claveNombre += "1";
-			        }
+			        String claveNombre = generarClave(_localctx.nombreBloque + "::" + (((DefprocContext)_localctx).IDENTIFIER!=null?((DefprocContext)_localctx).IDENTIFIER.getText():null), _localctx.map);
+			        String nombre = claveNombre.substring(claveNombre.lastIndexOf(":")+1);
+
 			        _localctx.map.put(claveNombre, "procFunc");
 			        mapConParams.put(claveNombre, "procFunc");
 			        String nombreBloqueInterno = _localctx.nombreBloque + "::" + nombre;
@@ -1366,12 +1362,15 @@ public class MainParser extends Parser {
 			        ((DefprocContext)_localctx).procedimiento = "<LI> <a href=\"#"+claveNombre+"\">"+claveNombre.substring(7)+" "+((DefprocContext)_localctx).formal_paramlist.variables+";</a></LI>\n";
 			        _localctx.procedimiento += ((DefprocContext)_localctx).blq.procYFunc;
 			        ((DefprocContext)_localctx).codigo =  "<div><a NAME= \""+ claveNombre +"\" >"+ formatearReservada("PROCEDURE") + "  " + claveNombre.substring(7) + " " + ((DefprocContext)_localctx).formal_paramlist.variables + ";</a></div>";
+			        String codigoCopia = "<div>"+ formatearReservada("PROCEDURE") + "  " + claveNombre.substring(7) + " " + ((DefprocContext)_localctx).formal_paramlist.variables + ";</a></div>";
 			        // Propagamos hacia arriba posibles códigos de procedimientos y funciones que estuviesen anidados
 			        _localctx.codigo += "<div style=\"margin-left:1cm\">" + ((DefprocContext)_localctx).blq.codigoFuncProcLocal + "</div>";
+			        codigoCopia += "<div style=\"margin-left:1cm\">" + ((DefprocContext)_localctx).blq.codigoFuncProcLocal + "</div>";
 			        _localctx.codigo += ((DefprocContext)_localctx).blq.codigo + ";<br>";
-			        ((DefprocContext)_localctx).codigoFuncProcLocal =  _localctx.codigo;
-			        _localctx.codigo += "<div class=\"moverse\"><a href=\"#inicioPrograma\">Al principio de la página</a></div>";
-			        _localctx.codigo += "<div class=\"moverse\"><a href=\"#"+claveNombre+"\">Al principio del procedimiento "+claveNombre.substring(7)+"</a></div><br>";
+			        codigoCopia += ((DefprocContext)_localctx).blq.codigo + ";<br>";
+			        ((DefprocContext)_localctx).codigoFuncProcLocal =  codigoCopia;
+			        _localctx.codigo += "<div class=\"moverse\"><a href=\"#inicioPrograma\">Comienzo de la web</a></div>";
+			        _localctx.codigo += "<div class=\"moverse\"><a href=\"#"+claveNombre+"\">Inicio del procedimiento "+claveNombre.substring(7)+"</a></div><br>";
 			        ((DefprocContext)_localctx).codigoFunc =  ((DefprocContext)_localctx).blq.codigoFunc;
 			        ((DefprocContext)_localctx).codigoProc =  ((DefprocContext)_localctx).blq.codigoProc;
 			    
@@ -1447,13 +1446,8 @@ public class MainParser extends Parser {
 			setState(190);
 			((DeffunContext)_localctx).IDENTIFIER = match(IDENTIFIER);
 
-			        String claveNombre = _localctx.nombreBloque + "::" + (((DeffunContext)_localctx).IDENTIFIER!=null?((DeffunContext)_localctx).IDENTIFIER.getText():null);
-			        String nombre = (((DeffunContext)_localctx).IDENTIFIER!=null?((DeffunContext)_localctx).IDENTIFIER.getText():null);
-			        while(_localctx.map.containsKey(claveNombre)){
-			            nombre += "1";
-			            claveNombre +="1";
-			        }
-
+			        String claveNombre = generarClave(_localctx.nombreBloque + "::" + (((DeffunContext)_localctx).IDENTIFIER!=null?((DeffunContext)_localctx).IDENTIFIER.getText():null), _localctx.map);
+			        String nombre = claveNombre.substring(claveNombre.lastIndexOf(":")+1);
 			        _localctx.map.put(claveNombre, "procFunc");
 			        mapConParams.put(claveNombre, "procFunc");
 			        String nombreBloqueInterno = _localctx.nombreBloque + "::" + nombre;
@@ -1476,11 +1470,15 @@ public class MainParser extends Parser {
 			        _localctx.funcion += ((DeffunContext)_localctx).blq.procYFunc;
 			        ((DeffunContext)_localctx).codigo =  "<div><a NAME= \""+ claveNombre +"\" >"+ formatearReservada("FUNCTION") + "  " + claveNombre.substring(7) + " " + ((DeffunContext)_localctx).formal_paramlist.variables + ":"
 			            + ((DeffunContext)_localctx).tbas.tipoDevuelto + ";</a></div>";
+			        String codigoCopia = "<div>"+ formatearReservada("FUNCTION") + "  " + claveNombre.substring(7) + " " + ((DeffunContext)_localctx).formal_paramlist.variables + ":"
+			                    + ((DeffunContext)_localctx).tbas.tipoDevuelto + ";</div>";
 			        _localctx.codigo += "<div style=\"margin-left:1cm\">" + ((DeffunContext)_localctx).blq.codigoFuncProcLocal + "</div>";
+			        codigoCopia += "<div style=\"margin-left:1cm\">" + ((DeffunContext)_localctx).blq.codigoFuncProcLocal + "</div>";
 			        _localctx.codigo += ((DeffunContext)_localctx).blq.codigo + ";<br>";
-			        ((DeffunContext)_localctx).codigoFuncProcLocal =  _localctx.codigo;
-			        _localctx.codigo += "<div class=\"moverse\"><a href=\"#inicioPrograma\">Al principio de la página</a></div>";
-			        _localctx.codigo += "<div class=\"moverse\"><a href=\"#"+claveNombre+"\">Al principio del procedimiento "+claveNombre.substring(7)+"</a></div><br>";
+			        codigoCopia += ((DeffunContext)_localctx).blq.codigo + ";<br>";
+			        ((DeffunContext)_localctx).codigoFuncProcLocal =  codigoCopia;
+			        _localctx.codigo += "<div class=\"moverse\"><a href=\"#inicioPrograma\">Comienzo de la web</a></div>";
+			        _localctx.codigo += "<div class=\"moverse\"><a href=\"#"+claveNombre+"\">Comienzo de la funcion "+claveNombre.substring(7)+"</a></div><br>";
 			        ((DeffunContext)_localctx).codigoFunc =  ((DeffunContext)_localctx).blq.codigoFunc;
 			        ((DeffunContext)_localctx).codigoProc =  ((DeffunContext)_localctx).blq.codigoProc;
 			    

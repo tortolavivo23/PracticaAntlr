@@ -43,7 +43,7 @@ readln(valorTemp);
 
 
 
-writeln;
+writeln(numero_Neg_Resultado);
 {_________________________________________________________________}
 
 
