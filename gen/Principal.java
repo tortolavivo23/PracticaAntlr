@@ -38,6 +38,9 @@ public class Principal {
             System.out.println(".moverse {" +
                     "color:  #1A2E48;" +
                     "}");
+            System.out.println(".codigoError {" +
+                    "color:  #ff0000;" +
+                    "}");
             System.out.println("</style>");
             System.out.println("</head>");
 

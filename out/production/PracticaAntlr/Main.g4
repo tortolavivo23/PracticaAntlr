@@ -7,21 +7,28 @@ grammar Main;
     import java.util.Arrays;
     import java.util.HashMap;
     import java.util.Map;
+    import org.antlr.v4.Tool;
 }
 
 @members {
+
+
+     // método auxiliar
+    public void reportError(String msg, int line, int column){
+        String textoMostrar = "<div CLASS=\"codigoError\">" + msg;
+        textoMostrar += ". Linea: " + line;
+        textoMostrar += (column == -1) ? ".</div>" : ". Columna: " + column + ".</div>";
+        System.out.println(textoMostrar);
+    }
+
     public String formatearReservada(String cadena){
             return "<SPAN CLASS=\"palres\">"+cadena+"</SPAN>";
     }
 
     public String formatear(String cadenaUnica, String cadenaBloque, Map<String,String> identificadores) {
-        if(!identificadores.containsKey(cadenaUnica)){
+
+        if (!identificadores.containsKey(cadenaUnica)) {
             return "<SPAN CLASS=\"ctesindeclarar\">"+cadenaBloque+"</SPAN>";
-        }
-        if (identificadores.get(cadenaUnica).equals("funcion")) { // Caso particular: asignamos a una función un valor.
-            int subcadenaFin = cadenaUnica.lastIndexOf(':');
-            String subcadena = cadenaUnica.substring(0,subcadenaFin-1);
-            return "<SPAN CLASS=\"procFunc\"> <a href=\"#"+subcadena+"\">"+cadenaBloque+"</a></SPAN>";
         }
         return "<SPAN CLASS=\""+identificadores.get(cadenaUnica)+"\"> <a href=\"#"+cadenaUnica+"\">"+cadenaBloque+"</a></SPAN>";
     }
@@ -191,7 +198,16 @@ ctelistFactor[Map<String, String> map, String nombreBloque] returns [String cons
 simpvalue returns [String constante] :
     NUMERIC_INTEGER_CONST {$constante = $NUMERIC_INTEGER_CONST.text;} |
     NUMERIC_REAL_CONST{$constante = $NUMERIC_REAL_CONST.text;}|
-    STRING_CONST{$constante = $STRING_CONST.text;};
+    STRING_CONST{$constante = $STRING_CONST.text;}|
+    NUMERIC_INTEGER_CONST_ERROR{
+        $constante = $NUMERIC_INTEGER_CONST_ERROR.text;
+        reportError("Un entero no puede contener letras", $NUMERIC_INTEGER_CONST_ERROR.getLine(), $NUMERIC_INTEGER_CONST_ERROR.getCharPositionInLine()+1);
+    }|
+    NUMERIC_REAL_CONST_ERROR{
+        $constante = $NUMERIC_REAL_CONST_ERROR.text;
+        reportError("Un real no puede contener letras", $NUMERIC_REAL_CONST_ERROR.getLine(), $NUMERIC_REAL_CONST_ERROR.getCharPositionInLine()+1);
+    };
+
 defvar[Map<String, String> map, String nombreBloque] returns [String defVariables] : 'VAR' defvarlist[$map, $nombreBloque] ';'
 {
     $defVariables = formatearReservada("VAR")+" <br>" + $defvarlist.variables + ";<br>";
@@ -224,11 +240,10 @@ defproc[Map<String, String> map, String nombreBloque] returns [String procedimie
     {
         String claveNombre = generarClave($nombreBloque + "::" + $IDENTIFIER.text, $map);
         String nombre = claveNombre.substring(claveNombre.lastIndexOf(":")+1);
-
-        $map.put(claveNombre, "procFunc");
-        mapConParams.put(claveNombre, "procFunc");
         String nombreBloqueInterno = $nombreBloque + "::" + nombre;
+
     } formal_paramlist [mapConParams, nombreBloqueInterno] ';' blq [mapConParams, nombreBloqueInterno] ';'{
+        $map.put(claveNombre, "procFunc");
         $procedimiento ="<LI> <a href=\"#"+claveNombre+"\">"+claveNombre.substring(7)+" "+$formal_paramlist.variables+";</a></LI>\n";
         $procedimiento += $blq.procYFunc;
         $codigo = "<div><a NAME= \""+ claveNombre +"\" >"+ formatearReservada("PROCEDURE") + "  " + claveNombre.substring(7) + " " + $formal_paramlist.variables + ";</a></div>";
@@ -255,10 +270,9 @@ deffun[Map<String, String> map, String nombreBloque] returns[String funcion, Str
         String claveNombre = generarClave($nombreBloque + "::" + $IDENTIFIER.text, $map);
         String nombre = claveNombre.substring(claveNombre.lastIndexOf(":")+1);
         $map.put(claveNombre, "procFunc");
-        mapConParams.put(claveNombre, "procFunc");
         String nombreBloqueInterno = $nombreBloque + "::" + nombre;
-        mapConParams.put(nombreBloqueInterno, "procFunc");
-        mapConParams.put(nombreBloqueInterno+"::"+nombre, "funcion"); // De esta forma decimos a la función que se le puede asignar un valor (y es ella misma)
+        //mapConParams.put(nombreBloqueInterno, "procFunc");
+        mapConParams.put(nombreBloqueInterno+"::"+nombre, "var");
     } formal_paramlist [mapConParams, nombreBloqueInterno] ':' tbas ';' blq[mapConParams, nombreBloqueInterno] ';'
     {
         $funcion = "<LI> <a href=\"#"+claveNombre+"\">"+claveNombre.substring(7)+" "+$formal_paramlist.variables+ ":"
@@ -290,7 +304,12 @@ formal_param[Map<String,String> map, String nombreBloque] returns[String variabl
 formal_paramFactor[Map<String,String> map, String nombreBloque] returns[String variables]:
     {$variables = "";} |
     ';' formal_param[map, nombreBloque] {$variables = "; " + $formal_param.variables ;}  ; //Factorización
-tbas returns[String tipoDevuelto] : 'integer' {$tipoDevuelto = formatearReservada("integer");} | 'real' {$tipoDevuelto = formatearReservada("real");};
+tbas returns[String tipoDevuelto] : 'integer' {$tipoDevuelto = formatearReservada("integer");} | 'real' {$tipoDevuelto = formatearReservada("real");} |
+    IDENTIFIER{
+        $tipoDevuelto = formatearReservada($IDENTIFIER.getText());
+        reportError("Se ha usado un tipo no conocido: "+ $IDENTIFIER.getText(),
+                        $IDENTIFIER.getLine(), $IDENTIFIER.getCharPositionInLine()+1);
+    };
 
 sent[Map<String,String> map, String nombreBloque]
     returns[String sentencia, String procYFunc, String codigoProc, String codigoFunc, String codigoFuncProcLocal] :
@@ -300,8 +319,12 @@ sent[Map<String,String> map, String nombreBloque]
         $codigoProc = "";
         $codigoFunc = "";
         $codigoFuncProcLocal = "";
+        if ($sentFactor.sentencia.equals("()")) {
+            reportError("Se ha lanzado una funcion o procedimiento con parentesis sin parametros",
+                $IDENTIFIER.getLine(), $IDENTIFIER.getCharPositionInLine()+$IDENTIFIER.getText().length()+1);
+        }
      } |
-     'IF' expcond[$map,$nombreBloque] 'THEN'
+     IF expcond[$map,$nombreBloque] 'THEN'
      {
         $sentencia = "<div>" + formatearReservada("IF ") + $expcond.condicion + formatearReservada(" THEN") + "</div>";
         Map<String,String> mapB1 = new HashMap<>();
@@ -322,7 +345,42 @@ sent[Map<String,String> map, String nombreBloque]
         $codigoFunc += $b2.codigoFunc;
         $codigoFuncProcLocal = "";
      } |
-     'WHILE' expcond[$map, $nombreBloque] 'DO'
+     IF expcond[$map,$nombreBloque]
+     {
+        reportError("Falta THEN despues de iniciar un bloque IF",
+                        $IF.getLine(), -1);
+        $sentencia = "<div>" + formatearReservada("IF ") + $expcond.condicion + formatearReservada(" THEN") + "</div>";
+        Map<String,String> mapB1 = new HashMap<>();
+        mapB1.putAll($map);
+      }b1=blq [mapB1, $nombreBloque] 'ELSE'
+      {
+         $sentencia += $b1.codigoFuncProcLocal + "<div style=\"margin-left:1cm\">" + $b1.codigo + "</div>";
+         $sentencia += "<div>" + formatearReservada("ELSE") + "</div>";
+         $procYFunc = $b1.procYFunc;
+         $codigoProc = $b1.codigoProc;
+         $codigoFunc = $b1.codigoFunc;
+         Map<String,String> mapB2 = new HashMap<>();
+         mapB2.putAll($map);
+     } b2=blq [mapB2, $nombreBloque] {
+         $sentencia += $b2.codigoFuncProcLocal + "<div style=\"margin-left:1cm\">" + $b2.codigo + "</div>";
+         $procYFunc += $b2.procYFunc;
+         $codigoProc += $b2.codigoProc;
+         $codigoFunc += $b2.codigoFunc;
+         $codigoFuncProcLocal = "";
+     }|
+     IF expcond[$map,$nombreBloque] 'THEN'
+     {
+         $sentencia = "<div>" + formatearReservada("IF ") + $expcond.condicion + formatearReservada(" THEN") + "</div>";
+         Map<String,String> mapB1 = new HashMap<>();
+         mapB1.putAll($map);
+     }b1=blq [mapB1, $nombreBloque] {
+         $sentencia += $b1.codigoFuncProcLocal + "<div style=\"margin-left:1cm\">" + $b1.codigo + "</div>";
+         $procYFunc = $b1.procYFunc;
+         $codigoProc = $b1.codigoProc;
+         $codigoFunc = $b1.codigoFunc;
+         reportError("Falta ELSE en la condicion IF", $IF.getLine(), -1);
+     } |
+     WHILE expcond[$map, $nombreBloque] 'DO'
      {
         Map<String,String> mapBlq = new HashMap<>();
         mapBlq.putAll($map);
@@ -347,18 +405,47 @@ sent[Map<String,String> map, String nombreBloque]
         $codigoFunc = $blq.codigoFunc;
         $codigoFuncProcLocal = "";
      }|
-     'FOR' IDENTIFIER ':=' exp[$map, $nombreBloque] inc exp[$map, $nombreBloque] 'DO'
+     WHILE expcond[$map, $nombreBloque]
+      {
+        reportError("Falta DO despues de WHILE",
+                                          $WHILE.getLine(), -1);
+         Map<String,String> mapBlq = new HashMap<>();
+         mapBlq.putAll($map);
+         $sentencia = "<div> "+formatearReservada("WHILE ") + $expcond.condicion + formatearReservada(" DO") + "</div>";
+      } blq [mapBlq, $nombreBloque]{
+         $sentencia += $blq.codigoFuncProcLocal + "<div style=\"margin-left:1cm\">" + $blq.codigo + "</div>";
+         $procYFunc = $blq.procYFunc;
+         $codigoProc = $blq.codigoProc;
+         $codigoFunc = $blq.codigoFunc;
+         $codigoFuncProcLocal = "";
+      } |
+     FOR IDENTIFIER ':=' e1=exp[$map, $nombreBloque] inc e2=exp[$map, $nombreBloque] 'DO'
      {
         Map<String,String> mapBlq = new HashMap<>();
         mapBlq.putAll($map);
-        $sentencia = "<div>" + formatearReservada("FOR ") + $IDENTIFIER.text + " := " + $exp.expresion + $inc.incremento + $exp.expresion + formatearReservada(" DO ") + "</div>";
+        $sentencia = "<div>" + formatearReservada("FOR ") + formatear($IDENTIFIER.text, $IDENTIFIER.text, $map) + " := " + $e1.expresion + $inc.incremento + $e2.expresion + formatearReservada(" DO ") + "</div>";
      } blq [mapBlq, $nombreBloque] {
         $sentencia += $blq.codigoFuncProcLocal + "<div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
         $procYFunc = $blq.procYFunc;
         $codigoProc = $blq.codigoProc;
         $codigoFunc = $blq.codigoFunc;
         $codigoFuncProcLocal = "";
-     };
+     }
+     |
+     FOR IDENTIFIER ':=' e1=exp[$map, $nombreBloque] inc e2=exp[$map, $nombreBloque]
+          {
+            reportError("Falta DO despues de FOR",
+                                    $FOR.getLine(), -1);
+             Map<String,String> mapBlq = new HashMap<>();
+             mapBlq.putAll($map);
+             $sentencia = "<div>" + formatearReservada("FOR ") + formatear($IDENTIFIER.text, $IDENTIFIER.text, $map) + " := " + $e1.expresion + $inc.incremento + $e2.expresion + formatearReservada(" DO ") + "</div>";
+          } blq [mapBlq, $nombreBloque] {
+             $sentencia += $blq.codigoFuncProcLocal + "<div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
+             $procYFunc = $blq.procYFunc;
+             $codigoProc = $blq.codigoProc;
+             $codigoFunc = $blq.codigoFunc;
+             $codigoFuncProcLocal = "";
+          };
 
 sentFactor[Map<String, String> map, String nombreBloque, String proc_o_asignacion] returns[String sentencia]:
     proc_call[$map, $nombreBloque] {
@@ -401,14 +488,22 @@ factor[Map<String,String> map, String nombreBloque] returns[String variable] :
         $variable = "("+$exp.expresion+")";
     } |
     IDENTIFIER subpparamlist[$map, $nombreBloque]{
-        if(!$map.containsKey($nombreBloque+"::"+$IDENTIFIER.text)){
+        if( $subpparamlist.parametros.length()==2){
+            reportError("Se ha lanzado una funcion o procedimiento con parentesis sin parametros",
+                $IDENTIFIER.getLine(), $IDENTIFIER.getCharPositionInLine()+$IDENTIFIER.getText().length()+1);
+        }
+        if(!$map.containsKey($nombreBloque+"::"+$IDENTIFIER.text) && $subpparamlist.parametros.length()>0){
             $map.put($nombreBloque+"::"+$IDENTIFIER.text,"procFunc");
         }
+
         $variable = formatear($nombreBloque+"::"+$IDENTIFIER.text,$IDENTIFIER.text,$map) +" " + $subpparamlist.parametros;
     };
 subpparamlist[Map<String,String> map, String nombreBloque] returns[String parametros]:
     {$parametros="";} |
-    '(' explist[$map, $nombreBloque] ')' {$parametros = "("+$explist.expresiones+")";} ; //Expresion ʎ
+    '(' explist[$map, $nombreBloque] ')' {$parametros = "("+$explist.expresiones+")";} |
+    '()' {
+        $parametros="()";
+    };
 
 explist[Map<String, String> map, String nombreBloque] returns[String expresiones]:
     exp[$map, $nombreBloque] explistFactor[$map,$nombreBloque] {
@@ -450,6 +545,13 @@ opcomp returns[String comparador] :
 NUMERIC_INTEGER_CONST: ('+' | '-')? INT ;
 NUMERIC_REAL_CONST: ('+' | '-')? INT ('.'INT)? (('e'|'E')('+' | '-')? INT)? ;
 STRING_CONST: (('\'' ('\'\'' | ~['])* '\'') | ('"' ('""' | ~["])* '"')) ;
+IF : 'IF';
+FOR : 'FOR';
+WHILE : 'WHILE';
+REPEAT:'REPEAT';
+
+NUMERIC_INTEGER_CONST_ERROR: NUMERIC_INTEGER_CONST IDENTIFIER {setText(String.valueOf(NUMERIC_INTEGER_CONST));};
+NUMERIC_REAL_CONST_ERROR: NUMERIC_REAL_CONST IDENTIFIER{setText(String.valueOf(NUMERIC_REAL_CONST));};
 
 COMMENT_LINE: '{' ~[\r\n]+ '}'-> skip;
 COMMENT_BLOCK: '(*' (~[*] | '*' ~[)])* '*'+ ')'-> skip;
@@ -458,7 +560,12 @@ COMMENT_BLOCK: '(*' (~[*] | '*' ~[)])* '*'+ ')'-> skip;
 IDENTIFIER: ('_'|LETTER) ('_' | DIG | LETTER)* ;
 
 
+
 IGNORE : (' '|'\r'|'\n'|'\t') -> skip;
+
+CARACTERES_INVALIDOS: . {
+reportError("Se ha detectado un caracter invalido", getLine(), getCharPositionInLine()+1);
+} -> skip;
 
 fragment
 LETTER: [A-Za-z]; //Caracteres del alfabeto ingles en mayusculas y minusculas

@@ -3,7 +3,6 @@ VAR
 Nota, Nota2: integer;
 CONST
 numero = 3;
-unaConstante = 3;
 dosConstantes = "Hola";
 
 PROCEDURE funcionAuxiliar(numero: integer; numeroReal: real; cont: integer);
@@ -17,6 +16,16 @@ BEGIN
 END;
 
 PROCEDURE funcionAuxiliar2(numero: integer; Nota: real; cont: integer);
+    FUNCTION funcionAux: real;
+        PROCEDURE funcionAuxiliary;
+        BEGIN
+            writeln(unaConstante);
+        END;
+    CONST
+        unaConstante = 4;
+    BEGIN
+        writeln(unaConstante);
+    END;
 BEGIN
     numero := numeroReal * (numero + 2);
     WHILE (cont < unaConstante) DO BEGIN

@@ -1,6 +1,8 @@
 PROGRAM Hello;
 VAR
 Nota, Nota2, Nota: integer;
+CONST
+unaConstante = 3;
 PROCEDURE funcionAuxiliar2(numero: integer; Nota: real; cont: integer);
 BEGIN
     numero := numeroReal * (numero + 2);
@@ -42,4 +44,5 @@ BEGIN
             END
         END
     END
+    writeln(unaConstante);
 END.

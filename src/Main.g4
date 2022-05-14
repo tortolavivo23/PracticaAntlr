@@ -26,13 +26,9 @@ grammar Main;
     }
 
     public String formatear(String cadenaUnica, String cadenaBloque, Map<String,String> identificadores) {
-        if(!identificadores.containsKey(cadenaUnica)){
+
+        if (!identificadores.containsKey(cadenaUnica)) {
             return "<SPAN CLASS=\"ctesindeclarar\">"+cadenaBloque+"</SPAN>";
-        }
-        if (identificadores.get(cadenaUnica).equals("funcion")) { // Caso particular: asignamos a una función un valor.
-            int subcadenaFin = cadenaUnica.lastIndexOf(':');
-            String subcadena = cadenaUnica.substring(0,subcadenaFin-1);
-            return "<SPAN CLASS=\"procFunc\"> <a href=\"#"+subcadena+"\">"+cadenaBloque+"</a></SPAN>";
         }
         return "<SPAN CLASS=\""+identificadores.get(cadenaUnica)+"\"> <a href=\"#"+cadenaUnica+"\">"+cadenaBloque+"</a></SPAN>";
     }
@@ -323,6 +319,10 @@ sent[Map<String,String> map, String nombreBloque]
         $codigoProc = "";
         $codigoFunc = "";
         $codigoFuncProcLocal = "";
+        if ($sentFactor.sentencia.equals("()")) {
+            reportError("Se ha lanzado una funcion o procedimiento con parentesis sin parametros",
+                $IDENTIFIER.getLine(), $IDENTIFIER.getCharPositionInLine()+$IDENTIFIER.getText().length()+1);
+        }
      } |
      IF expcond[$map,$nombreBloque] 'THEN'
      {
@@ -405,11 +405,25 @@ sent[Map<String,String> map, String nombreBloque]
         $codigoFunc = $blq.codigoFunc;
         $codigoFuncProcLocal = "";
      }|
-     'FOR' IDENTIFIER ':=' exp[$map, $nombreBloque] inc exp[$map, $nombreBloque] 'DO'
+     WHILE expcond[$map, $nombreBloque]
+      {
+        reportError("Falta DO despues de WHILE",
+                                          $WHILE.getLine(), -1);
+         Map<String,String> mapBlq = new HashMap<>();
+         mapBlq.putAll($map);
+         $sentencia = "<div> "+formatearReservada("WHILE ") + $expcond.condicion + formatearReservada(" DO") + "</div>";
+      } blq [mapBlq, $nombreBloque]{
+         $sentencia += $blq.codigoFuncProcLocal + "<div style=\"margin-left:1cm\">" + $blq.codigo + "</div>";
+         $procYFunc = $blq.procYFunc;
+         $codigoProc = $blq.codigoProc;
+         $codigoFunc = $blq.codigoFunc;
+         $codigoFuncProcLocal = "";
+      } |
+     FOR IDENTIFIER ':=' e1=exp[$map, $nombreBloque] inc e2=exp[$map, $nombreBloque] 'DO'
      {
         Map<String,String> mapBlq = new HashMap<>();
         mapBlq.putAll($map);
-        $sentencia = "<div>" + formatearReservada("FOR ") + $IDENTIFIER.text + " := " + $exp.expresion + $inc.incremento + $exp.expresion + formatearReservada(" DO ") + "</div>";
+        $sentencia = "<div>" + formatearReservada("FOR ") + formatear($IDENTIFIER.text, $IDENTIFIER.text, $map) + " := " + $e1.expresion + $inc.incremento + $e2.expresion + formatearReservada(" DO ") + "</div>";
      } blq [mapBlq, $nombreBloque] {
         $sentencia += $blq.codigoFuncProcLocal + "<div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
         $procYFunc = $blq.procYFunc;
@@ -474,7 +488,11 @@ factor[Map<String,String> map, String nombreBloque] returns[String variable] :
         $variable = "("+$exp.expresion+")";
     } |
     IDENTIFIER subpparamlist[$map, $nombreBloque]{
-        if(!$map.containsKey($nombreBloque+"::"+$IDENTIFIER.text)){
+        if( $subpparamlist.parametros.length()==2){
+            reportError("Se ha lanzado una funcion o procedimiento con parentesis sin parametros",
+                $IDENTIFIER.getLine(), $IDENTIFIER.getCharPositionInLine()+$IDENTIFIER.getText().length()+1);
+        }
+        if(!$map.containsKey($nombreBloque+"::"+$IDENTIFIER.text) && $subpparamlist.parametros.length()>0){
             $map.put($nombreBloque+"::"+$IDENTIFIER.text,"procFunc");
         }
 
@@ -540,6 +558,7 @@ COMMENT_BLOCK: '(*' (~[*] | '*' ~[)])* '*'+ ')'-> skip;
 
 //Ristras de símbolos compuestas por letras del alfabeto inglés, dígitos y guiones bajos "_". No empiezan por numero.
 IDENTIFIER: ('_'|LETTER) ('_' | DIG | LETTER)* ;
+
 
 
 IGNORE : (' '|'\r'|'\n'|'\t') -> skip;
