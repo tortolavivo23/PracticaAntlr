@@ -7,9 +7,20 @@ grammar Main;
     import java.util.Arrays;
     import java.util.HashMap;
     import java.util.Map;
+    import org.antlr.v4.Tool;
 }
 
 @members {
+
+
+     // método auxiliar
+    public void reportError(String msg, int line, int column){
+        String textoMostrar = "<div CLASS=\"codigoError\">" + msg;
+        textoMostrar += ". Linea: " + line;
+        textoMostrar += (column == -1) ? ".</div>" : ". Columna: " + column + ".</div>";
+        System.out.println(textoMostrar);
+    }
+
     public String formatearReservada(String cadena){
             return "<SPAN CLASS=\"palres\">"+cadena+"</SPAN>";
     }
@@ -358,7 +369,22 @@ sent[Map<String,String> map, String nombreBloque]
         $codigoProc = $blq.codigoProc;
         $codigoFunc = $blq.codigoFunc;
         $codigoFuncProcLocal = "";
-     };
+     }
+     |
+     FOR IDENTIFIER ':=' e1=exp[$map, $nombreBloque] inc e2=exp[$map, $nombreBloque]
+          {
+            reportError("Falta DO despues de FOR",
+                                    $FOR.getLine(), -1);
+             Map<String,String> mapBlq = new HashMap<>();
+             mapBlq.putAll($map);
+             $sentencia = "<div>" + formatearReservada("FOR ") + formatear($IDENTIFIER.text, $IDENTIFIER.text, $map) + " := " + $e1.expresion + $inc.incremento + $e2.expresion + formatearReservada(" DO ") + "</div>";
+          } blq [mapBlq, $nombreBloque] {
+             $sentencia += $blq.codigoFuncProcLocal + "<div style=\"margin-left:1cm\"> " + $blq.codigo + "</div>";
+             $procYFunc = $blq.procYFunc;
+             $codigoProc = $blq.codigoProc;
+             $codigoFunc = $blq.codigoFunc;
+             $codigoFuncProcLocal = "";
+          };
 
 sentFactor[Map<String, String> map, String nombreBloque, String proc_o_asignacion] returns[String sentencia]:
     proc_call[$map, $nombreBloque] {

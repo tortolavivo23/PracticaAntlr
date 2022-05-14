@@ -36,7 +36,7 @@ public class Principal {
                     "color:  #986592;" +
                     "}");
             System.out.println(".moverse {" +
-                    "color:  #996600;" +
+                    "color:  #1A2E48;" +
                     "}");
             System.out.println("</style>");
             System.out.println("</head>");
