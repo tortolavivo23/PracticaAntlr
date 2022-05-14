@@ -1,0 +1,43 @@
+PROGRAM notpass5;
+
+VAR
+
+
+numMes : integer;
+valorTemp : real;
+valorFunc : sergitoElGuapito;
+resultadoFunc : real;
+
+CONST
+texto_Resultado = "Un resultado";
+numero_Pos_Resultado = +3.5E12;
+numero_Neg_Resultado = -3.5;
+
+BEGIN
+writeln(ROUND() + ROUND());
+writeln();
+writeln(12a3);
+writeln(ñA);
+writeln(-3.5 + 8);
+IF (Paco = "Tontito")
+    BEGIN
+        writeln();
+    END
+ELSE
+    BEGIN
+        writeln();
+    END
+
+IF (Paco = "Tontito") THEN
+    BEGIN
+        writeln();
+    END
+
+WHILE (Paco = "Tontito")
+BEGIN
+    writeln("El sergas");
+END
+
+
+END.
+
