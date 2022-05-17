@@ -1,19 +1,15 @@
-program programon;
+PROGRAM programon;
 
 VAR a, b, c: real;
 VAR a, b, c: integer;
 
 BEGIN
-    IF variable THEN
+    IF variable = true THEN
         BEGIN
-            writeln(a+b+c+a+b+c) ;
+            writeln() ;
         END
-    ELSE
-        BEGIN
-            B := 2 MOD 3;
-        END
-    {
-    Esto es un comentario }
+
+    { Esto es un comentario }
     FOR i := 0 TO 3 DO
         VAR t: real ;
         BEGIN

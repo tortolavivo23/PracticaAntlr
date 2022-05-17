@@ -1,22 +1,49 @@
 PROGRAM Hello;
 VAR
-Nota: integer;
+Nota, Nota2: integer;
+CONST
+numero = 35a98;
+dosConstantes = "Hola";
 
-FUNCTION funcionAuxiliar(numero: integer; numeroReal: real; cont: integer);
+PROCEDURE funcionAuxiliar(numero: integer; numeroReal: real; cont: integer);
+VAR
+numero: double;
+numero: float;
+numero: char;
 BEGIN
     numero := numeroReal * (numero + 2);
-    WHILE (cont < 3) DO BEGIN
+    WHILE (cont < "3") DO BEGIN
         funcionAuxiliar(numero, numeroReal, cont + 1);
     END
 END;
 
+PROCEDURE funcionAuxiliar2(numero: integer; Nota: real; cont: integer);
+    FUNCTION funcionAux: real;
+        PROCEDURE funcionAuxiliary;
+        BEGIN
+            writeln(unaConstante);
+        END;
+    CONST
+        unaConstante = 4;
+    BEGIN
+        writeln(unaConstante);
+    END;
 BEGIN
-    Asignado := 1;
+    numero := numeroReal * (numero + 2);
+    WHILE (cont < unaConstante) DO BEGIN
+        funcionAuxiliar(numero, Nota, cont + 1);
+    END
+END;
+
+BEGIN
+    Nota := 1;
     REPEAT
       BEGIN
-          Nota := Nota + 1;
+          Nota := Nota + unaConstante + numero;
+          writeln("Nota aumentada!");
       END
-    UNTIL (Nota = 10)
+    UNTIL (Nota = unaConstante);
     writeln("La nota es", funcionAuxiliar(Nota, 3.05E12)); { Cálculo de la nota }
-    writeln("Nota");
+    variable := 4 + 5 DIV 3;
+    writeln(dosConstantes);
 END.

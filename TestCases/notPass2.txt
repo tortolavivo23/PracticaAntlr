@@ -1,16 +1,17 @@
-program pass2;
+PROGRAM pass2;
 
 VAR
 
 
-numMes : INTEGER;
+numMes : integer;
 valorTemp : real;
 valorFunc : real;
 resultadoFunc : real;
 
 CONST
+errorç = "Un error";
 texto_Resultado = "Un resultado";
-numero_Pos_Resultado = +3.5E12E4;
+numero_Pos_Resultado = +3.5E12;
 numero_Neg_Resultado = -3.5;
 
 BEGIN
@@ -23,7 +24,11 @@ writeln('************* EL CUATRIMESTRE **************');
 writeln('Introduzca el mes (entre 1 y 12)');
 readln(numMes);
 
-	WHILE ((numMes < 0) OR (numMes > 12)) DO
+	WHILE ((numMes < 0) OR (numMes > 12))
+        PROCEDURE FFF(r: real);
+            BEGIN
+                writeln(r);
+            END;
 		BEGIN
 			writeln('Valor erroneo, introduzca un numero de mes valido');
 			readln(numMes);
@@ -39,7 +44,7 @@ readln(valorTemp);
 
 
 
-writeln;
+writeln(numero_Neg_Resultado);
 {_________________________________________________________________}
 
 
