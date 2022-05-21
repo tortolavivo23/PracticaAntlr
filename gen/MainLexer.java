@@ -3,7 +3,7 @@
     import java.util.Arrays;
     import java.util.HashMap;
     import java.util.Map;
-    import org.antlr.v4.Tool;
+    
 
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
@@ -126,7 +126,7 @@ public class MainLexer extends Lexer {
 	    }
 
 	    public String formatear(String cadenaUnica, String cadenaBloque, Map<String,String> identificadores) {
-	        
+
 	        if (!identificadores.containsKey(cadenaUnica)) {
 	            return "<SPAN CLASS=\"ctesindeclarar\">"+cadenaBloque+"</SPAN>";
 	        }

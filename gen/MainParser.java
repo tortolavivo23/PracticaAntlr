@@ -3,7 +3,7 @@
     import java.util.Arrays;
     import java.util.HashMap;
     import java.util.Map;
-    import org.antlr.v4.Tool;
+    
 
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -139,7 +139,7 @@ public class MainParser extends Parser {
 	    }
 
 	    public String formatear(String cadenaUnica, String cadenaBloque, Map<String,String> identificadores) {
-	        
+
 	        if (!identificadores.containsKey(cadenaUnica)) {
 	            return "<SPAN CLASS=\"ctesindeclarar\">"+cadenaBloque+"</SPAN>";
 	        }
